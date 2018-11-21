@@ -1,0 +1,39 @@
+<extend name="Public/base" />
+
+    <block name="top">
+        <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+        <div class="center sliding">美家服务</div>
+        <div class="right"></div>
+    </block>
+    <block name="content">
+        <div class="page-content infinite-scroll" style="position:static">
+        <div class="index_find index_fd">
+            <div class="clearfix scroll-append-box">
+            </div>
+        </div>
+        <div class="g_cart"><a href="{:U('Cart/cartList')}" class="item-link"><img src="__IMG__/gwc_01.png"></a></div>
+        <include file="Public:scroll_loader"/>
+        </div>
+    </block>
+
+    <block name="script">
+        <script>
+            var target = '{:U("Goods/getGoodsList")}';
+            function getHtml(data) {
+                return '<div class="list">' +
+                        '<div class="all">' +
+                            '<div class="content">' +
+                                '<div class="pic"><a href="{:U(\'Goods/detail\')}/goods_id/'+data['goods_id']+'" class="item-link"><img src="'+data['cover']+'"></a></div>' +
+                                '<div class="about">'+data['goods_name']+'</div>' +
+                                '<div class="price"><em>￥'+data['price']+'</em></div>' +
+                            '</div>' +
+                        '</div>' +
+                        '</div>';
+            }
+            //创建ajax data参数
+            function getQuery() {
+                return {p:p,flag:'{$_REQUEST["flag"]}'};
+            }
+        </script>
+        <script type="text/javascript" src="__JS__/scroll.js"></script>
+    </block>

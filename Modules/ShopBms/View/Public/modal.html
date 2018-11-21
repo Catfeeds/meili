@@ -1,0 +1,163 @@
+<!--弹出层 使用方式-->
+<a href="#myModal" data-toggle="modal" class="btn btn-primary">Modal dialog</a>
+<a href="#myAlert" data-toggle="modal" class="btn btn-danger">Alert</a>
+<div id="myModal" class="modal hide">
+    <div class="modal-header">
+        <button data-dismiss="modal" class="close" type="button">×</button>
+        <h3>Modal header</h3>
+    </div>
+    <div class="modal-body">
+        <p>One fine body…</p>
+    </div>
+</div>
+<div id="myAlert" class="modal hide">
+    <div class="modal-header">
+        <button data-dismiss="modal" class="close" type="button">×</button>
+        <h3>Alert modal</h3>
+    </div>
+    <div class="modal-body">
+        <p>Lorem ipsum dolor sit amet...</p>
+    </div>
+    <div class="modal-footer">
+        <a data-dismiss="modal" class="btn btn-primary" href="#">Confirm</a>
+        <a data-dismiss="modal" class="btn" href="#">Cancel</a>
+    </div>
+</div>
+
+<!--下拉操作
+<span class="navbar">
+    <ul class="nav">
+        <li id="fat-menu" class="dropdown" style="line-height: 26px;">
+            <a id="drop3" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">
+                <span class="label label-important label-important-hover">更多操作<b class="caret"></b></span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labeledby="drop3">
+                <li role="presentation">
+                    <a href="{:U('Member/delete',array('model'=>'Member','ids'=>$row['id']))}" title="删除" data-confirm="删除该会员之后与该会员相关的所有信息将全部删除，请谨慎操作！" data-ing-html="正在删除 <i class='fa fa-spinner fa-spin'></i>" class="confirm ajax-get">
+                        删除
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="{:U('ToUsers/send',array('receive_rule'=>3,'where'=>$row['id'],'model'=>'Member'))}" title="发信" class="">
+                        发信
+                    </a>
+                </li>
+                <li role="presentation" class="divider"></li>
+            </ul>
+        </li>
+    </ul>
+</span>-->
+
+<!--合并div和文本框<span class="input-prepend">
+                    <div class="add-on">&gt=</div>
+                    <input type="text" name="account" value="{$_REQUEST['account']}" placeholder="会员账号">
+                </span>
+                <span class="input-append">
+                                    <input type="text" name="time_interval" value="{$row['time_interval']|default=1}" class="number-only text-width-10" maxlength="1">
+                                <div class="add-on">&gt=</div>
+                                </span>-->
+
+<!--<button class="btn btn-success href" url="{:U('ToUsers/send',array('model'=>'Member'))}">发信</button>&nbsp;-->
+
+<!--<ul class="quick-actions-horizontal">
+    <li>
+        <a href="{:U('Withdraw/index',array('status'=>0))}">
+            <i class="icon-tag"></i>
+            <span>未处理提现：{$count}</span>
+        </a>
+    </li>
+</ul>-->
+
+<!--<div class="ibox-content timeline">
+    <div class="timeline-item">
+        <div class="row">
+            <div class="col-xs-3 date">
+                <i class="fa fa-circle"></i>6:006:006:006:00<br>
+                <small class="text-navy">2 小时前</small>
+            </div>
+            <div class="col-xs-7 content no-top-border">
+                <p class="m-b-xs">
+                    <strong>服务器已彻底崩溃</strong>
+                </p>
+                <p>还未检查出错误</p>
+            </div>
+        </div>
+    </div>
+    <div class="timeline-item">
+        <div class="row">
+            <div class="col-xs-3 date">
+                <i class="fa fa-circle"></i>7:00<br>
+                <small class="text-navy">3小时前</small>
+            </div>
+            <div class="col-xs-7 content">
+                <p class="m-b-xs">
+                    <strong>修复了0.5个bug</strong>
+                </p>
+                <p>重启服务</p>
+            </div>
+        </div>
+    </div>
+    <div class="timeline-item">
+        <div class="row">
+            <div class="col-xs-3 date">
+                <i class="fa fa-circle"></i>8:00<br>
+            </div>
+            <div class="col-xs-7 content">
+                <p class="m-b-xs">
+                    <strong>喝水、上厕所、做测试</strong>
+                </p>
+                <p>
+                    喝了4杯水，上了3次厕所，控制台输出出2324个错误，神啊，带我走吧
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="timeline-item">
+        <div class="row">
+            <div class="col-xs-3 date">
+                <i class="fa fa-circle"></i>11:00<br>
+                <small class="text-navy">21小时前</small>
+            </div>
+            <div class="col-xs-7 content">
+                <p class="m-b-xs">
+                    <strong>项目经理打电话来了</strong>
+                </p>
+                <p>
+                    TMD，项目经理居然还没有起床！！！
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="timeline-item">
+        <div class="row">
+            <div class="col-xs-3 date">
+                <i class="fa fa-circle"></i>09:00<br>
+                <small>21小时前</small>
+            </div>
+            <div class="col-xs-7 content">
+                <p class="m-b-xs">
+                    <strong>开会</strong>
+                </p>
+                <p>
+                    开你妹的会，老子还有897894个bug没有修复
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="timeline-item">
+        <div class="row">
+            <div class="col-xs-3 date">
+                <i class="fa fa-circle"></i>12:50<br>
+                <small class="text-navy">讨论</small>
+            </div>
+            <div class="col-xs-7 content">
+                <p class="m-b-xs">
+                    <strong>…………</strong>
+                </p>
+                <p>
+                    又是操蛋的一天
+                </p>
+            </div>
+        </div>
+    </div>
+</div>-->

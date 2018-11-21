@@ -1,0 +1,64 @@
+<extend name="Public/base" />
+
+<block name="main">
+    <div class="row-fluid main-row-fluid">
+        <div class="span12">
+            <div class="widget-box">
+                <div class="alert alert-block">
+                    <a class="close" data-dismiss="alert" href="#">×</a>
+                    <p>提示：系统模板不可禁用或删除！</p>
+                </div>
+                <div class="widget-title widget-title-search list-widget-title">
+                    <button class="btn btn-success href" url="{:U('SendTemplate/add')}" target-form="ids">新增</button>&nbsp;
+                    <button class="btn btn-inverse ajax-post" url="{:U('SendTemplate/forbidResume',array('model'=>'SendTemplate','field'=>'status','value'=>0))}" target-form="ids">禁用</button>&nbsp;
+                    <button class="btn btn-info ajax-post" url="{:U('SendTemplate/forbidResume',array('model'=>'SendTemplate','field'=>'status','value'=>1))}" target-form="ids">启用</button>&nbsp;
+                    <button class="btn btn-danger confirm ajax-post" url="{:U('SendTemplate/delete',array('model'=>'SendTemplate'))}" target-form="ids">删除</button>&nbsp;
+                </div>
+
+                <div class="widget-content no-padding no-border">
+                    <table class="table table-bordered table-striped with-check reset-checkbox">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="title-checkbox" name="title-checkbox" class="check-all"/><!--<i class="icon-resize-vertical"></i>--></th>
+                            <th>ID</th>
+                            <th>模板标识</th>
+                            <th>类型</th>
+                            <th>描述</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="tbody">
+                        <empty name="list"><tr><td colspan="30">Aho！没有查询结果！！</td></tr></empty>
+                        <volist name="list" id="row">
+                            <tr>
+                                <td><input type="checkbox" name="ids[]" value="{$row['id']}" class="ids"/></td>
+                                <td>{$row['id']}</td>
+                                <td>{$row['unique_code']} <span class="badge badge-warning">{$row['cate']|get_send_cate}</span></td>
+                                <td><i class="fa {$row['type']|get_send_icon}"></i> {$row['type'],SEND_TEMPLATE_TYPES|get_config_title}</td>
+                                <td>{$row['description']|default='---'}</td>
+                                <td>{$row['status']|get_status_title}</td>
+                                <td>
+                                    <a href="{:U('SendTemplate/update',array('id'=>$row['id'],'model'=>'SendTemplate'))}" title="编辑" class="">
+                                        <span class="label label-success label-success-hover">编辑</span></a>&nbsp;
+                                    <if condition="$row['status'] eq 0 or $row['status'] eq 1">
+                                        <a href="{:U('SendTemplate/forbidResume',array('model'=>'SendTemplate','ids'=>$row['id'],'field'=>'status','value'=>abs(1-$row['status']),'cate'=>$row['cate']))}" title="{$row['status']|show_status_name}" class="ajax-get">
+                                            <span class="label {$row['status']|show_status_label}">{$row['status']|show_status_name}</span></a>&nbsp;
+                                    </if>
+                                    <a href="{:U('SendTemplate/delete',array('model'=>'SendTemplate','ids'=>$row['id'],'cate'=>$row['cate']))}" title="删除" data-ing-html="正在删除 <i class='fa fa-spinner fa-spin'></i>" class="confirm ajax-get">
+                                        <span class="label label-important label-important-hover">删除</span></a>
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination alternate">
+                    {$page}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</block>

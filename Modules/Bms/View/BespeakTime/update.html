@@ -1,0 +1,130 @@
+<extend name="Public/base" />
+
+<block name="main">
+
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+                <!--<div class="widget-title">
+                    <span class="icon">
+                        <i class="fa fa-plus"></i>
+                    </span>
+                    <h5>更新信息</h5>
+                </div>-->
+                <br>
+                <div class="widget-content no-padding">
+                    <form class="form-horizontal text-height-27-form" method="post" action="{:U('BespeakTime/update')}">
+                        <input type="hidden" name="model" value="BespeakTime">
+                        <input type="hidden" name="id" value="{$row['id']}">
+                        <div class="control-group">
+                            <label class="control-label">时间段名称</label>
+                            <div class="controls">
+                                <input type="text" name="name" value="{$row['name']}" class="text-width-20" maxlength="15">
+                                <span class="help-block">* 时间段名称必须</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">该时间段最多预约人数限制</label>
+                            <div class="controls">
+                                <input type="number" name="max_count" value="{$row['max_count']}" class="text-width-20" maxlength="15">
+                                <span class="help-block">* 该时间段最多预约人数限制</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">开始时间</label>
+                            <div class="controls">
+                                <input name="start_time" type="text" value="<?php echo $row['start_time']?date('Y-m-d H:i',$row['start_time']):'';?>" class="text-width-20" id="jedatestart" placeholder="请选择开始时间" readonly>
+                                <!--<input name="end_time" type="text"  class="text-width-20" id="jedateend" placeholder="请选择秒杀结束时间" readonly>-->
+                                <span class="help-block">* 点击即可弹出时间选择器，开始时间必须</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">结束时间</label>
+                            <div class="controls">
+                                <input name="end_time" type="text" value="<?php echo $row['end_time']?date('Y-m-d H:i',$row['end_time']):'';?>" class="text-width-20" id="jedatestart_s" placeholder="请选择结束时间" readonly>
+                                <!--<input name="end_time" type="text"  class="text-width-20" id="jedateend" placeholder="请选择秒杀结束时间" readonly>-->
+                                <span class="help-block">* 点击即可弹出时间选择器，结束时间必须</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                <span class="help-block">* 只需要选择正确的时分秒即可，年月日请忽略随意填写</span>
+                            </div>
+                        </div>
+                        <!--<div class="control-group">-->
+                            <!--<label class="control-label">开始&结束时间点设置</label>-->
+                            <!--<div class="controls">-->
+                                <!--<div class="input-daterange" id="datepicker">-->
+                                    <!--<notempty name="row['id']">-->
+                                        <!--<input type="text" name="start_time" value="{$row['start_time']|date='Y-m-d',###}" class="text-width-10"  readonly>-->
+                                        <!--&#45;&#45;-->
+                                        <!--<input type="text" name="end_time" value="{$row['end_time']|date='Y-m-d',###}" class="text-width-10" readonly>-->
+                                        <!--<else/>-->
+                                        <!--<input type="text" name="start_time" value="" class="text-width-10" readonly>-->
+                                        <!--&#45;&#45;-->
+                                        <!--<input type="text" name="end_time" value="" class="text-width-10" readonly>-->
+                                    <!--</notempty>-->
+                                <!--</div>-->
+                                <!--<span class="help-block">* 点击即可弹出时间选择器</span>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <div class="form-actions">
+                            <button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>　
+                            <button class="btn btn-info ajax-post" target-form="form-horizontal" type="submit">保 存</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script"> <!--日历 start-->
+    <link type="text/css" rel="stylesheet" href="__STATIC__/plugins/jedate-6.5.0/skin/jedate.css">
+    <script src="__STATIC__/plugins/jedate-6.5.0/jedate.js"></script>
+    <script>
+        jeDate("#jedatestart",{
+            // festival:true,                      //显示农历
+            minDate:"1970-01-01",              //最小日期
+            maxDate:"2099-12-31",              //最大日期
+            format: "YYYY-MM-DD hh:mm",       //控制可选属性(年月日时分秒)
+            donefun:function (obj) {              //选择完成回调
+                var jedateend=document.getElementById("jedateend");
+                if(jedateend){
+                    if(jedateend.value && jedateend.value < obj.val){
+                        jedateend.value = obj.val;
+                    }
+                }
+            }
+        });
+        jeDate("#jedatestart_s",{
+            // festival:true,                      //显示农历
+            minDate:"1970-01-01",              //最小日期
+            maxDate:"2099-12-31",              //最大日期
+            format: "YYYY-MM-DD hh:mm",       //控制可选属性(年月日时分秒)
+            donefun:function (obj) {              //选择完成回调
+                var jedateend=document.getElementById("jedateend_s");
+                if(jedateend){
+                    if(jedateend.value && jedateend.value < obj.val){
+                        jedateend.value = obj.val;
+                    }
+                }
+            }
+        });
+        // jeDate("#jedateend",{
+        //     // festival:true,                      //显示农历
+        //     minDate:"1970-01-01",              //最小日期
+        //     maxDate:"2099-12-31",              //最大日期
+        //     format: "YYYY-MM-DD hh:mm",       //控制可选属性(年月日时分秒)
+        //     donefun:function (obj) {              //选择完成回调
+        //         var jedatestart=document.getElementById("jedatestart");
+        //         if(jedatestart){
+        //             if(jedatestart.value && jedatestart.value > obj.val){
+        //                 jedatestart.value = obj.val;
+        //             }
+        //         }
+        //     }
+        // });
+    </script>
+
+</block>

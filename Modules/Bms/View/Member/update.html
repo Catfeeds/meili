@@ -1,0 +1,148 @@
+<extend name="Public/base" />
+
+<block name="main">
+
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#tab1">编辑信息</a></li>
+                    <li class=""><a data-toggle="tab" href="#tab2">其他信息</a></li>
+                </ul>
+                <!--<div class="widget-title"></div>-->
+                <br>
+                <div class="widget-content tab-content no-padding">
+                    <div id="tab1" class="tab-pane active">
+                        <form class="form-horizontal text-height-27-form" method="post" action="{:U('Member/update')}">
+                            <input type="hidden" name="model" value="Member">
+                            <input type="hidden" name="id" value="{$row['id']}">
+                            <div class="control-group">
+                                <label class="control-label">编号</label>
+                                <div class="controls">
+                                    <input type="text" name="" value="{$row['member_sn']}" class="text-width-20" disabled>
+                                    <span class="help-block">用户编号，不可更改</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">账号</label>
+                                <div class="controls">
+                                    <input type="text" name="account" value="{$row['account']}" class="number-only text-width-30" maxlength="11">
+                                    <span class="help-block">* 用户的登录账号，手机号</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">登陆密码</label>
+                                <div class="controls">
+                                    <input type="text" name="password" value="" class="text-width-30" maxlength="18">
+                                    <span class="help-block">用户的登录密码，6-18位</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">支付密码</label>
+                                <div class="controls">
+                                    <input type="text" name="pay_pass" value="" class="text-width-30" maxlength="6">
+                                    <span class="help-block">用户的支付密码，6位数字</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">昵称</label>
+                                <div class="controls">
+                                    <input type="text" name="nickname" value="{$row['nickname']}" class="text-width-30" maxlength="15">
+                                    <span class="help-block">* 昵称，15个字符以内</span>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>　
+                                <button class="btn btn-info ajax-post" target-form="form-horizontal" type="submit">保 存</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div id="tab2" class="tab-pane">
+                        <div class="invoice-content">
+                            <div class="invoice-head invoice-left">
+                                <table style="margin-top:0;width:70%">
+                                    <tr>
+                                        <td>
+                                            <div class="invoice-meta">
+                                                余额<span class="invoice-number"></span>
+                                            </div>
+                                        </td>
+                                        <td><div class="invoice-meta">佣金</div></td>
+                                        <td><div class="invoice-meta">状态</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><h5>￥ {$row['balance']}</h5></td>
+                                        <td><h5>￥ {$row['profit']}</h5></td>
+                                        <td><h5>{$row['status']|get_status_title}</h5></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="invoice-meta">登陆次数</div></td>
+                                        <td><div class="invoice-meta">最后登录IP</div></td>
+                                        <td><div class="invoice-meta">最后登录时间</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><h5>{$row['login']} 次</h5></td>
+                                        <td><h5>{:long2ip($row['last_login_ip'])}</h5></td>
+                                        <td><h5>{$row['last_login_time']|timestamp2date}</h5></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="invoice-meta">注册IP</div></td>
+                                        <td><div class="invoice-meta">注册时间</div></td>
+                                        <td><div class="invoice-meta">最后更新时间</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><h5>{:long2ip($row['register_ip'])}</h5></td>
+                                        <td><h5>{$row['create_time']|timestamp2date}</h5></td>
+                                        <td><h5>{$row['update_time']|timestamp2date}</h5></td>
+                                    </tr>
+                                </table>
+                                <br>
+                                <!--<div class="invoice-meta">
+                                    <i class="fa fa-area-chart"></i> 相关统计<span class="invoice-number"></span>
+                                </div>
+                                <h5>
+                                    <br>
+                                    <ul class="stat-boxes">
+                                        {//hook('statistics',array('is_first'=>1,'stat_type'=>1,'peity'=>'bar-warning','title_text'=>'消费金额','title_en_text'=>'RMB','data'=>$stat['pay'],'default'=>0.00))}
+                                        {//hook('statistics',array('stat_type'=>1,'peity'=>'bar-success','title_text'=>'充值金额','title_en_text'=>'RMB','data'=>$stat['charge'],'default'=>0.00))}
+                                        {//hook('statistics',array('stat_type'=>1,'peity'=>'bar-info','title_text'=>'提现金额','title_en_text'=>'RMB','data'=>$stat['wd'],'default'=>0.00))}
+                                    </ul>
+                                    <div class="clear"></div>
+                                </h5>-->
+                            </div>
+                            <div class="invoice-head invoice-right">
+                                <div class="invoice-meta">
+                                    <i class="fa fa-user"></i> 头像<span class="invoice-number"></span>
+                                </div>
+                                <h5><img src="{$row['head_path']|default='__ROOT__/Uploads/Head/default.jpg'}" class="img-circle" width="150"></h5>
+                                <div class="invoice-meta">
+                                    <i class="fa fa-barcode"></i> 推广码<span class="invoice-number"></span>
+                                </div>
+                                <h5><img src="{$row['code_url']}" class="" width="150"></h5>
+
+                                <!--<div class="invoice-meta">
+                                    <i class="fa fa-credit-card"></i> 银行卡信息<span class="invoice-number"></span>
+                                </div>
+                                <h5>
+                                    <empty name="row['cards']">
+                                        <div class="credit-card float-left">未添加</div>
+                                    </empty>
+                                    <volist name="row['cards']" id="card">
+                                        <div class="credit-card float-left">
+                                            &lt;!&ndash;<img src="{$card['bank_short']|get_bank_icon}" width="24">&ndash;&gt; {$card['bank_name']} <br>{$card['card_number']|format_card_number}<br>{$card['open_name']} <br> {$card['mobile']}
+                                        </div>
+                                    </volist>
+                                    <div class="clear"></div>
+                                </h5>-->
+                                <br>
+                                <button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>

@@ -1,0 +1,40 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">修改登录密码</div>
+    <div class="right"></div>
+</block>
+<block name="content">
+    <div class="page-content">
+        <div class="set_password">
+            <form action="{:U('Center/modifyPass')}" method="post" class="form-horizontal">
+            <div class="sex_box">
+                <p>
+                    <input type="password" name="password" placeholder="请输入原密码" class="text" datatype="s6-18" nullmsg="请输入原密码！" errormsg="密码长度在6-18位！">
+                </p>
+                <p>
+                    <input type="password" name="new_password" placeholder="请输入新密码" class="text" datatype="s6-18" nullmsg="请输入新密码！" errormsg="密码长度在6-18位！">
+                </p>
+                <p>
+                    <input type="password" name="re_new_password" placeholder="请确认新密码" class="text" datatype="s6-18" recheck="new_password" nullmsg="请确认新密码！" errormsg="您两次输入的账号密码不一致！">
+                </p>
+            </div>
+            <div class="sex_ref">
+                <input type="submit" value="确认修改" class="btn submit-btn">
+            </div>
+            </form>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script src="__STATIC__/validform_5.3.2/Validform_v5.3.2_min.js"></script>
+    <script src="__JS__/validform.js"></script>
+    <script src="__JS__/common.js"></script>
+    <script>
+        $(function() { });
+        //提示弹出层 回调方法
+        function success_callback() {}
+        function error_callback() {}
+    </script>
+</block>

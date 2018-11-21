@@ -1,0 +1,325 @@
+<extend name="Public/base" />
+<block name="style">
+    <link rel="stylesheet" href="__CSS__/style/style.base.css" />
+    <link rel="stylesheet" href="__CSS__/style/style.timeline.v1.css" />
+</block>
+<block name="main">
+
+<div class="row-fluid main-row-fluid">
+
+    <div class="span12">
+        <div class="widget-box">
+        <ul class="nav nav-tabs">
+            <!--<li class="active"><a data-toggle="tab" href="#tab1">订单详情</a></li>-->
+            <!--<li class=""><a data-toggle="tab" href="#tab2">物流信息</a></li>-->
+            <!--<if condition="in_array($row['status'], array(7,8,9))"><li class=""><a data-toggle="tab" href="#tab3">退款信息</a></li></if>-->
+
+            <li <if condition="empty($_REQUEST['is_refund'])">class="active"</if>><a data-toggle="tab" href="#tab1">订单详情</a></li>
+            <!--<li class=""><a data-toggle="tab" href="#tab2">物流信息</a></li>-->
+            <if condition="in_array($row['status'], array(7,8,9))">
+                <li <if condition="$_REQUEST['is_refund'] eq 1">class="active"</if>><a data-toggle="tab" href="#tab3">退款信息</a></li>
+            </if>
+        </ul>
+        <!--<div class="widget-title"></div>-->
+        <br>
+        <div class="widget-content tab-content no-padding">
+        <div id="tab1" <if condition="empty($_REQUEST['is_refund'])">class="tab-pane active"<else/>class="tab-pane"</if>>
+            <table class="bill-table">
+                <tr class="bg-tr">
+                    <td colspan="5" align="center">订单操作</td>
+                </tr>
+                <tr>
+                    <td>操作</td>
+                    <td colspan="4">
+                        <input type="hidden" name="ids[]" value="{$row['id']}" class="ids"/>
+                        <switch name="row['status']">
+                            <case value="2">
+                                <!--<button class="btn btn-success ajax-post confirm" url="{:U('OrderInfo/delivery')}" target-form="ids">确认发货</button>&nbsp;-->
+                                <button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>
+                            </case>
+                            <!--<case value="3">-->
+                                <!--<button class="btn btn-warning ajax-post confirm" url="{:U('OrderInfo/receiving')}" target-form="ids">确认完成</button>&nbsp;-->
+                                <!--<button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>-->
+                            <!--</case>-->
+                            <case value="1">
+                                <!--<button class="btn btn-danger ajax-post confirm" url="{:U('OrderInfoSer/cancel')}" target-form="ids">取消订单</button>&nbsp;-->
+                                <if condition="$row['status'] eq 1">
+                                    <a href="#cancel-order-reason" data-toggle="modal" title="取消订单" onclick="setID(this)" data-order-id="{$row['id']}">
+                                        <span class="label label-important label-important-hover">取消订单</span>
+                                    </a>&nbsp;
+                                </if>
+                                <button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>
+                            </case>
+                            <case value="10">
+                                <button class="btn btn-danger ajax-post confirm" url="{:U('CancelOrderSer/delete',array('model'=>'OrderInfoSer'))}" target-form="ids">删除订单</button>&nbsp;
+                                <button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>
+                            </case>
+                            <default/>
+                            <button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>
+                        </switch>
+                    </td>
+                </tr>
+                <tr class="bg-tr">
+                    <td colspan="5" align="center">订单基本信息</td>
+                </tr>
+                <tr>
+                    <td width="15%">订单号</td><td colspan="4">{$row['order_sn']}</td>
+                </tr>
+                <!--<tr>-->
+                    <!--<td>物流单号 <i class="fa fa-pencil"></i></td>-->
+                    <!--<td colspan="4" class="quick-edit" data-model="OrderInfo" data-id="{$row['id']}" data-field="logistics_number">{$row['logistics_number']}</td>-->
+                    <!--&lt;!&ndash;<td colspan="4">{$row['logistics_number']|default='-&#45;&#45;'}</td>&ndash;&gt;-->
+                <!--</tr>-->
+                <tr>
+                    <td>备注</td><td colspan="4">{$row['remark']|default='---'}</td>
+                </tr>
+                <tr>
+                    <td>订单状态</td><td colspan="4">{$row['status_name']}</td>
+                </tr>
+                <tr class="bg-tr">
+                    <td colspan="5" align="center">用户及收货人信息</td>
+                </tr>
+                <tr>
+                    <td>下单人信息</td><td colspan="10">昵称：{$row['nickname']|default='---'}　账号：{$row['account']}</td>
+                </tr>
+                <!--<tr>-->
+                    <!--<td>收货人</td><td colspan="4">{$row['consignee']}</td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<td>收获电话</td><td colspan="4">{$row['mobile']}</td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<td>收货地址</td><td colspan="4">{$row['province_name']}{$row['city_name']}{$row['area_name']}{$row['address']}</td>-->
+                <!--</tr>-->
+                <tr class="bg-tr">
+                    <td colspan="5" align="center">实体店铺信息</td>
+                </tr>
+                <tr>
+                    <td>店铺名称</td>
+                    <td colspan="4">{$row['shop_name']}</td>
+                </tr>
+                <tr>
+                    <td>店铺地址</td><td colspan="4">{$row['shop_province_name']}{$row['shop_city_name']}{$row['shop_area_name']}{$row['shop_address']}</td>
+                </tr>
+                <tr>
+                    <td>联系人</td>
+                    <td colspan="4">{$row['shop_contacts']}</td>
+                </tr>
+                <tr>
+                    <td>联系电话</td>
+                    <td colspan="4">{$row['shop_mobile']}</td>
+                </tr>
+                <tr class="bg-tr">
+                    <td colspan="5" align="center">商品清单</td>
+                </tr>
+                    <tr>
+                        <td><img src="{$row['goods']['cover']}" width="80"/></td>
+                        <td>{$row['goods']['name']}</td>
+                        <td>数量：1</td>
+                        <td>单价：￥ {$row['goods']['price']}&ensp;元<br>小计：￥ {$row['goods']['price']}&ensp;元</td>
+                    </tr>
+                <tr class="bg-tr">
+                    <td colspan="5" align="center">费用明细</td>
+                </tr>
+                <tr>
+                    <td>商品总额</td><td colspan="4">＋&ensp;￥&ensp;{$row['goods_amounts']}&ensp;元</td>
+                </tr>
+                <!--<tr>
+                    <td>积分抵扣</td><td colspan="4">－&ensp;￥&ensp;{$row['integral_ded_amounts']}&ensp;元</td>
+                </tr>-->
+                <!--<tr>-->
+                    <!--<td>优惠券抵扣</td><td colspan="4">－&ensp;￥&ensp;{$row['coupon_amounts']}&ensp;元</td>-->
+                <!--</tr>-->
+                <tr>
+                    <td>实际支付</td><td colspan="4">&ensp;￥&ensp;{$row['pay_amounts']}&ensp;元</td>
+                </tr>
+                <tr class="bg-tr">
+                    <td colspan="5" align="center">支付信息</td>
+                </tr>
+                <!--<tr>
+                    <td>支付状态</td><td colspan="4"><if condition="$row['pay_status'] eq 1"><span class="yellow-1">已支付</span><else/><span class="red-1">未支付</span></if></td>
+                </tr>-->
+                <tr>
+                    <td>支付方式</td><td colspan="4">{$row['payment']|get_payment_name}</td>
+                </tr>
+                <tr>
+                    <td>支付时间</td><td colspan="4">{$row['pay_time']|timestamp2date}</td>
+                </tr>
+                <tr class="bg-tr">
+                    <td colspan="5" align="center">时间明细</td>
+                </tr>
+                <tr>
+                    <td>下单时间</td>
+                    <td colspan="4">{$row['create_time']|timestamp2date}</td>
+                </tr>
+                <tr>
+                    <td>支付时间</td>
+                    <td colspan="4">{$row['pay_time']|timestamp2date}</td>
+                </tr>
+                <!--<tr>-->
+                    <!--<td>发货时间</td>-->
+                    <!--<td colspan="4">{$row['delivery_time']|timestamp2date}</td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<td>收货时间</td>-->
+                    <!--<td colspan="4">{$row['receiving_time']|timestamp2date}</td>-->
+                <!--</tr>-->
+                <tr>
+                    <td>申请退款时间</td>
+                    <td colspan="4">{$row['apply_refund_time']|timestamp2date}</td>
+                </tr>
+                <tr>
+                    <td>取消退款时间</td>
+                    <td colspan="4">{$row['cancel_refund_time']|timestamp2date}</td>
+                </tr>
+                <tr>
+                    <td>完成退款时间</td>
+                    <td colspan="4">{$row['finish_refund_time']|timestamp2date}</td>
+                </tr>
+                <tr>
+                    <td>取消订单时间</td>
+                    <td colspan="4">{$row['cancel_order_time']|timestamp2date}</td>
+                </tr>
+            </table>
+        </div>
+        <!--<div id="tab2" class="tab-pane">-->
+            <!--<div class="ibox-content timeline">-->
+                <!--<volist name="row['logistics']" id="lts">-->
+                    <!--<div class="timeline-item">-->
+                        <!--<div class="row">-->
+                            <!--<div class="col-xs-3 date">-->
+                                <!--<i class="fa fa-circle"></i>{$lts['time']}<br>-->
+                            <!--</div>-->
+                            <!--<div class="col-xs-5 content no-top-border">-->
+                                <!--<p class="m-b-xs">-->
+                                    <!--<strong>{$lts['time']}</strong>-->
+                                <!--</p>-->
+                                <!--<p>{$lts['context']}</p>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</volist>-->
+            <!--</div>-->
+        <!--</div>-->
+        <div id="tab3" <if condition="$_REQUEST['is_refund'] eq 1">class="tab-pane active"<else/>class="tab-pane"</if>>
+            <form action="{:U('RefundOrderSer/refund')}" method="post" class="refund-form" autocomplete="off">
+                <input type="hidden" name="order_id" value="{$row['id']}">
+                <input type="hidden" name="payment" value="{$row['payment']}">
+                <input type="hidden" name="turnover_number" value="{$row['turnover_number']}">
+                <input type="hidden" name="module" value="{$row['module']}">
+                <!--<input type="hidden" name="pay_amounts" value="{$row['pay_amounts']}">-->
+                <table class="bill-table">
+                    <tr class="bg-tr">
+                        <td colspan="10" align="center">退款信息</td>
+                    </tr>
+                    <tr class="wb-tr">
+                        <td>申请退款时间</td>
+                        <td>退款原因</td>
+                        <td>退款状态</td>
+                        <td>退款前状态</td>
+                        <td>用户实付金额</td>
+                        <td>支付方式</td>
+                        <td>支付流水号</td>
+                        <td>退款金额</td>
+                        <td>退款完成时间</td>
+                        <td>取消退款时间</td>
+                    </tr>
+                    <tr>
+                        <td>{$row['apply_refund_time']|timestamp2date}</td>
+                        <td>{$row['refund_reason']|default='---'}</td>
+                        <td>{$row['status_name']}</td>
+                        <td>{$row['before_status_name']}</td>
+                        <td>￥ {$row['pay_amounts']} 元</td>
+                        <td>{$row['payment']|get_payment_name}</td>
+                        <td>{$row['turnover_number']|default='---'}</td>
+                        <td>￥ {$row['refund_amounts']|default='0.0'} 元</td>
+                        <td>{$row['finish_refund_time']|timestamp2date}</td>
+                        <td>{$row['cancel_refund_time']|timestamp2date}</td>
+                    </tr>
+                    <if condition="$row['status'] eq 7">
+                        <tr class="bg-tr">
+                            <td colspan="10" align="center">处理退款</td>
+                        </tr>
+                        <!--<tr>
+                            <td>退款金额</td>
+                            <td colspan="10">
+                                <input type="text" name="refund_fee" value="{$row['pay_amounts']}" class="decimal-only">
+                            </td>
+                        </tr>-->
+                        <tr>
+                            <td colspan="10">
+                                退款金额：<input type="text" name="refund_amounts" value="{$row['pay_amounts']}" class="decimal-only">
+                                                    <span class="help-block">
+                                                        注：1、如果不修改退款金额则是全额退款！<br>
+                                                        　　2、退款中不要进行其他的操作或刷新页面！
+                                                    </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="10">
+                                <!--<button class="btn btn-success ajax-post" target-form="refund-form" type="submit">确认退款</button>　-->
+                                <if condition="$row['payment'] eq 1">
+                                    <button class="btn btn-info refund" type="button">确认退款</button>　
+                                <elseif condition="$row['payment'] eq 2"/>
+                                    <button class="btn btn-info ajax-post confirm" data-confirm="确认要执行退款吗？" target-form="refund-form" type="submit" data-ing-html="请稍后进行其他操作，退款中...">确认退款</button>　
+                                <elseif condition="$row['payment'] eq 3"/>
+                                    <button class="btn btn-info ajax-post confirm" data-confirm="确认要执行退款吗？" target-form="refund-form" type="submit" data-ing-html="请稍后进行其他操作，退款中...">确认退款</button>　
+                                </if>
+
+                                <if condition="$row['status'] eq 7">
+                                    <!--<button href="{:U('RefundOrder/cancelRefund',array('ids'=>$row['id']))}" class="btn ajax-get confirm" data-confirm="确认要操作此订单取消退款吗？">取消退款</button>　-->
+                                    <button href="#cancel-refund-reason" data-toggle="modal" class="btn" title="取消退款" onclick="setID(this)" data-order-id="{$row['id']}">取消退款</button>
+                                </if>
+                                <button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>
+                            </td>
+                        </tr>
+                    </if>
+                </table>
+            </form>
+            <script>
+                $(function() {
+                    $('.refund').click(function(){
+                        var refund_amounts = $('input[name="refund_amounts"]').val(), that = this;
+                        if(refund_amounts == '' || refund_amounts == 0) {
+                            updateAlert('请输入退款金额！','alert-error'); return;
+                        }
+                        if(confirm('确定要执行退款吗？')) {
+                            $(that).addClass('disabled').attr('autocomplete','off').prop('disabled',true);
+                            window.onbeforeunload = function () {return "正在退款，请不要关闭此页面！"}
+                            setInterval("checkStatus()", 2000);
+                            $('.refund-form').attr('target', '_blank');
+                            $('.refund-form').submit();
+                        }
+                        //$(that).removeClass('disabled').prop('disabled',false);
+                    });
+                });
+                //定时请求订单状态
+                function checkStatus() {
+                    $.post('{:U("RefundCallback/checkStatus")}', {order_id:'{$row["id"]}'}).success(function(data) {
+                        if(data.status == 1) {
+                            window.onbeforeunload = function () {return null;}
+                            window.location.reload();
+                        }
+                    });
+                }
+            </script>
+        </div>
+        </div>
+        </div>
+    </div>
+</div>
+<include file="./Modules/MsC/View/Public/modal_cancel_order_ser_reason.html"/>
+<include file="./Modules/MsC/View/Public/modal_cancel_refund_ser_reason.html"/>
+
+</block>
+<block name="script">
+    <script>
+        function beforePost() {
+            var t1 = setInterval("checkStatus()", 2000);
+            window.onbeforeunload = function () {return "正在退款，请不要关闭此页面！"}
+        }
+        function afterPost() {
+            window.onbeforeunload = function () {return null;}
+        }
+    </script>
+</block>

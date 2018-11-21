@@ -1,0 +1,44 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding"><if condition="!empty($interconnect['openid'])">绑定账号<else/>注册</if></div>
+    <div class="right"></div>
+</block>
+
+<block name="content">
+    <div class="page-content">
+        <div class="content-block">
+            <form action="{:U('Passport/doRegister')}" method="post" class="register-form-2 form-horizontal">
+            <div class="content-block-inner">
+                <div class="login_logo"><img src="__IMG__/logo.png"></div>
+                <div class="login_top">
+                    <input type="hidden" name="account" value="{$_POST['account']}" datatype="m" nullmsg="请输入手机号！" errormsg="手机号格式不正确！">
+                    <p class="a">
+                        <input type="password" name="password" placeholder="输入密码" class="text text5" datatype="s6-18" nullmsg="请输入密码！" errormsg="密码长度在6-18位！">
+                    </p>
+                    <p class="a">
+                        <input type="password" name="re_password" placeholder="再次输入密码" class="text text6" datatype="s6-18" recheck="password" nullmsg="请再输入一次密码！" errormsg="您两次输入的账号密码不一致！">
+                    </p>
+                </div>
+                <div class="login_bot">
+                    <input type="submit" value="注册" class="btn submit-btn">
+                </div>
+            </div>
+                <input type="hidden" name="openid" value="{$interconnect['openid']}">
+                <input type="hidden" name="platform" value="{$interconnect['platform']}">
+            </form>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script src="__STATIC__/validform_5.3.2/Validform_v5.3.2_min.js"></script>
+    <script src="__JS__/validform.js"></script>
+    <script src="__JS__/common.js"></script>
+    <script>
+        $(function() { });
+        //提示弹出层 回调方法
+        function success_callback() {}
+        function error_callback() {}
+    </script>
+</block>

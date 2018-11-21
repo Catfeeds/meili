@@ -1,0 +1,92 @@
+<script type="text/javascript">
+    var receive_rule = 0, where = '', model = '{$_REQUEST["model"]}', time = '{:time()}', send_p = 1, count = 0, suc = 0, fail = 0, is_sending = false;
+    $(document).ready(function() {
+        //执行发送
+        $('.do-send').click(function() {
+            if(!setWhereAndRule()) {
+                return;
+            }
+            $('.bar').css('width', '0%');
+            var that = this;
+            var data_ing_html = $(that).attr('data-ing-html');
+            //禁用按钮
+            $('.btn').addClass('disabled').attr('autocomplete','off').prop('disabled',true);
+            //按钮文字
+            if(data_ing_html != null) {
+                $(that).html('<i class="fa fa-mail-reply"></i>&nbsp;'+data_ing_html);
+            }
+            //设置参数
+            setQuery();
+            //序列化参数
+            var query = getQuery();
+            //第一次请求
+            $.post('{:U("ToUsers/toUsers")}', query).success(function(data){
+                is_sending = true;
+                //成功调用成功后处理方法
+                success(data);
+            });
+            //关闭页面前提示
+            window.onbeforeunload = function(){ return "发送中...，请不要关闭页面！"; }
+            return false;
+
+            function success(data) {
+                if(data.status == 1) {
+                    //提示文字
+                    $('h2.after-send-notify').html('请勿关闭页面！发送中...');
+                    //页号  总数  发送成功条数  发送失败条数
+                    send_p = data.p; count = data.count; suc = data.log_num.success; fail = data.log_num.fail;
+                    //获取参数
+                    query = getQuery();
+                    //进度
+                    $('.bar').css('width', data.rate + '%'); $('span.text-bar').html(parseInt(data.rate) + '%');
+                    //不到百分之百  继续请求 递归
+                    if (data.rate != 100) {
+                        //间隔0.5秒
+                        setTimeout(function () {
+                            $.post('{:U("ToUsers/toUsers")}', query).success(function (data) {
+                                success(data);
+                            });
+                        }, 150);
+                    } else {
+                        //达到100%  释放页面提示   提示发送完成
+                        setTimeout(function () {
+                            ridWindow(); ridBtn(that); rid();
+                            $('h2.after-send-notify').html(data.info);
+                        }, 1000);
+                    }
+                } else {
+                    updateAlertWithTime(data.info,'alert-error');
+                    ridWindow(); ridBtn(that); rid();
+                }
+            }
+        });
+    });
+    //设置 筛选条件 发送规则
+    function setWhereAndRule() {
+        where = '', receive_rule = $("input[name='receive_rule']").val();
+        if(receive_rule == 0 || receive_rule == '') {
+            updateAlertWithTime('请选择接收规则！','alert-error'); return false;
+        }
+        if(receive_rule == '3') { //选中用户
+            $('input.receiver-ids').each(function (key, obj) {
+                if ($(obj).is(':checked') == true) {
+                    where += obj.value + ',';
+                }
+            });
+            if(where == '') {
+                updateAlertWithTime('请选择接收对象！','alert-error'); return false;
+            }
+        } else if(receive_rule == '2') { //筛选条件
+            where = $('.send-search-form').serialize();
+        }
+        return true;
+    }
+    //重置btn
+    function ridBtn(obj) {
+        $('.btn').removeClass('disabled').prop('disabled',false);
+        $(obj).html('<i class="fa fa-mail-reply"></i>&nbsp;重新发送');
+    }
+    function ridWindow() {
+        window.onbeforeunload = function () { return null; }
+    }
+</script>

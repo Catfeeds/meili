@@ -1,0 +1,71 @@
+<extend name="Public/base" />
+
+<block name="main">
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+
+                <div class="widget-title widget-title-search list-widget-title">
+                    <button class="btn btn-danger confirm ajax-post" url="{:U('UserBankcard/delete',array('model'=>'UserBankcard'))}" target-form="ids">删除</button>&nbsp;
+
+                    <form action="{:U('UserBankcard/index')}" method="post" class="form">
+                        <input type="text" name="account" value="{$_REQUEST['account']}" placeholder="会员账号">　
+
+                        <button class="btn btn-inverse">查询</button>
+                        <!--<button type="button" class="btn btn-warning senior">高级</button>
+                        <div class="senior-search" style="width: 300px;height: 300px;">
+                            <p>
+                                <input type="text" name="id" value="{$_REQUEST['id']}" placeholder="会员ID">
+                            </p>
+                        </div>-->
+                    </form>
+                </div>
+                <div class="widget-content no-padding no-border">
+                    <table class="table table-bordered table-striped with-check reset-checkbox">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="title-checkbox" name="title-checkbox" class="check-all"/><!--<i class="icon-resize-vertical"></i>--></th>
+                            <th>ID</th>
+                            <th>用户信息</th>
+                            <th>银行信息</th>
+                            <th>卡号</th>
+                            <th>开户姓名</th>
+                            <!--<th>预留手机号</th>-->
+                            <th>创建时间</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="tbody">
+                        <empty name="list"><tr><td colspan="30">Aho！没有查询结果！！</td></tr></empty>
+                        <volist name="list" id="row">
+                            <tr>
+                                <td><input type="checkbox" name="ids[]" value="{$row['id']}" class="ids"/></td>
+                                <td>{$row['id']}</td>
+                                <td>{$row['account']}-{$row['nickname']}</td>
+                                <td><img src="{$row['bank_logo']}" width="25"> {$row['bank_name']}</td>
+                                <td>{$row['card_number']}</td>
+                                <td>{$row['open_name']}</td>
+                                <!--<td>{$row['mobile']}</td>-->
+                                <td>{$row['create_time']|timestamp2date}</td>
+                                <td>
+                                    <!--<a href="{:U('UserBankcard/update',array('id'=>$row['id'],'model'=>'UserBankcard'))}" title="编辑" class="">
+                                        <span class="label label-success label-success-hover">编辑</span></a>&nbsp;-->
+
+                                    <a href="{:U('UserBankcard/delete',array('model'=>'UserBankcard','ids'=>$row['id']))}" title="删除" class="confirm ajax-get">
+                                        <span class="label label-important label-important-hover">删除</span></a>
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination alternate">
+                    {$page}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</block>

@@ -1,0 +1,73 @@
+<extend name="Public/base" />
+
+<block name="main">
+    <div class="row-fluid main-row-fluid">
+        <div class="span12">
+            <div class="widget-box">
+                <div class="alert alert-block">
+                    <a class="close" data-dismiss="alert" href="#">×</a>
+                    <p>1、执行数据备份时不要关闭此页面或进行任何其他操作，以免破坏备份文件，造成数据不可恢复！</p>
+                    <p>2、请勿在短时间内多次进行数据备份，造成数据库资源的占用和锁闭！</p>
+                    <p>3、数据备份时可能会影响数据库的性能，请在尽量在用户访问量较少的时段进行备份！</p>
+                    <p>4、数据备份时间根据数据量的大小，几分钟到十几分钟不等，备份时请耐心等待！</p>
+                </div>
+
+                <div class="widget-title widget-title-search list-widget-title">
+                    <button class="btn btn-warning confirm ajax-post no-refresh" url="{:U('Database/doExport')}" target-form="tables" data-confirm="确认要进行数据备份吗？" data-ing-html="数据正在备份，请勿关闭此页面 <i class='fa fa-spinner fa-spin'></i>">确认备份</button>&nbsp;
+                    <button class="btn btn-success ajax-post no-refresh" url="{:U('Database/optimize')}" target-form="tables" data-ing-html="数据表正在优化，请勿关闭此页面 <i class='fa fa-spinner fa-spin'></i>">优化表</button>&nbsp;
+                    <button class="btn btn-info ajax-post no-refresh" url="{:U('Database/repair')}" target-form="tables" data-ing-html="数据表正在修复，请勿关闭此页面 <i class='fa fa-spinner fa-spin'></i>">修复表</button>&nbsp;
+                </div>
+
+                <div class="widget-content no-padding no-border">
+                    <table class="table table-bordered table-striped with-check">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="title-checkbox" name="title-checkbox" class="check-all" checked='checked'/><!--<i class="icon-resize-vertical"></i>--></th>
+                            <th>表名</th>
+                            <th>数据行数</th>
+                            <th>数据大小</th>
+                            <th>表描述</th>
+                            <th>创建时间</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="tbody">
+                        <empty name="list"><tr><td colspan="30">Aho！没有查询结果！！</td></tr></empty>
+                        <volist name="list" id="row">
+                            <tr>
+                                <td><input type="checkbox" name="tables[]" value="{$row['name']}" class="tables" checked='checked'/></td>
+                                <td>{$row['name']}</td>
+                                <td>{$row['rows']|default='---'}</td>
+                                <td>{$row['data_length']|format_bytes}</td>
+                                <td>{$row['comment']|default='---'}</td>
+                                <td>{$row['create_time']|default='---'}</td>
+                                <td>
+                                    <a href="{:U('Database/optimize',array('tables'=>$row['name']))}" title="优化表" data-ing-html="正在优化数据表 <i class='fa fa-spinner fa-spin'></i>" class="ajax-get no-refresh">
+                                        <span class="label label-success label-success-hover">优化表</span></a>&nbsp;
+                                    <a href="{:U('Database/repair',array('tables'=>$row['name']))}" title="修复表" data-ing-html="正在修复数据表 <i class='fa fa-spinner fa-spin'></i>" class="ajax-get no-refresh">
+                                        <span class="label label-info label-info-hover">修复表</span></a>
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination alternate">
+                    {$page}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script>
+        function beforePost() {
+            window.onbeforeunload = function () {return "正在备份数据库，请不要关闭此页面！"}
+        }
+        function afterPost() {
+            window.onbeforeunload = function () {return null;}
+        }
+    </script>
+</block>

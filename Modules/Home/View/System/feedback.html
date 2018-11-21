@@ -1,0 +1,21 @@
+<extend name="Public/base" />
+<block name="head-script">
+    <script src="__JS__/common.js"></script>
+</block>
+<block name="main">
+  <div class="main">
+    <div class="feedback">
+    	<h1>反馈通道</h1>
+        <form action="{:C('System/feedback')}" method="post" autocomplete="off" class="form-horizontal">
+        	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><textarea name="content" class="textarea1" placeholder="我们非常珍视您的反馈，请留下您的宝贵意见"></textarea></td>
+              </tr>
+              <tr>
+                <td><input type="submit" value="提 交" class="btn1 ajax-post" target-form="form-horizontal"></td>
+              </tr>
+            </table>
+        </form>
+    </div>
+  </div>
+</block>

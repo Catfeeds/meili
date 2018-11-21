@@ -1,0 +1,97 @@
+<extend name="Public/base" />
+
+<block name="main">
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+
+                <div class="widget-title widget-title-search list-widget-title">
+                    <button class="btn btn-success href" url="{:U('Card/add')}" target-form="ids">新增</button>&nbsp;
+                    <button class="btn btn-inverse ajax-post" url="{:U('Card/forbidResume',array('model'=>'Card','field'=>'status','value'=>0))}" target-form="ids">禁用</button>&nbsp;
+                    <button class="btn btn-info ajax-post" url="{:U('Card/forbidResume',array('model'=>'Card','field'=>'status','value'=>1))}" target-form="ids">启用</button>&nbsp;
+                    <button class="btn btn-danger confirm ajax-post" url="{:U('Card/delete',array('model'=>'Card'))}" target-form="ids">删除</button>&nbsp;
+
+                    <form action="{:U('Card/index')}" method="post" class="form">
+                        <input type="text" name="card_name" value="{$_REQUEST['card_name']}" placeholder="一卡通名称">
+                        {$select}
+                        <button class="btn btn-inverse">查询</button>
+                    </form>
+                </div>
+
+                <div class="widget-content no-padding no-border">
+                    <table class="table table-bordered table-striped with-check reset-checkbox">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="title-checkbox" name="title-checkbox" class="check-all"/><!--<i class="icon-resize-vertical"></i>--></th>
+                            <th>ID</th>
+                            <th>名称</th>
+                            <th>Logo</th>
+                            <th>季卡价格</th>
+                            <th>季卡点数</th>
+                            <th>年卡价格</th>
+                            <th>年卡点数</th>
+                            <th>开始时间</th>
+                            <th>结束时间</th>
+                            <th>修改时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="tbody">
+                        <empty name="list"><tr><td colspan="30">Aho！没有查询结果！！</td></tr></empty>
+                        <volist name="list" id="row">
+                            <tr>
+                                <td><input type="checkbox" name="ids[]" value="{$row['id']}" class="ids"/></td>
+                                <td>{$row['id']}</td>
+                                <td>{$row['card_name']}</td>
+                                <td><img src="{$row['cover']}" width="30"></td>
+                                <td>{$row['m_price']}</td>
+                                <td>{$row['m_count']}</td>
+                                <td>{$row['y_price']}</td>
+                                <td>{$row['y_count']}</td>
+                                <td>{$row['start_time']|timestamp2date}</td>
+                                <td>{$row['end_time']|timestamp2date}</td>
+                                <td>{$row['update_time']|timestamp2date}</td>
+                                <td>{$row['status']|get_status_title}</td>
+                                <!--<td>{$row['is_on_sale']}</td>-->
+                                <!--<td>
+                                    <select class="quick-edit-select" data-model="Card" data-id="{$row['id']}" data-field="is_integral" data-focus-value="{$row['is_integral']}" onchange="quick_edit_select_change(this)">
+                                        <option value="1" >可用</option>
+                                        <option value="0" >不可用</option>
+                                    </select>
+                                </td>-->
+                                <!--<td>
+                                    <select class="quick-edit-select" data-model="Card" data-id="{$row['id']}" data-field="is_best" data-focus-value="{$row['is_best']}" onchange="quick_edit_select_change(this)">
+                                        <option value="1">推荐</option>
+                                        <option value="0">不推荐</option>
+                                    </select>
+                                </td>-->
+                                <td>
+                                    <if condition ="in_array($row['type_id'],$spec_types)">
+                                    <!--<a href="{:U('Card/products',array('id'=>$row['id']))}" title="货品列表" class="">
+                                        <span class="label label-primary label-primary-hover">货品列表</span></a>&nbsp;-->
+                                    </if>
+                                    <a href="{:U('Card/update',array('model'=>'Card','id'=>$row['id']))}" title="编辑" class="">
+                                        <span class="label label-success label-success-hover">编辑</span></a>&nbsp;
+                                    <if condition="$row['status'] eq 0 or $row['status'] eq 1">
+                                        <a href="{:U('Card/forbidResume',array('model'=>'Card','ids'=>$row['id'],'field'=>'status','value'=>abs(1-$row['status'])))}" title="{$row['status']|show_status_name}" class="ajax-get">
+                                        <span class="label {$row['status']|show_status_label}">{$row['status']|show_status_name}</span></a>&nbsp;
+                                    </if>
+                                    <a href="{:U('Card/delete',array('model'=>'Card','ids'=>$row['id']))}" title="删除" class="confirm ajax-get">
+                                        <span class="label label-important label-important-hover">删除</span></a>
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination alternate">
+                    {$page}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</block>

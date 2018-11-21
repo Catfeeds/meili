@@ -1,0 +1,39 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">输入维修金额</div>
+    <div class="right"></div>
+</block>
+
+<block name="content">
+    <div class="page-content">
+        <div class="homepage">
+            <div class="feedback">
+                <form action="{:U('OrderInfo/repairPrepay',array('order_id'=>$_REQUEST['order_id']))}" method="post" class="form-horizontal">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td>
+                            <input type="text" name="order_amounts" class="txt" placeholder="请输入维修金额">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="submit" value="提交" class="btn submit-btn"></td>
+                    </tr>
+                </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script src="__STATIC__/validform_5.3.2/Validform_v5.3.2_min.js"></script>
+    <script src="__JS__/validform.js"></script>
+    <script src="__JS__/common.js"></script>
+    <script>
+        $(function() { });
+        //提示弹出层 回调方法
+        function success_callback() {}
+        function error_callback() {}
+    </script>
+</block>

@@ -1,0 +1,45 @@
+<extend name="Public/base" />
+
+<block name="main">
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+
+                <div class="widget-title widget-title-search list-widget-title">
+                </div>
+
+                <div class="widget-content no-padding no-border">
+                    <table class="table table-bordered table-striped reset-checkbox">
+                        <thead>
+                        <tr>
+                            <!--<th><input type="checkbox" id="title-checkbox" name="title-checkbox" class="check-all"/>--><!--<i class="icon-resize-vertical"></i>--></th>
+                            <th>ID</th>
+                            <th>账号信息</th>
+                            <th>签到IP</th>
+                            <th>签到时间</th>
+                        </tr>
+                        </thead>
+                        <tbody class="tbody">
+                        <empty name="list"><tr><td colspan="30">Aho！没有查询结果！！</td></tr></empty>
+                        <volist name="list" id="row">
+                            <tr>
+                                <!--<td><input type="checkbox" name="ids[]" value="{$row['id']}" class="ids"/></td>-->
+                                <td>{$row['id']}</td>
+                                <td>{$row['account']}--{$row['nickname']}</td>
+                                <td>{$row['sign_in_ip']|long2ip}</td>
+                                <td>{$row['sign_in_time']|timestamp2date}</td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination alternate">
+                    {$page}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</block>

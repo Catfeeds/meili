@@ -1,0 +1,47 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">登录</div>
+    <div class="right"><a href="{:U('Passport/register/step/1')}" class="item-link">注册</a></div>
+</block>
+<block name="content">
+    <div class="page-content">
+        <div class="content-block">
+            <div class="content-block-inner">
+                <div class="login_logo"><a href="/"><img src="__IMG__/logo.png"></a></div>
+                <form action="{:U('Passport/login')}" method="post" class="form-horizontal">
+                <div class="login_top">
+                    <p class="a">
+                        <input type="number" name="account" placeholder="请输入手机号" class="text text1" datatype="m" nullmsg="请输入手机号！" errormsg="手机号格式不正确！">
+                    </p>
+                    <p class="a">
+                        <input type="password" name="password" placeholder="请输入密码" class="text text2" datatype="s6-18" nullmsg="请输入密码！" errormsg="密码长度在6-18位！">
+                        <i><a href="{:U('Passport/findPass/step/1')}">忘记密码?</a></i>
+                    </p>
+                </div>
+                <div class="login_bot">
+                    <input type="submit" value="立即登录" class="btn do-login submit-btn">
+                </div>
+                </form>
+                <div class="third">
+                    <p><span>合作账号登录</span></p>
+                    <ul class="clearfix">
+                        {:hook('interconnect')}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script src="__STATIC__/validform_5.3.2/Validform_v5.3.2_min.js"></script>
+    <script src="__JS__/validform.js"></script>
+    <script src="__JS__/common.js"></script>
+    <script>
+        $(function() { });
+        //提示弹出层 回调方法
+        function success_callback() {}
+        function error_callback() {}
+    </script>
+</block>

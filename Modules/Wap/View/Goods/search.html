@@ -1,0 +1,48 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="{:U('Goods/goodsList')}" class="back link"> <i class="icon icon-back"></i></a></div>
+    <form action="{:U('Goods/goodsList')}" method="post" autocomplete="off" class="search_list">
+    <div class="center sliding">
+        <span class="sousou">
+            <input type="text" name="keywords" class="text7" placeholder="请输入商品名称">
+            <input type="button" value="" class="btn1">
+        </span>
+    </div>
+    <div class="right"><input type="submit" value="搜索" class="btn"></div>
+    </form>
+</block>
+<block name="content">
+    <div class="page-content">
+        <div class="search">
+            <h1>推荐搜索</h1>
+            <div class="content tag">
+                <volist name="hots" id="hot">
+                    <a href="{:U('Goods/goodsList', array('keywords'=>$hot['keywords']))}">{$hot['keywords']}</a>
+                </volist>
+            </div>
+            <h2>搜索历史</h2>
+            <div class="content">
+                <ul>
+                    <volist name="history" id="his">
+                        <li><a href="{:U('Goods/goodsList', array('keywords'=>$his))}">{$his}</a></li>
+                    </volist>
+                </ul>
+                <if condition="!empty($history)">
+                <p><a href="{:U('Goods/clearHistory')}" title="清空搜索历史" class="ajax-get">清空搜索历史</a></p>
+                </if>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript" src="__JS__/common.js"></script>
+    <script>
+        $(function() {
+            $(".none").css("height",$(window).height()-196);
+        })
+        //提示弹出层 回调方法
+        function success_callback() {window.location.reload();}
+        function error_callback() {}
+    </script>
+</block>

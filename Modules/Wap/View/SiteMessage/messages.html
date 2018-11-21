@@ -1,0 +1,39 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">消息</div>
+    <div class="right"></div>
+</block>
+<block name="content">
+    <div class="page-content infinite-scroll">
+        <div class="dope">
+            <ul class="scroll-append-box">
+
+            </ul>
+        </div>
+        <include file="Public:scroll_loader"/>
+    </div>
+</block>
+<block name="script">
+    <script>
+        var target = '{:U("SiteMessage/getMessages")}';
+        function getHtml(data) {
+            var html = '<a href="{:U(\'SiteMessage/detail\')}/site_msg_id/'+data['site_msg_id']+'"><li> ' +
+            '<span><em class="fl">【'+data['subject']+'】</em><em class="fr">'+data['create_time']+'</em>';
+             if(data['status'] == 0) {
+                 html += '<i></i>';
+             }
+            html += '</span> ' +
+            '<p>'+data['content']+'</p> ' +
+            '</li></a>';
+
+            return html;
+        }
+        //创建ajax data参数
+        function getQuery() {
+            return {p:p};
+        }
+    </script>
+    <script type="text/javascript" src="__JS__/scroll.js"></script>
+</block>

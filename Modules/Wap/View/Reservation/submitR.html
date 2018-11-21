@@ -1,0 +1,101 @@
+<extend name="Public/base" />
+
+<block name="top">
+        <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+        <div class="center sliding">
+            <if condition="$_REQUEST['type'] eq 1">家装服务</if>
+            <if condition="$_REQUEST['type'] eq 2">维修安装</if>
+        </div>
+        <div class="right"></div>
+</block>
+<block name="content">
+    <div class="page-content" style="background:#fff">
+        <form action="{:U('Reservation/submitR')}" method="post" class="form-horizontal">
+            <input type="hidden" name="type" value="{$_REQUEST['type']}">
+        <div class="site consignee">
+            <ul>
+                <li>
+                    <span class="fl">所在地区：</span>
+                    <span class="fr">
+                        <a href="javascript:void(0)" class="item-link area-text" onclick="getArea(223,2,'常州',3)">常州</a>
+                    </span>
+                </li>
+				<input type="hidden" name="m_id" value="{$_REQUEST['m_id']}" >
+                <input type="hidden" name="province_name" value="江苏" datatype="s" nullmsg="请选择省！" errormsg="请选择省！">
+                <input type="hidden" name="city_name" value="常州" datatype="s" nullmsg="请选择市！" errormsg="请选择市！">
+                <input type="hidden" name="area_name" value="{$row['area_name']}" datatype="s" nullmsg="请选择区！" errormsg="请选择区！">
+                <li>
+                    <if condition="$_REQUEST['type'] eq 1">
+					<span class="fl">小区名字：</span>
+					<else />
+					<span class="fl">详细地址：</span>
+					</if>
+                    <span class="fr">
+                        <input type="text" name="address_detail" class="text" datatype="s" nullmsg="请输入小区名称！" errormsg="请输入小区名称！">
+                    </span>
+                </li>
+                <if condition="$_REQUEST['type'] eq 1">
+                <li>
+                    <span class="fl">房屋面积：</span>
+                    <span class="fr">
+                        <input type="text" name="acreage" class="text" datatype="s" nullmsg="请输入房屋面积！" errormsg="请输入房屋面积！">
+                    </span>
+                </li>
+                </if>
+                <if condition="$_REQUEST['type'] eq 2">
+				 <li>
+                    <span class="fl">维修类型：</span>
+                    <span class="fr">
+                        <a href="javascript:void(0)" class="item-link cat-text" onclick="getCat(0,0,'请选择类型')" style="color:#000">请选择类型</a>
+						<input type="hidden" name="master_cat" value="" datatype="n" nullmsg="请选择维修类型！" errormsg="请选择维修类型！">
+                    </span>
+                </li>
+                    <li>
+                        <span class="fl">维修说明：</span>
+                    <span class="fr">
+                        <input type="text" name="instruction" class="text" datatype="s" nullmsg="请输入维修说明！" errormsg="请输入维修说明！">
+                    </span>
+                    </li>
+                </if>
+                <li>
+                    <span class="fl">联系人：</span>
+                    <span class="fr">
+                        <input type="text" name="contacts" class="text" datatype="s" nullmsg="请联系人姓名！" errormsg="请联系人姓名！">
+                    </span>
+                </li>
+                <li>
+                    <span class="fl">联系电话：</span>
+                    <span class="fr">
+                        <input type="text" name="mobile" class="text" datatype="s" nullmsg="请输入联系电话！" errormsg="请输入联系电话！">
+                    </span>
+                </li>
+				<if condition="$_REQUEST['type'] eq 2">
+				<li>
+                    <span class="fl">指定师傅：</span>
+                    <span class="fr">
+                        <input type="text" name="master_mobile" class="text">
+                    </span>
+                </li>
+				</if>
+            </ul>
+            <p><a href="javascript:void(0)"><input type="submit" value="提交预约" class="btn submit-btn"></a></p>
+        </div>
+        </form>
+        <div class="add_city area-list" style="background:#fff;display: none"></div>
+		<div class="add_cat cat-list" style="background:#fff;display: none"></div>
+
+    </div>
+    <include file="Public:area"/>
+	<include file="Public:master_cat"/>
+ </block>
+<block name="script">
+    <script src="__STATIC__/validform_5.3.2/Validform_v5.3.2_min.js"></script>
+    <script src="__JS__/validform.js"></script>
+    <script src="__JS__/common.js"></script>
+    <script>
+        $(function() { });
+        //提示弹出层 回调方法
+        function success_callback() {window.location.href = '/'}
+        function error_callback() {}
+    </script>
+</block>

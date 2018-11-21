@@ -1,0 +1,104 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">个人信息</div>
+    <div class="right"></div>
+</block>
+<block name="content">
+    <div class="page-content">
+        <div class="homepage">
+            <div class="portrait">
+                <div class="pt_head clearfix">
+                    <span class="fl">头像</span>
+                    <span class="fr ig"><a href="#" class="item-link"><img src="{$info['head']}"></a></span>
+                </div>
+                <hr class="comment_line">
+                <ul>
+                    <li><a href="{:U('Center/modifyInfo')}" class="item-link"><span class="fl">昵称</span><span class="fr">{$info['nickname']}</span></a></li>
+                    <li><a href="{:U('Center/modifyPass')}" class="item-link"><span class="fl">修改登录密码</span><span class="fr"></span></a></li>
+                    <li><a href="{:U('Center/modifyAccount/step/1')}" class="item-link"><span class="fl">已绑定手机号码</span><span class="fr">{$info["account"],'****',3,4|substr_replace}</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script src='__JS__/webuploader.js'></script>
+    <link rel="stylesheet" href="__CSS__/webuploader.css">
+    <script>
+        $(document).ready(function(){
+            var uploader = WebUploader.create({
+                // 选完文件后，是否自动上传。
+                auto: true,
+                // swf文件路径
+                swf: '__PUBLIC__/webuploader/Uploader.swf',
+                // 文件接收服务端。
+                server: '{:U("Center/modifyHead")}',
+                // 选择文件的按钮。可选。
+                // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+                pick: {
+                    id: '.ig',
+                    multiple : false
+                },
+//      fileSingleSizeLimit:500*1024,
+                // 只允许选择图片文件。
+                accept: {
+                    title: 'Images',
+                    extensions: 'gif,jpg,jpeg,bmp,png',
+                    mimeTypes: 'image/*'
+                },
+                duplicate: true
+            });
+
+            // 当有文件添加进来的时候
+            uploader.on( 'fileQueued', function( file ) {
+                $('.ig img').attr('src','__IMG__/loading.gif');
+//            var $li = $(
+//                            '<div id="' + file.id + '" class="file-item thumbnail">' +
+//                            '<img id="img_crop">' +
+//                            '</div>'
+//                    ),
+//                    $img = $li.find('img');
+//
+//            // 创建缩略图
+//            // 如果为非图片文件，可以不用调用此方法。
+//            // thumbnailWidth x thumbnailHeight 为 100 x 100
+//            uploader.makeThumb( file, function( error, src ) {
+//                if ( error ) {
+//                    $img.replaceWith('<span>不能预览</span>');
+//                    return;
+//                }
+//                $img.attr( 'src', src );
+//                $('#pic_show #img').html( $img );
+//
+//                $("html,body").animate({scrollTop:0});
+//                crop();         //裁切上传图片
+//            },1,1);
+//            $('.main').hide();
+//            $('#pic_show').show();
+//            cover = $('input[name="m_head"]').val();
+            });
+
+            // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+            uploader.on( 'uploadSuccess', function( file,data ) {
+                //alert(data.head);
+                $('.ig img').attr('src',data.head);
+                //$('input[name="head_pic"]').val(data.file);
+                //$('.ig img').attr('src',data.url);
+                //$('input[name="img_w"]').val($('#img_crop').css('width'));
+                //$('input[name="img_h"]').val($('#img_crop').css('height'));
+            });
+
+            // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+            uploader.on( 'uploadProgress', function( file,data ) {
+                $('.ig img').attr('src','__IMG__/loading.gif');
+                //<img src="__WEBPUBLIC__/Wap/images/default_head_1.png">
+                //alert(0);
+                //$('input[name="head_pic"]').val('111');
+                //$('input[name="img_w"]').val($('#img_crop').css('width'));
+                //$('input[name="img_h"]').val($('#img_crop').css('height'));
+            });
+        });
+    </script>
+</block>

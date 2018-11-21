@@ -1,0 +1,170 @@
+<extend name="Public/base" />
+
+<block name="main">
+    <!--总计部分 start-->
+    <div class="row-fluid">
+        <div class="span12 center">
+            <ul class="stat-boxes">
+                {:hook('statistics',array('is_first'=>1,'stat_type'=>1,'peity'=>'bar-success','title_text'=>'会员总数','title_en_text'=>'members','data'=>$total_stat['users'],'default'=>0))}
+            </ul>
+        </div>
+    </div>
+    <!--总计部分 end-->
+
+    <div class="row-fluid">
+        <div class="widget-box">
+            <ul class="nav nav-tabs">
+                <li <eq name="_REQUEST['unit']" value="d">class="active"</eq>>
+                <a href="{:U('Statistics/members',array('unit'=>'d'))}" data-toggle="">“天”统计报表</a>
+                </li>
+                <li <eq name="_REQUEST['unit']" value="m">class="active"</eq>>
+                <a href="{:U('Statistics/members',array('unit'=>'m'))}" data-toggle="">“月”统计报表</a>
+                </li>
+                <li <eq name="_REQUEST['unit']" value="q">class="active"</eq>>
+                <a href="{:U('Statistics/members',array('unit'=>'q'))}" data-toggle="">“季度”统计报表</a>
+                </li>
+                <li <eq name="_REQUEST['unit']" value="y">class="active"</eq>>
+                <a href="{:U('Statistics/members',array('unit'=>'y'))}" data-toggle="">“年”统计报表</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 以天为单位统计  start-->
+    <if condition="$_REQUEST['unit'] eq 'd'">
+        <!--日期选择部分 start-->
+        <div class="row-fluid">
+            <div class="widget-title widget-title-search list-widget-title">
+                <span style="color: #666"><i class="fa fa-info-circle"></i> 您可以选择右侧时间来查看某时间段内的统计</span>
+                <form action="{:U('Statistics/members/unit/d')}" method="post" class="form">
+                    <div class="input-daterange">
+                        <input type="text" name="start_date" value="{$_REQUEST['start_date']}" class="text-width-10" placeholder="起始时间" readonly>
+                        --
+                        <input type="text" name="end_date" value="{$_REQUEST['end_date']}" class="text-width-10" placeholder="结束时间" readonly>
+                        <button class="btn btn-inverse">查看</button>
+                    </div>
+                </form>
+            </div>
+            <script>
+                $(function(){
+                    $('.input-daterange').datepicker({keyboardNavigation: false, forceParse: false, autoclose: true});
+                })
+            </script>
+        </div>
+        <!--日期选择部分 end-->
+
+        <!--统计图部分 start-->
+        <div class="row-fluid">
+            {:hook('statistics',array('is_first'=>1,'chart_id'=>'line-container','chart_type'=>'spline','chart_data'=>$day_users_quantity_line,'title_icon'=>'line-chart','title_text'=>'用户数量统计','y_title_text'=>'quantity (EA)'))}
+            {:hook('statistics',array('chart_id'=>'pie-container','chart_type'=>'pie','chart_data'=>$payment_pie,'margin'=>1,'title_icon'=>'pie-chart','title_text'=>'支付方式比例统计','series_name'=>'各支付方式比例'))}
+        </div>
+        <!--统计图部分 end-->
+    </if>
+    <!-- 以天为单位统计  end-->
+
+    <!-- 以月为单位统计  start-->
+    <if condition="$_REQUEST['unit'] eq 'm'">
+        <!--日期选择部分 start-->
+        <div class="row-fluid">
+            <div class="widget-title widget-title-search list-widget-title">
+                <span style="color: #666"><i class="fa fa-info-circle"></i> 您可以选择右侧时间来查看某时间段内的统计</span>
+                <form action="{:U('Statistics/members/unit/m')}" method="post" class="form">
+                    <div class="date-group date month float-left">
+                        <input type="text" name="start_date" class="text-width-10 date-group-addon" value="{$_REQUEST['start_date']}" placeholder="起始月份" readonly>
+                        --&nbsp;
+                    </div>
+                    <div class="date-group date month float-left" style="width:184px;">
+                        <input type="text" name="end_date" class="text-width-10 date-group-addon" value="{$_REQUEST['end_date']}" placeholder="结束月份" readonly>
+                    </div>
+                    <button class="btn btn-inverse">查看</button>
+                </form>
+            </div>
+            <script>
+                $(function(){
+                    $('.date-group.month').datepicker({minViewMode: 1, keyboardNavigation: false, forceParse: false, autoclose: true, todayHighlight: true});
+                })
+            </script>
+        </div>
+        <!--日期选择部分 end-->
+
+        <!--统计图部分 start-->
+        <div class="row-fluid">
+
+        </div>
+        <!--统计图部分 end-->
+    </if>
+    <!-- 以月为单位统计  end-->
+
+    <!-- 以季度为单位统计  start-->
+    <if condition="$_REQUEST['unit'] eq 'q'">
+        <!--日期选择部分 start-->
+        <div class="row-fluid">
+            <div class="widget-title widget-title-search list-widget-title">
+                <span style="color: #666"><i class="fa fa-info-circle"></i> 您可以选择右侧时间来查看某时间段内的统计</span>
+                <form action="{:U('Statistics/members/unit/q')}" method="post" class="form">
+                    <div class="date-group date year float-left">
+                        <input type="text" name="start_date" class="text-width-10 date-group-addon" value="{$_REQUEST['start_date']}" placeholder="起始年份" readonly>
+                        --&nbsp;
+                    </div>
+                    <div class="date-group date year float-left" style="width:184px;">
+                        <input type="text" name="end_date" class="text-width-10 date-group-addon" value="{$_REQUEST['end_date']}" placeholder="结束年份" readonly>
+                    </div>
+                    <button class="btn btn-inverse">查看</button>
+                </form>
+            </div>
+            <script>
+                $(function(){
+                    $('.date-group.year').datepicker({minViewMode: 2, keyboardNavigation: false, forceParse: false, autoclose: true, todayHighlight: true});
+                })
+            </script>
+        </div>
+        <!--日期选择部分 end-->
+
+        <!--统计图部分 start-->
+        <div class="row-fluid">
+
+        </div>
+        <!--统计图部分 end-->
+    </if>
+    <!-- 以季度为单位统计  end-->
+
+    <!-- 以年为单位统计  start-->
+    <if condition="$_REQUEST['unit'] eq 'y'">
+        <!--日期选择部分 start-->
+        <div class="row-fluid">
+            <div class="widget-title widget-title-search list-widget-title">
+                <span style="color: #666"><i class="fa fa-info-circle"></i> 您可以选择右侧时间来查看某时间段内的统计</span>
+                <form action="{:U('Statistics/members/unit/y')}" method="post" class="form">
+                    <div class="date-group date year float-left">
+                        <input type="text" name="start_date" class="text-width-10 date-group-addon" value="{$_REQUEST['start_date']}" placeholder="起始年份" readonly>
+                        --&nbsp;
+                    </div>
+                    <div class="date-group date year float-left" style="width:184px;">
+                        <input type="text" name="end_date" class="text-width-10 date-group-addon" value="{$_REQUEST['end_date']}" placeholder="结束年份" readonly>
+                    </div>
+                    <button class="btn btn-inverse">查看</button>
+                </form>
+            </div>
+            <script>
+                $(function(){
+                    $('.date-group.year').datepicker({minViewMode: 2, keyboardNavigation: false, forceParse: false, autoclose: true, todayHighlight: true});
+                })
+            </script>
+        </div>
+        <!--日期选择部分 end-->
+
+        <!--统计图部分 start-->
+        <div class="row-fluid">
+
+        </div>
+        <!--统计图部分 end-->
+    </if>
+    <!-- 以年为单位统计  end-->
+</block>
+
+<block name="script">
+    <!--日历 start-->
+    <link href="__STATIC__/plugins/datepicker/datepicker3.css" rel="stylesheet">
+    <script src="__STATIC__/plugins/datepicker/bootstrap-datepicker.js"></script>
+    <!--日历 end-->
+</block>

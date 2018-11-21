@@ -1,0 +1,169 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">发表评价</div>
+    <div class="right"><!--<a href="#">发表</a>--></div>
+</block>
+
+<block name="content">
+    <div class="page-content">
+        <form action="{:U('OrderInfo/comment')}" method="post" class="form-horizontal">
+            <input type="hidden" value="{$_REQUEST['order_id']}" name="order_id">
+        <div class="assess">
+            <volist name="goods_list" id="goods">
+            <!--start-->
+            <div class="list">
+                <div class="share_list">
+                    <div class="list">
+                        <div class="clearfix">
+                            <div class="left"><span><img src="{$goods['cover']}"></span></div>
+                            <div class="right">
+                                <p>{$goods['goods_name']}</p>
+                                <span>￥{$goods['price']}</span> <em><i class="fl">{$goods['goods_attr_desc']}</i><i class="fr">x{$goods['number']}</i></em>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" value="{$goods['goods_id']}" name="goods_id[]">
+                </div>
+                <div class="stars">
+                    <p><em>总体评价</em>
+                        <span class="level">
+                            <i class="leveltit" cjmark=""></i>
+                            <i class="leveltit" cjmark=""></i>
+                            <i class="leveltit" cjmark=""></i>
+                            <i class="leveltit" cjmark=""></i>
+                            <i class="leveltit" cjmark=""></i>
+                        </span>
+                        <input type="hidden" value="5" class="level" name="level[]">
+                    </p>
+                </div>
+                <div class="assess_txt">
+                    <textarea name="content[]" class="textarea" placeholder="亲，说点什么吧！对他人有帮助"></textarea>
+                </div>
+                <div class="c_photo">
+                    <p>亲，您可上传4张图片哦!</p>
+                    <div class="pn clearfix">
+                        <div class="c_pic">
+                            <ul class="clearfix file-box-{$goods['goods_id']}">
+
+                            </ul>
+                        </div>
+                        <div class="c_btn">
+                            <span class="pic{$goods['goods_id']}"><input type="button" value="" class="btn3"></span>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" value="" class="pictures-input{$goods['goods_id']}" name="pictures[]">
+            </div>
+            <!--end-->
+                <script>
+                    $(document).ready(function(){
+                        var uploader{$goods["goods_id"]} = WebUploader.create({
+                            // 选完文件后，是否自动上传。
+                            auto: true,
+                            // swf文件路径
+                            swf: '__PUBLIC__/webuploader/Uploader.swf',
+                            // 文件接收服务端。
+                            server: '{:U("UpDownLoad/upload", array("save_path"=>"Goods"))}',
+                            //提交信息
+                            formData: {goods_id:'{$goods["goods_id"]}'},
+                            // 选择文件的按钮。可选。
+                            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+                            pick: {
+                                id: '.pic{$goods["goods_id"]}',
+                                multiple : false
+                            },
+                            // 只允许选择图片文件。
+                            accept: {
+                                title: 'Images',
+                                extensions: 'gif,jpg,jpeg,bmp,png',
+                                mimeTypes: 'image/*'
+                            },
+                            duplicate: true
+                        });
+                        // 当有文件添加进来的时候
+                        uploader{$goods["goods_id"]}.on( 'fileQueued', function( file ) {
+                            var ids = [];
+                            $(".file-box-{$goods['goods_id']}").find('li').each(function(){
+                                ids.push($(this).attr('val'));
+                            });
+                            if(ids.length > 3) {
+                                uploader{$goods["goods_id"]}.cancelFile( file ); return false;
+                            }
+                            $('.file-box-{$goods["goods_id"]}').append('<li class="loading"><span><i><img src="__IMG__/loading.gif"></i></span></li>');
+                        });
+                        // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+                        uploader{$goods["goods_id"]}.on( 'uploadSuccess', function( file,data ) {
+                            if(data.status){
+                                $('.loading').remove();
+                                var html = '<li val="'+data.id+'">' +
+                                        '<span><i><img src="'+data.abs_url+'"></i><em onclick="removeFile{$goods["goods_id"]}(this)"><img src="__IMG__/del.png"></em></span>' +
+                                        '</li>';
+                                $('.file-box-{$goods["goods_id"]}').append(html);
+                                setFileIds{$goods["goods_id"]}();
+                            } else {
+                                showPop(data.info, 'error', 1500, '');
+                            }
+                        });
+                        // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+                        uploader{$goods["goods_id"]}.on( 'uploadProgress', function( file,data ) {
+                            //$('.file-box-{$goods["goods_id"]}').append('<li class="loading"><span><i><img src="__IMG__/loading.gif"></i></span></li>');
+                        });
+                    });
+                    //删除文件
+                    function removeFile{$goods["goods_id"]}(o){
+                        $(o).parent().parent().remove();
+                        setFileIds{$goods["goods_id"]}();
+                    }
+                    //重置ids
+                    function setFileIds{$goods["goods_id"]}(){
+                        var ids = [];
+                        $(".file-box-{$goods['goods_id']}").find('li').each(function(){
+                            ids.push($(this).attr('val'));
+                        });
+                        if(ids.length > 0)
+                            $(".pictures-input{$goods['goods_id']}").val(ids.join(','));
+                        else
+                            $(".pictures-input{$goods['goods_id']}").val('');
+                    }
+                </script>
+            </volist>
+        </div>
+            <p><a href="javascript:void(0)">
+                <input type="submit" value="提交评价" class="btn submit-btn"></a>
+            </p>
+        </form>
+    </div>
+</block>
+<block name="script">
+    <script src='__JS__/webuploader.js'></script>
+    <link rel="stylesheet" href="__CSS__/webuploader.css">
+    <script src="__STATIC__/validform_5.3.2/Validform_v5.3.2_min.js"></script>
+    <script src="__JS__/validform.js"></script>
+    <script src="__JS__/common.js"></script>
+    <script>
+        $(function() { });
+        //提示弹出层 回调方法
+        function success_callback() {}
+        function error_callback() {}
+    </script>
+    <script>
+        $(function() {
+            $(document).on('mouseover','i[cjmark]',function(){
+                var num = $(this).index();
+                var pmark = $(this).parents('.stars');
+                var mark = pmark.prevAll('input');
+                if(mark.prop('checked')) return false;
+                var list = $(this).parent().find('i');
+                for(var i=0;i<=num;i++){
+                    list.eq(i).attr('class','leveltit');
+                }
+                for(var i=num+1,len=list.length-1;i<=len;i++){
+                    list.eq(i).attr('class','levelbot');
+                }
+                $(this).parent().next().val([num+1]);
+            });
+        })
+    </script>
+</block>

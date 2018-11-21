@@ -1,0 +1,59 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"></div>
+    <div class="center sliding">
+        <span class="sousou">
+            <a href="{:U('Goods/search')}">
+                <input type="text" class="text7" placeholder="请输入商品名称">
+                <input type="button" value="" class="btn1">
+            </a>
+        </span>
+    </div>
+    <div class="right"><!--<a href="#" class="item-link">消息<i></i></a>--></div>
+</block>
+<block name="content">
+    <div class="page-content infinite-scroll" style="position:static">
+        <div class="index_find index_fb">
+            <div class="row">
+                <div class="col-auto"><a href="{:U('Goods/goodsList', array('goods_cate_id'=>0))}" <if condition="empty($_REQUEST['goods_cate_id'])">class="focus"</if>>全部</a></div>
+                <volist name="cates" id="cate">
+                    <div class="col-auto"><a href="{:U('Goods/goodsList', array('goods_cate_id'=>$cate['goods_cate_id']))}" <if condition="$_REQUEST['goods_cate_id'] eq $cate['goods_cate_id']">class="focus"</if>>{$cate['name']}</a></div>
+                </volist>
+            </div>
+            <div class="clearfix scroll-append-box">
+
+            </div>
+        </div>
+        <include file="Public:scroll_loader"/>
+        <div class="g_cart"><a href="{:U('Cart/cartList')}" class="item-link"><img src="__IMG__/gwc_01.png"></a></div>
+        <div class="footer">
+            <ul>
+                <li><a href="/"><i><img src="__IMG__/icon_01.png"></i><span>首页</span></a></li>
+                <li class="focus"><a href="{:U('Goods/goodsList')}"><i><img src="__IMG__/icon_02_bak.png"></i><span>商城</span></a></li>
+                <li><a href="{:U('Center/index')}"><i><img src="__IMG__/icon_03.png"></i><span>我的</span></a></li>
+            </ul>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script>
+        var target = '{:U("Goods/getGoodsList")}', goods_cate_id = '{$_REQUEST["goods_cate_id"]|default=0}';
+        function getHtml(data) {
+            return '<div class="list">' +
+            '<div class="all">' +
+            '<div class="content">' +
+            '<div class="pic"><a href="{:U(\'Goods/detail\')}/goods_id/'+data['goods_id']+'" class="item-link"><img src="'+data['cover']+'"></a></div>' +
+            '<div class="about">'+data['goods_name']+'</div>' +
+            '<div class="price"><em>￥'+data['price']+'</em></div>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+        }
+        //创建ajax data参数
+        function getQuery() {
+            return {p:p,goods_cate_id:goods_cate_id};
+        }
+    </script>
+    <script type="text/javascript" src="__JS__/scroll.js"></script>
+</block>

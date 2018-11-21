@@ -1,0 +1,95 @@
+<extend name="Public/base" />
+
+<block name="main">
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+
+                <div class="widget-title widget-title-search list-widget-title">
+                    <button class="btn btn-success href" url="{:U('Shop/add')}" target-form="ids">新增</button>&nbsp;
+                    <button class="btn btn-inverse ajax-post" url="{:U('Shop/forbidResume',array('model'=>'Shop','field'=>'status','value'=>0))}" target-form="ids">禁用</button>&nbsp;
+                    <button class="btn btn-info ajax-post" url="{:U('Shop/forbidResume',array('model'=>'Shop','field'=>'status','value'=>1))}" target-form="ids">启用</button>&nbsp;
+                    <button class="btn btn-danger confirm ajax-post" url="{:U('Shop/delete',array('model'=>'Shop'))}" target-form="ids">删除</button>&nbsp;
+
+                    <form action="{:U('Shop/index')}" method="post" class="form">
+                        <input type="text" name="name" value="{$_REQUEST['name']}" placeholder="店铺名称">
+                        {$select}
+                        <button class="btn btn-inverse">查询</button>
+                    </form>
+                </div>
+
+                <div class="widget-content no-padding no-border">
+                    <table class="table table-bordered table-striped with-check reset-checkbox">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="title-checkbox" name="title-checkbox" class="check-all"/><!--<i class="icon-resize-vertical"></i>--></th>
+                            <th>ID</th>
+                            <th>名称</th>
+                            <th>Logo</th>
+                            <th>简述</th>
+                            <th>联系人</th>
+                            <th>联系电话</th>
+                            <th>省市区/县</th>
+                            <th>详细地址</th>
+                            <th>更新时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="tbody">
+                        <empty name="list"><tr><td colspan="30">Aho！没有查询结果！！</td></tr></empty>
+                        <volist name="list" id="row">
+                            <tr>
+                                <td><input type="checkbox" name="ids[]" value="{$row['id']}" class="ids"/></td>
+                                <td>{$row['id']}</td>
+                                <td>{$row['name']}</td>
+                                <td><img src="{$row['logo']}" width="30"></td>
+                                <td>{$row['short']|msubstr=0,7,'utf-8'}</td>
+                                <td>{$row['contacts']}</td>
+                                <td>{$row['mobile']}</td>
+                                <td>{$row['all_address']}</td>
+                                <td>{$row['address']|msubstr=0,7,'utf-8'}</td>
+                                <td>{$row['update_time']|timestamp2date}</td>
+                                <td>{$row['status']|get_status_title}</td>
+                                <!--<td>{$row['is_on_sale']}</td>-->
+                                <!--<td>
+                                    <select class="quick-edit-select" data-model="Shop" data-id="{$row['id']}" data-field="is_integral" data-focus-value="{$row['is_integral']}" onchange="quick_edit_select_change(this)">
+                                        <option value="1" >可用</option>
+                                        <option value="0" >不可用</option>
+                                    </select>
+                                </td>-->
+                                <!--<td>
+                                    <select class="quick-edit-select" data-model="Shop" data-id="{$row['id']}" data-field="is_best" data-focus-value="{$row['is_best']}" onchange="quick_edit_select_change(this)">
+                                        <option value="1">推荐</option>
+                                        <option value="0">不推荐</option>
+                                    </select>
+                                </td>-->
+                                <td>
+                                    <if condition ="in_array($row['type_id'],$spec_types)">
+                                    <!--<a href="{:U('Shop/products',array('id'=>$row['id']))}" title="货品列表" class="">
+                                        <span class="label label-primary label-primary-hover">货品列表</span></a>&nbsp;-->
+                                    </if>
+                                    <a href="{:U('Shop/update',array('model'=>'Shop','id'=>$row['id']))}" title="编辑" class="">
+                                        <span class="label label-success label-success-hover">编辑</span></a>&nbsp;
+                                    <if condition="$row['status'] eq 0 or $row['status'] eq 1">
+                                        <a href="{:U('Shop/forbidResume',array('model'=>'Shop','ids'=>$row['id'],'field'=>'status','value'=>abs(1-$row['status'])))}" title="{$row['status']|show_status_name}" class="ajax-get">
+                                        <span class="label {$row['status']|show_status_label}">{$row['status']|show_status_name}</span></a>&nbsp;
+                                    </if>
+                                    <a href="{:U('Shop/delete',array('model'=>'Shop','ids'=>$row['id']))}" title="删除" class="confirm ajax-get">
+                                        <span class="label label-important label-important-hover">删除</span></a>
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination alternate">
+                    {$page}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</block>

@@ -1,0 +1,50 @@
+<extend name="Public/base" />
+
+<block name="main">
+
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+                <!--<div class="widget-title">
+                    <span class="icon">
+                        <i class="fa fa-plus"></i>
+                    </span>
+                    <h5>更新信息</h5>
+                </div>-->
+                <br>
+                <div class="widget-content no-padding">
+                    <form class="form-horizontal text-height-27-form" method="post" action="{:U('Bank/update')}">
+                        <input type="hidden" name="model" value="Bank">
+                        <input type="hidden" name="id" value="{$row['id']}">
+                        <div class="control-group">
+                            <label class="control-label">银行名称</label>
+                            <div class="controls">
+                                <input type="text" name="name" value="{$row['name']}" class="text-width-20" maxlength="15">
+                                <span class="help-block">* 银行名称必须</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">银行简称</label>
+                            <div class="controls">
+                                <input type="text" name="short" value="{$row['short']}" class="text-width-20" maxlength="15">
+                                <span class="help-block">* 银行简称必须，如 ICBC ...</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">银行LOGO</label>
+                            <div class="controls">
+                                {:hook('upload',array('is_first'=>1,'unique_sign'=>'logo','field_name'=>'logo','field_value'=>$row['logo'],'save_path'=>'Config'))}
+                                <span class="help-block">* 银行LOGO必须，比例 1:1</span>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>　
+                            <button class="btn btn-info ajax-post" target-form="form-horizontal" type="submit">保 存</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>

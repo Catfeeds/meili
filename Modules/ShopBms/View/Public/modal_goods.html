@@ -1,0 +1,80 @@
+<div id="modal-goods" class="modal-860 modal hide">
+    <div class="modal-header" id="modal-header-goods">
+        <button data-dismiss="modal" class="close" type="button">×</button>
+        <h3>选择商品</h3>
+    </div>
+    <div class="modal-body" id="modal-body-goods">
+        <div class="widget-box" style="margin-top: 0px">
+
+            <div class="widget-title widget-title-search list-widget-title" style="height:36px;">
+                <form action="" method="post" class="form" id="goods-search-form">
+                    <input type="hidden" name="p" id="goods-list-p" value="1">
+                    <input type="hidden" name="spe_id" value="{$_REQUEST['spe_id']}">
+                    <input type="text" name="goods_name" value="{$_REQUEST['goods_name']}" placeholder="商品名称">
+                    {$select}
+                    <input type="button" class="btn btn-inverse" id="goods-search-btn" value="查询">
+                </form>
+            </div>
+
+            <div class="widget-content no-padding no-border">
+                <table class="table table-bordered table-striped with-check reset-checkbox">
+                    <thead>
+                    <tr>
+                        <th><input type="checkbox" id="title-checkbox" name="title-checkbox" class="check-all"/></th>
+                        <th>ID</th>
+                        <th>商品货号</th>
+                        <th>商品名称</th>
+                        <th>库存</th>
+                    </tr>
+                    </thead>
+                    <tbody class="tbody" id="goods-list-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" id="modal-footer-goods">
+        <a class="btn btn-success ajax-post" url="{:U('Special/addSpeGoods',array('spe_id'=>$_REQUEST['spe_id']))}" target-form="goods-ids">确定</a>
+        <a data-dismiss="modal" class="btn" href="javascript:void(0)">取消</a>
+    </div>
+</div>
+<script>
+    var p;
+    $('#goods-search-btn').click(function(){
+        p = 1; getList('html');
+    });
+    $("#modal-body-goods").scroll(function(){
+        if($("#modal-body-goods")[0].scrollTop >= ($("#modal-body-goods")[0].scrollHeight - $("#modal-body-goods").height() - 30)) { p++; getList('append'); }
+    });
+    //获取列表
+    //getList('html');
+    function getList(func) {
+        $('#goods-list-p').val(p); //设置页号
+        var query = $('#goods-search-form').serialize(); //form传输参数序列化
+        $.post('{:U("Goods/ajaxGetGoods")}', query).success(function(data){
+            var html = ''
+            for(var i in data.data) {
+                data.data[i]['mobile'] = (data.data[i]['mobile'] == '') ? '---' : data.data[i]['mobile'];
+                html += '<tr> ' +
+                            //'<td><div class="checker"><span><input type="checkbox" name="goods_ids[]" value="'+data.data[i]['id']+'" class="goods-ids" style="opacity:0;"></span></div></td> ' +
+                            '<td><input type="checkbox" name="goods_ids[]" value="'+data.data[i]['id']+'" class="goods-ids"></td> ' +
+                            '<td>'+data.data[i]['id']+'</td> ' +
+                            '<td>'+data.data[i]['goods_sn']+'</td> ' +
+                            '<td>'+data.data[i]['goods_name']+'</td> ' +
+                            '<td>'+data.data[i]['stock']+'</td> ' +
+                        '</tr>';
+            }
+            if(func == 'html') {
+                $('#goods-list-body').html(html);
+            } else {
+                $('#goods-list-body').append(html);
+            }
+        });
+    }
+    //打开弹出层执行
+    function openGoodsModal(obj) {
+        p = 1; getList('html');
+    }
+    //'<td>' +
+    //    '<a href="javascript:void(0)" title="选择" class="" onclick=""> <span class="label label-success label-success-hover">选择</span></a>' +
+    //'</td> ' +
+</script>

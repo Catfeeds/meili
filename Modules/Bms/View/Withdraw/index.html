@@ -1,0 +1,119 @@
+<extend name="Public/base" />
+
+<block name="main">
+
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+
+                <div class="widget-title widget-title-search list-widget-title">
+                    <ul class="quick-actions-horizontal">
+                        <li>
+                            <a href="javascript:void(0)">
+                                <i class="icon-tag"></i>
+                                <span>已操作总额：￥{$result['total_1']|default=0}</span>
+                                <span>未操作总额：￥{$result['total_2']|default=0}</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <!--<ul class="quick-actions-horizontal">
+                        <li>
+                            <a href="{:U('Withdraw/index',array('status'=>0))}">
+                                <i class="icon-tag"></i>
+                                <span>未处理提现：{$count}</span>
+                            </a>
+                        </li>
+                    </ul>-->
+                    <!--<button class="btn btn-primary" href="#export" data-toggle="modal">导出EXCEL</button>&nbsp;
+                    <button class="btn btn-info href" url="{:U('Withdraw/import')}">批量处理</button>&nbsp;-->
+                    <form action="{:U('Withdraw/index')}" method="post" class="form">
+                        <input type="hidden" name="m_id" value="{$_REQUEST['m_id']}">
+                        <input type="text" name="account" value="{$_REQUEST['account']}" placeholder="用户账号">
+                        <div class="btn-group">
+                            <button type="button" class="btn checked" data-default="--处理状态--"></button>
+                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li data-value="" data-title="--取消选择--"><a href="javascript:void(0)">--取消选择--</a></li>
+                                <li data-value="0" data-title="未处理" <eq name="$_REQUEST['status']" value="0">class="selected"</eq>><a href="javascript:void(0)">未处理</a></li>
+                                <li data-value="1" data-title="已处理" <eq name="$_REQUEST['status']" value="1">class="selected"</eq>><a href="javascript:void(0)">已处理</a></li>
+                            </ul>
+                        </div>
+                        <input type="hidden" name="status" value="{$_REQUEST['status']}">
+                        <button class="btn btn-inverse">查询</button>
+                    </form>
+                </div>
+                <!--导出 start-->
+                <div id="export" class="modal hide">
+                    <div class="modal-header">
+                        <button data-dismiss="modal" class="close" type="button">×</button><h3>导出EXCEL</h3>
+                    </div>
+                    <form action="{:U('Withdraw/export')}" method="post" class="export-form">
+                        <div class="modal-body">
+                            <p>
+                                <input type="checkbox" value="收款账号||card_number" name="fields_data[]" checked/>收款账号　
+                                <input type="checkbox" value="收款户名||open_name" name="fields_data[]" checked/>收款户名　
+                                <input type="checkbox" value="转账金额||amounts" name="fields_data[]" checked/>转账金额　
+                                <input type="checkbox" value="银行名称||bank_name" name="fields_data[]" checked/>银行名称　
+                            </p>
+                        </div>
+                    </form>
+                    <div class="modal-footer">
+                        <a data-dismiss="" class="btn btn-primary confirm-export" href="javascript:void(0)">导出未曾导出过的记录</a>
+                        <a data-dismiss="" class="btn btn-info confirm-export" href="javascript:void(0)">导出未处理的记录</a>
+                        <a data-dismiss="modal" class="btn" href="javascript:void(0)">取消</a>
+                    </div>
+                    <script>
+                        $(function(){
+                            $('.confirm-export').click(function(){ $('.export-form').submit(); })
+                        })
+                    </script>
+                </div>
+                <!--导出 end-->
+                <div class="widget-content no-padding no-border">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>用户账号</th>
+                            <th>银行信息</th>
+                            <th>提现金额</th>
+                            <th>申请时间</th>
+                            <th>处理状态</th>
+                            <th>操作者</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="tbody">
+                        <empty name="list"><tr><td colspan="30">Aho！没有查询结果！！</td></tr></empty>
+                        <volist name="list" id="row">
+                            <tr>
+                                <td>{$row['id']}</td>
+                                <td>{$row['m_account']}</td>
+                                <td>
+                                    <img src="{$row['bank_logo']}" width="24"> {$row['bank_name']}　<!--{$row['card_number']|format_card_number}-->
+                                </td>
+                                <td>￥ {$row['amounts']} 元</td>
+                                <td>{$row['create_time']|date='Y-m-d H:i',###}</td>
+                                <td><eq name="row['status']" value="1"><span class="badge badge-success">已处理</span><else/><span class="badge badge-warning">未处理</span></eq></td>
+                                <td>{$row['admin_account']|default='---'}</td>
+                                <td>
+                                    <a href="{:U('Withdraw/update',array('id'=>$row['id']))}" title="明细" class="">
+                                        <span class="label label-hover">详情</span></a>&nbsp;
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination alternate">
+                    {$page}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</block>

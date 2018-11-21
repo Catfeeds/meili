@@ -1,0 +1,138 @@
+<extend name="Public/base" />
+
+<block name="main">
+
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#tab1">基本信息</a></li>
+                </ul>
+
+                <br>
+                <form class="form-horizontal text-height-27-form" method="post" action="{:U('Bespeak/update')}">
+                    <div class="widget-content tab-content no-padding">
+                        <div id="tab1" class="tab-pane active">
+                            <input type="hidden" name="model" value="Bespeak">
+                            <input type="hidden" name="id" value="{$row['id']}">
+                            <div class="control-group">
+                                <table class="bill-table">
+                                    <tr class="bg-tr">
+                                        <td colspan="5" align="center">预约操作</td>
+                                    </tr>
+                                    <tr>
+                                        <td>操作</td>
+                                        <td colspan="4">
+                                            <input type="hidden" name="ids[]" value="{$row['id']}" class="ids"/>
+                                            <switch name="row['status']">
+                                                <case value="1">
+                                                    <button class="btn btn-success ajax-post confirm" url="{:U('Bespeak/bespeakSussessDo',array('model'=>'Bespeak','id'=>$row['id']))}" target-form="ids">确认服务完成</button>&nbsp;
+                                                </case>
+                                                <default/>
+                                                无
+                                            </switch>
+                                        </td>
+                                    </tr>
+                                    <tr class="bg-tr">
+                                        <td colspan="5" align="center">预约基本信息</td>
+                                    </tr>
+                                    <tr>
+                                        <td width="15%">预约单号</td><td colspan="4">{$row['bespeak_sn']}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>订单状态</td><td colspan="4">
+                                        <eq name="row['status']" value="1"><span style="color: red">已预约</span></eq>
+                                        <eq name="row['status']" value="2"><span style="color: goldenrod">已取消</span></eq>
+                                        <eq name="row['status']" value="3"><span style="color: green">已服务</span></eq>
+                                        <eq name="row['status']" value="4"><span style="color: grey">已过期</span></eq>
+                                    </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="15%">预约方式</td><td colspan="4">
+                                        <eq name="row['way']" value="1"><span style="color: blue">品项预约</span></eq>
+                                        <eq name="row['way']" value="2"><span style="color: blue">卡包预约</span></eq>
+                                    </td>
+                                    <tr>
+                                        <td width="15%">预约创建时间</td><td colspan="4">{$row['bespeak_time']|timestamp2date}
+                                    </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="15%">预约服务开始时间</td><td colspan="4">{$row['start_time']|timestamp2date}
+                                    </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="15%">预约服务结束时间</td><td colspan="4">{$row['end_time']|timestamp2date}
+                                    </td>
+                                    </tr>
+                                    <tr class="bg-tr">
+                                        <td colspan="5" align="center">预约用户信息</td>
+                                    </tr>
+                                    <tr>
+                                        <td width="15%">名称</td><td colspan="4">{$row['name']}
+                                    </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="15%">手机号</td><td colspan="4">{$row['mobile']}
+                                    </td>
+                                    </tr>
+                                    <tr class="bg-tr">
+                                        <td colspan="5" align="center">预约店铺信息</td>
+                                    </tr>
+                                    <tr>
+                                        <td width="15%">店名</td><td colspan="4"><img src="{$row['logo']}" width="80"><span style="color: red">{$row['shop_name']}</span>
+                                    </td>
+                                    <tr>
+                                        <td width="15%">店联系电话</td><td colspan="4"><span>{$row['shop_mobile']}</span>
+                                    </td>
+                                    <tr class="bg-tr">
+                                        <td colspan="5" align="center">预约服务商品信息</td>
+                                    </tr>
+                                    <tr>
+                                        <td width="15%">名称</td><td colspan="4"><img src="{$row['cover']}" width="80"><span style="color: red">{$row['service_name']}</span>
+                                    </td>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>　
+                            <!--<button class="btn btn-info ajax-post" target-form="form-horizontal" type="submit">保 存</button>-->
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script>
+        $(function(){
+            //获取属性
+            $(".type-select").change(function(){
+                var goods_id = $(this).attr('data-id'), type_id = $(this).val();
+                if(type_id == 0) {
+                    $('#attr-form').html('');
+                } else {
+                    $.ajax({
+                        url:'{:U("Shop/ajaxAttrForm")}', type:'POST', dataType:'json', data:{package_id:goods_id,type_id:type_id},
+                        success:function(data){
+                            $('#attr-form').html(data.form);
+                        }
+                    });
+                }
+            });
+        });
+        //增加一个节点
+        function addSpec(obj) {
+            var html = '<div class="control-group">' +
+                        '<label class="control-label">' + $(obj).parent().parent().find('label').html() + '</label>' +
+                        '<div class="controls">' + $(obj).parent().html().replace(/(.*)(addSpec)(.*)(\[)(\+)/i, "$1removeSpec$3$4-") + '</div>' +
+                       '</div>';
+            $(obj).parent().parent().next('.add-area').append(html);
+        }
+        //删除一个节点
+        function removeSpec(obj) {
+            $(obj).parent().parent().remove();
+        }
+    </script>
+</block>

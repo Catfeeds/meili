@@ -1,0 +1,50 @@
+<script>
+    //getArea(1,0,'');
+    function getArea(reg_id,region_type,region_name) {
+		var start_region = arguments[3] ? arguments[3] : 0; 
+        if(region_type == 1) {
+            $("input[name='province_name']").val(region_name);
+            $("input[name='province_id']").val(reg_id);
+            $('.area-text').html(region_name);
+        } if(region_type == 2) {
+            $("input[name='city_name']").val(region_name);
+            $("input[name='city_id']").val(reg_id);
+            $('.area-text').append(region_name);
+        } if(region_type == 3) {
+            $("input[name='area_name']").val(region_name);
+            $("input[name='area_id']").val(reg_id);
+			if(start_region == 3)
+            $('.area-text').html(region_name);
+			else
+            $('.area-text').append(region_name);
+        }
+        if(region_type == 3) {
+            $('.consignee').show();
+            $('.area-list').hide();
+            return;
+        } else {
+            $('.consignee').hide();
+            $('.area-list').show();
+        }
+        $.ajax({
+            url :'{:U("System/getRegion")}', type:'post', data:{reg_id:reg_id}, dataType:'Json',
+            success:function(data){
+                if(data) {
+                    var html = '<ul>'
+                    for(var i in data.data) {
+                        html += '<li onclick="getArea('+data.data[i]['reg_id']+','+data.data[i]['region_type']+',\''+data.data[i]['region_name']+'\','+start_region+')">' +
+                        '<a href="javascript:void(0);" class="area" style="color:#000">'+data.data[i]['region_name']+'</a>' +
+                        '</li>';
+                    }
+                    html += '</ul>';
+                    $('div.area-list').html(html);
+                } else {
+                    $('#page').text('没有更多数据了！！！');
+                    setTimeout(function() {
+                        $('#page').hide();
+                    },2000);
+                }
+            }
+        });
+    }
+</script>

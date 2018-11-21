@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <title>优道科技</title>
+        <link rel="stylesheet" href="__CSS__/ios.min.css">
+        <link rel="stylesheet" href="__CSS__/colors.min.css">
+        <link rel="stylesheet" href="__CSS__/style.css">
+        <block name="style"></block>
+        <script type="text/javascript" src="__JS__/jquery-1.8.3.min.js"></script>
+        <block name="head-script"></block>
+    </head>
+
+    <body>
+        <div class="views">
+            <div class="view view-main">
+                <div class="navbar">
+                    <div class="navbar-inner">
+                        <block name="top"></block>
+                    </div>
+                </div>
+                <div class="pages navbar-through toolbar-through">
+                    <div data-page="index" class="page">
+                        <block name="content"></block>
+                        <include file="Public:notification"/>
+                    </div>
+                </div>
+                <img class="share" style="position:fixed;right:-5px;top:0px;width:100%;z-index:2100;padding:0px 0;display:none;" src="__IMG__/bg-share.png">
+            </div>
+        </div>
+
+        <script type="text/javascript" src="__JS__/framework7.min.js"></script>
+        <script type="text/javascript" src="__JS__/my-app.js"></script>
+        <script>
+            $(function() {
+                //$(".none").css("height",$(window).height()-46)
+                $('.do-share').click(function(){ $('.bg,.share').toggle(); });
+                $('.share').click(function(){ $('.bg,.share').toggle(); });
+            })
+        </script>
+        <block name="script"></block>
+    </body>
+</html>

@@ -1,0 +1,56 @@
+<extend name="Public/base" />
+
+<block name="main">
+    <div class="curing">
+        <div class="upside clearfix">
+            <div class="left"><img src="{$results['detail']['cate']['picture']}"></div>
+            <div class="right">
+                <ul>
+                <volist name="results['detail']['list']" id="detail">
+                    <li> <span class="fl">{$detail['name']}</span><span class="fr">￥{$detail['price']}</span> </li>
+                </volist>
+                </ul>
+                <p class="a1"><a href="javascript:void(0)" class="yy-qj" onclick="yyqj({$results['item']['item_id']})"><em>预约奢护管家</em></a></p>
+                <p class="a2"><span>{$results['detail']['cate']['wash_cycle']}</span></p>
+            </div>
+        </div>
+        <div class="underpart clearfix">
+            <div class="left">
+                <div class="list">
+                    <h1><span><img src="__IMG__/b_05.png"></span>服务流程</h1>
+                    <p>{$results['item']['process']}</p>
+                </div>
+                <div class="list">
+                    <h1><span><img src="__IMG__/b_06.png"></span>服务特色</h1>
+                    <p>{$results['item']['characteristic']}</p>
+                </div>
+                <div class="list">
+                    <h1><span><img src="__IMG__/b_07.png"></span>养护流程</h1>
+                    <p>{$results['item']['wash_process']}</p>
+                </div>
+                <div class="list">
+                    <h1>经典案例</h1>
+                    <p>{$results['item']['classic_case']}</p>
+                </div>
+            </div>
+            <div class="right shampoo">
+                <volist name="results['list']" id="details">
+                    <div class="list">
+                        <div class="pic"><a href="/detail/{$details['cate']['detail_cate_id']}/{$results['item']['item_id']}"><img class="img_400x160" src="{$details['cate']['picture']}"></a></div>
+                        <div class="about">
+                            <h1>{$details['cate']['name']}</h1>
+                            <p>
+                                <volist name="details['list']" id="detail">
+                                    |<span>{$detail['name']}</span>
+                                </volist>
+                            </p>
+                        </div>
+                    </div>
+                </volist>
+            </div>
+        </div>
+    </div>
+
+    <include file="Public/indexJs"/>
+
+</block>

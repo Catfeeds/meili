@@ -1,0 +1,61 @@
+<!--<link rel="stylesheet" href="__STATIC__/kindeditor/default/default.css" />
+<script charset="utf-8" src="__STATIC__/kindeditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="__STATIC__/kindeditor/zh_CN.js"></script>
+<script type="text/javascript">
+    var editor;
+    KindEditor.ready(function(K) {
+        editor = K.create('textarea[name="content"]', {
+            allowFileManager : false,
+            themesPath: K.basePath,
+            width: '100%',
+            height: '100',
+            resizeType: 0,
+                pasteType : 2,
+                urlType : 'absolute',
+                fileManagerJson : '{:U('fileManagerJson')}',
+            //uploadJson : '{:U('uploadJson')}' }
+                uploadJson : '{:plugins_url("EditorForAdmin://Upload/ke_upimg")}'
+    });
+    });
+
+    $(function(){
+        //传统表单提交同步
+        $('textarea[name="content"]').closest('form').submit(function(){
+            editor.sync();
+        });
+        //ajax提交之前同步
+        $('button[type="submit"],#submit,.ajax-post').click(function(){
+            editor.sync();
+        });
+    })
+</script>-->
+<!--<script type="text/javascript" charset="utf-8" src="__STATIC__/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="__STATIC__/ueditor/ueditor.all.js"></script>
+<script type="text/javascript" charset="utf-8" src="__STATIC__/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+    $('textarea[name="content"]').attr('id', 'editor_id_content');
+    window.UEDITOR_HOME_URL = "__STATIC__/ueditor";
+    window.UEDITOR_CONFIG.initialFrameHeight = 100;
+    window.UEDITOR_CONFIG.scaleEnabled = false;
+    window.UEDITOR_CONFIG.imageUrl = '{:plugins_url("EditorForAdmin://Upload/ue_upimg")}';
+    window.UEDITOR_CONFIG.imagePath = '';
+    window.UEDITOR_CONFIG.imageFieldName = 'imgFile';
+    window.UEDITOR_CONFIG.initialFrameWidth = '80%';  //初始化编辑器宽度,默认1000
+    UE.getEditor('editor_id_content');
+</script>-->
+
+<div id="send" class="modal hide" style="z-index: 99999999">
+    <div class="modal-header">
+        <button data-dismiss="modal" class="close" type="button">×</button>
+        <h3>帮助信息</h3>
+    </div>
+    <div class="modal-body">
+        <p><textarea name="content">{$row['content']}</textarea></p>
+        <p>二、列表中头部标题存在“<i class="fa fa-pencil"></i>”的列可双击修改！</p>
+        <p>三、带有“*”的表单为必填信息</p>
+        <p>四、文档信息管理中“注册协议”、“车位出租协议”、“关于我们”三个文档请勿删除</p>
+        <p>五、图标展示地址：<a href="http://9iphp.com/fa-icons" target="_blank">http://9iphp.com/fa-icons</a></p>
+        <p>二、列表中头部标题存在“<i class="fa fa-pencil"></i>”的列可双击修改！</p>
+        <p>二、列表中头部标题存在“<i class="fa fa-pencil"></i>”的列可双击修改！</p>
+    </div>
+</div>

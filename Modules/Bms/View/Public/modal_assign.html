@@ -1,0 +1,21 @@
+<div id="modal-assign" class="modal-860 modal hide">
+    <div class="modal-header">
+        <button data-dismiss="modal" class="close" type="button">×</button>
+        <h3>指派管家</h3>
+    </div>
+    <div class="modal-body">
+        <Iframe src="" width="100%" height="500" scrolling="yes" frameborder="0" id="dispatch-Iframe"></Iframe>
+    </div>
+    <div class="modal-footer">
+        <a data-dismiss="modal" class="btn" href="javascript:void(0)">取消</a>
+    </div>
+</div>
+<script>
+    function setSrc(obj) {
+        var id = $(obj).attr('data-id'), type = $(obj).attr('data-type'), city_id = $(obj).attr('data-city-id'), reason = $(obj).attr('data-reason');
+        if(type == 1)
+            $('#dispatch-Iframe').attr('src', '{:C("NOW_HOST")}Keeper/dispatch/m_id/'+id);
+        if(type == 3)
+            $('#dispatch-Iframe').attr('src', '{:C("NOW_HOST")}Business/dispatch/order_id/'+id+'/city_id/'+city_id+'');
+    }
+</script>

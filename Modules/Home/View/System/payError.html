@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>支付失败</title>
+    <link rel="stylesheet" type="text/css" href="__CSS__/main.css" />
+    <style type="text/css">
+        .pay{  width:980px;  margin:0 auto;  background:#fff; padding-bottom:50px;  padding-top:20px;  margin-top:20px;}
+        .pay .paytop{  line-height:54px;}
+        .pay .paytop .fl a{  margin-left: 10px;}
+        .pay .paytop .fr a{  color:#0077ff;margin-right: 10px;}
+        .pay .paytop .fr a:hover{  text-decoration:underline;}
+        .pay .payfail{  border:1px solid #f6c8b5;  background:#fceee8;  width:900px;  margin:0 auto;  padding:10px 30px;  margin-top:30px;}
+        .pay .payfail .payfailpic{  float:left;  width:50px;}
+        .pay .payfail .payfailpic img{  padding-top:10px;}
+        .pay .payfail .payfailabout{ width:750px;  float:left;  line-height:22px;}
+        .pay .payfail .payfailabout h1{  font-size:14px;}
+        .pay .payfail .payfailabout .cause{  margin-top: 10px;  }
+        .pay .payfail .payfailabout p{  color:#8f8d8d;}
+        .paybot{  width:960px;  margin:0 auto;  line-height:40px;  background:#eee;  text-align:center;  margin-top:30px;}
+    </style>
+</head>
+<body>
+	<div class="pay">
+    	<div class="paytop clearfix">
+        	<div class="fl"><a href="{:U('Index/index')}"><img src="__IMG__/logo.png"></a></div>
+            <div class="fr">您好，欢迎使用在线付款！<a href="#">支付遇到困难？联系我们</a></div>
+        </div>
+        <div class="payfail clearfix">
+        	<div class="payfailpic"><img src="__IMG__/oktask1.png"></div>
+            <div class="payfailabout">
+            	<h1>错误描述：{$_REQUEST['desc']}</h1>
+                <h1 class="cause">错误原因：{$_REQUEST['cause']}</h1>
+            </div>
+        </div>
+        <div class="paybot">备案号：{:C('WEB_SITE_ICP')}</div>
+    </div>
+</body>
+</html>

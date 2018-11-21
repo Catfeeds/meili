@@ -1,0 +1,43 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">设置</div>
+</block>
+<block name="content">
+    <div class="pages navbar-through toolbar-through">
+        <div data-page="index" class="page" style="position:static">
+            <div class="page-content">
+                <div class="homepage">
+                    <div class="fit">
+                        <ul>
+                            <li><a href="{:U('System/feedback')}">意见反馈</a></li>
+                            <li><a href="{:U('Article/art', array('flag'=>'about'))}">关于我们</a></li>
+                            <li><a href="javascript:void(0);" class="tel"><span class="fl">客服电话</span><span class="fr"><em>{$config[1]}</em></span></a></li>
+                        </ul>
+                        <p class="exit">
+                            <input type="button" value="退出登录" class="btn logout">
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script>
+        $$('.tel').on('click', function () {
+            myApp.confirm('您确定拨打电话吗？','',function(){window.location.href = 'tel:{$config[1]}';});
+        });
+        $$('.logout').on('click', function () {
+            myApp.confirm('确定要退出吗？','',
+                    function(){
+                       window.location.href = '{:U("Center/logout")}';
+                    },
+                    function(){
+
+                    }
+            );
+        });
+    </script>
+</block>

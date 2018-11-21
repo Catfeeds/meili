@@ -1,0 +1,54 @@
+<extend name="Public/base" />
+
+<block name="main">
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+
+                <table class="bill-table">
+                    <tr class="bg-tr">
+                        <td colspan="5" align="center">时间明细</td>
+                    </tr>
+                    <tr>
+                        <td>店铺名称</td>
+                        <td colspan="4">{$list[0]['name']}</td>
+                    </tr>
+                    <tr>
+                        <td>店铺Logo</td>
+                        <td colspan="4"><img src="{$list[0]['logo']}" width="30"></td>
+                    </tr>
+                    <tr>
+                        <td>店铺简述</td>
+                        <td colspan="4">{$list[0]['short']}</td>
+                    </tr>
+                    <tr>
+                        <td>联系人</td>
+                        <td colspan="4">{$list[0]['contacts']}</td>
+                    </tr>
+                    <tr>
+                        <td>联系电话</td>
+                        <td colspan="4">{$list[0]['mobile']}</td>
+                    </tr>
+                    <tr>
+                        <td>地址</td>
+                        <td colspan="4">{$list[0]['all_address']}{$list[0]['address']}</td>
+                    </tr>
+                    <tr>
+                        <td>状态</td>
+                        <td colspan="4">{$list[0]['status']|get_status_title}</td>
+                    </tr>
+                    <tr>
+                        <td>店铺创建时间</td>
+                        <td colspan="4">{$list[0]['create_time']|timestamp2date}</td>
+                    </tr>
+                    <tr>
+                        <td>最后更新时间</td>
+                        <td colspan="4">{$list[0]['update_time']|timestamp2date}</td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</block>

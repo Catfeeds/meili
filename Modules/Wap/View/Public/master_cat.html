@@ -1,0 +1,38 @@
+<script>
+    //getArea(1,0,'');
+    function getCat(cat_id,cat_type,cat_name) {
+        if(cat_type == 1) {
+            $("input[name='cat_name']").val(cat_name);
+            $("input[name='master_cat']").val(cat_id);
+            $('.cat-text').html(cat_name);
+        }
+        if(cat_type == 1) {
+            $('.consignee').show();
+            $('.cat-list').hide();
+            return;
+        } else {
+            $('.consignee').hide();
+            $('.cat-list').show();
+        }
+        $.ajax({
+            url :'{:U("System/getMasterCat")}', type:'post', dataType:'Json',
+            success:function(data){
+                if(data) {
+                    var html = '<ul>'
+                    for(var i in data.data) {
+                        html += '<li onclick="getCat('+data.data[i]['id']+','+'1'+',\''+data.data[i]['name']+'\')">' +
+                        '<a href="javascript:void(0);" class="area" style="color:#000">'+data.data[i]['name']+'</a>' +
+                        '</li>';
+                    }
+                    html += '</ul>';
+                    $('div.cat-list').html(html);
+                } else {
+                    $('#page').text('没有更多数据了！！！');
+                    setTimeout(function() {
+                        $('#page').hide();
+                    },2000);
+                }
+            }
+        });
+    }
+</script>

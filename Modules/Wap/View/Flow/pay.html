@@ -1,0 +1,80 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="{:U('OrderInfo/myOrders', array('status'=>1))}" class="back link"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">收银台</div>
+    <div class="right"></div>
+</block>
+<block name="content">
+    <div class="page-content" style="position:static">
+        <div class="confirm_list">
+            <div class="c_ticket">
+                <ul>
+                    <li>
+                        <span class="fl">微信支付</span>
+                        <span class="fr">
+                            <input type="radio" id="checkbox-1" class="choice_box1" name="box" checked="checked"/>
+                            <label for="checkbox-1"></label>
+                        </span>
+                    </li>
+                    <li>
+                        <!--<span class="fl">支付宝支付</span>
+                        <span class="fr">
+                            <input type="radio" id="checkbox-2" class="choice_box1" name="box"/>
+                            <label for="checkbox-2"></label>
+                        </span>-->
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="suspend">
+            <div class="fl"><em>支付：<i>￥{$order['pay_amounts']}</i></em></div>
+            <div class="fr"><a href="javascript:void(0)" onclick="callpay(this)">付款</a></div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        //调用微信JS api 支付
+        function jsApiCall() {
+            WeixinJSBridge.invoke(
+                    'getBrandWCPayRequest',
+                    {$pay_param},
+                    function(res){
+                        WeixinJSBridge.log(res.err_msg);
+                        if(res.err_msg == "get_brand_wcpay_request:ok"){
+                            //alert(res.err_code+res.err_desc+res.err_msg);
+                            alert('支付成功！');
+                            window.location.href="{$forward}";
+                        }else{
+                            //返回跳转到订单详情页面
+                            //alert(res.err_code+res.err_desc+res.err_msg);
+                            alert('支付关闭！');
+                            window.location.href="{$forward}";
+                        }
+                        //alert(res.err_code+res.err_desc+res.err_msg);
+                    }
+            );
+        }
+
+        function callpay(obj) {
+            $(obj).prop('disabled',true);
+            $(obj).html('支付中...');
+            if (typeof WeixinJSBridge == "undefined"){
+                if( document.addEventListener ){
+                    document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+                }else if (document.attachEvent){
+                    document.attachEvent('WeixinJSBridgeReady', jsApiCall);
+                    document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+                }
+            }else{
+                jsApiCall();
+            }
+        }
+    </script>
+    <script>
+        $(function() {
+            $(".none").css("height",$(window).height()-46)
+        })
+    </script>
+</block>

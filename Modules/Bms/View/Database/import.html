@@ -1,0 +1,68 @@
+<extend name="Public/base"/>
+
+<block name="main">
+
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+
+                <!--<div class="widget-title widget-title-search"></div>-->
+
+                <div class="widget-content no-padding no-border">
+                    <div class="alert alert-block">
+                        <a class="close" data-dismiss="alert" href="#">×</a>
+                        <!--<h4 class="alert-heading">注：</h4>-->
+                        <p>1、执行数据还原时不要关闭此页面或进行任何其他操作，以免造成数据库还原不完整！</p>
+                        <p>2、请勿在短时间内多次进行数据还原操作，造成数据库资源的占用和锁闭！</p>
+                        <p>3、数据还原时会对数据库造成一定影响，请在尽量在用户访问量较少的时段进行还原！</p>
+                        <p>4、数据还原时间根据数据量的大小，几分钟到几十分钟不等，还原时请耐心等待！</p>
+                        <p>5、如果需要还原数据最好联系我们帮助恢复，尽量不要擅自还原！</p>
+                    </div>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>备份名称</th>
+                            <th>压缩</th>
+                            <th>数据大小</th>
+                            <th>备份时间</th>
+                            <th width="25%">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="tbody">
+                        <empty name="list"><tr><td colspan="30">Aho！没有查询结果！！</td></tr></empty>
+                        <volist name="list" id="row">
+                            <tr>
+                                <td>{$row['time']|date='Ymd-His',###}</td>
+                                <td>{$row['compress']}</td>
+                                <td>{$row['size']|format_bytes}</td>
+                                <td>{$key}</td>
+                                <td>
+                                    <a href="{:U('Database/doImport',array('time'=>$row['time']))}" title="还原" data-ing-html="数据正在还原，请勿关闭此页面 <i class='fa fa-spinner fa-spin'></i>" class="ajax-get confirm">
+                                        <span class="label label-info label-info-hover">还原</span></a>&nbsp;
+                                    <a href="{:U('Database/del',array('time'=>$row['time']))}" title="删除" class="ajax-get confirm">
+                                        <span class="label label-important label-important-hover">删除</span></a>
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination alternate">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script>
+        function beforeGet() {
+            window.onbeforeunload = function () {return "正在还原数据库，请不要关闭此页面！"}
+        }
+        function afterGet() {
+            window.onbeforeunload = function () {return null;}
+        }
+    </script>
+</block>

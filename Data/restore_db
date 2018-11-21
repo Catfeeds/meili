@@ -1,0 +1,7 @@
+print 数据库正在还原...
+#解压文件 解压成.sql文件
+gzip -d /home/wwwroot/base.toocms-project.com/Data/data/{{file}}.sql.gz;
+#还原
+mysql -uroot -pSXkj985622015 db < /home/wwwroot/base.toocms-project.com/Data/data/{{file}}.sql;
+#重新压缩文件
+gzip /home/wwwroot/base.toocms-project.com/Data/data/{{file}}.sql;

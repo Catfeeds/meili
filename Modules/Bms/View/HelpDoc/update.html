@@ -1,0 +1,84 @@
+<extend name="Public/base" />
+
+<block name="main">
+
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#tab1">基本信息</a></li>
+                    <li class=""><a data-toggle="tab" href="#tab2">图文详情</a></li>
+                </ul>
+
+                <br>
+                <form class="form-horizontal text-height-27-form" method="post" action="{:U('HelpDoc/update')}">
+                    <div class="widget-content tab-content no-padding">
+                        <div id="tab1" class="tab-pane active">
+                            <input type="hidden" name="model" value="HelpDoc">
+                            <input type="hidden" name="id" value="{$row['id']}">
+                            <div class="control-group">
+                                <label class="control-label">标题</label>
+                                <div class="controls">
+                                    <input type="text" name="title" value="{$row['title']}" class="text-width-40" maxlength="60">
+                                    <span class="help-block">* 标题</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">排序</label>
+                                <div class="controls">
+                                    <input type="text" name="sort" value="{$row['sort']}" class="text-width-20" maxlength="15">
+                                    <span class="help-block">自定义排序，数值越大越靠前</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div id="tab2" class="tab-pane">
+                            <textarea name="content">{$row['content']}</textarea>
+                            {:hook('adminArticleEdit', array('is_first'=>1,'name'=>'content','value'=>$row['content'],'width'=>1010,'height'=>700))}
+                        </div>
+
+
+                        <div class="form-actions">
+                            <button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>　
+                            <button class="btn btn-info ajax-post" target-form="form-horizontal" type="submit">保 存</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script>
+        $(function(){
+            //获取属性
+            $(".type-select").change(function(){
+                var goods_id = $(this).attr('data-id'), type_id = $(this).val();
+                if(type_id == 0) {
+                    $('#attr-form').html('');
+                } else {
+                    $.ajax({
+                        url:'{:U("HelpDoc/ajaxAttrForm")}', type:'POST', dataType:'json', data:{package_id:goods_id,type_id:type_id},
+                        success:function(data){
+                            $('#attr-form').html(data.form);
+                        }
+                    });
+                }
+            });
+        });
+        //增加一个节点
+        function addSpec(obj) {
+            var html = '<div class="control-group">' +
+                        '<label class="control-label">' + $(obj).parent().parent().find('label').html() + '</label>' +
+                        '<div class="controls">' + $(obj).parent().html().replace(/(.*)(addSpec)(.*)(\[)(\+)/i, "$1removeSpec$3$4-") + '</div>' +
+                       '</div>';
+            $(obj).parent().parent().next('.add-area').append(html);
+        }
+        //删除一个节点
+        function removeSpec(obj) {
+            $(obj).parent().parent().remove();
+        }
+    </script>
+</block>

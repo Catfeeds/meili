@@ -1,0 +1,91 @@
+<extend name="Public/base" />
+
+<block name="main">
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+
+                <div class="widget-title widget-title-search list-widget-title">
+                    <!--<button class="btn btn-success href" url="{:U('Bespeak/bespeakSussessDo',array('model'=>'Bespeak','id'=>0))}" target-form="ids">一键确认预约完成</button>&nbsp;-->
+                    <!--<button class="btn btn-inverse ajax-post" url="{:U('Bespeak/forbidResume',array('model'=>'Bespeak','field'=>'status','value'=>0))}" target-form="ids">禁用</button>&nbsp;-->
+                    <!--<button class="btn btn-info ajax-post" url="{:U('Bespeak/forbidResume',array('model'=>'Bespeak','field'=>'status','value'=>1))}" target-form="ids">启用</button>&nbsp;-->
+                    <!--<button class="btn btn-danger confirm ajax-post" url="{:U('Bespeak/delete',array('model'=>'Bespeak'))}" target-form="ids">删除</button>&nbsp;-->
+
+                    <form action="{:U('Bespeak/index')}" method="post" class="form">
+                        <select name="status" style="margin: auto; padding-right: auto">
+                            <option value="" selected>请选择状态查询</option>
+                            <option value="1" style="color: #0d8ddb">待服务</option>
+                            <option value="2" style="color: #0d8ddb">已取消</option>
+                            <option value="3" style="color: #0d8ddb">已服务</option>
+                            <option value="4" style="color: #0d8ddb">已过期</option>
+                        </select>
+                        &nbsp;&nbsp;&nbsp;
+                        <input type="text" name="mobile" value="{$_REQUEST['mobile']}" placeholder="预约手机号">
+                        <button class="btn btn-inverse">查询</button>
+                    </form>
+                </div>
+
+                <div class="widget-content no-padding no-border">
+                    <table class="table table-bordered table-striped with-check reset-checkbox">
+                        <thead>
+                        <tr>
+                            <!--<th><input type="checkbox" id="title-checkbox" name="title-checkbox" class="check-all"/>&lt;!&ndash;<i class="icon-resize-vertical"></i>&ndash;&gt;</th>-->
+                            <th>ID</th>
+                            <th>预约单号</th>
+                            <th>账号</th>
+                            <th>预约人</th>
+                            <th>电话</th>
+                            <th>店铺</th>
+                            <th>预约项目</th>
+                            <th>预约时间</th>
+                            <th>预约开始时间</th>
+                            <th>预约结束时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="tbody">
+                        <empty name="list"><tr><td colspan="30">Aho！没有查询结果！！</td></tr></empty>
+                        <volist name="list" id="row">
+                            <tr>
+                                <!--<td><input type="checkbox" name="ids[]" value="{$row['id']}" class="ids"/></td>-->
+                                <td>{$row['id']}</td>
+                                <td>{$row['bespeak_sn']}</td>
+                                <td>{$row['account']}</td>
+                                <td>{$row['name']}</td>
+                                <td>{$row['mobile']}</td>
+                                <td>{$row['shop_name']|msubstr=0,7,'utf-8'}</td>
+                                <td>{$row['service_name']|msubstr=0,7,'utf-8'}</td>
+                                <td>{$row['bespeak_time']|timestamp2date}</td>
+                                <td>{$row['start_time']|timestamp2date}</td>
+                                <td>{$row['end_time']|timestamp2date}</td>
+                                <td>
+                                    <eq name="row['status']" value="1"><span style="color: red">待服务</span></eq>
+                                    <eq name="row['status']" value="2"><span style="color: goldenrod">已取消预约</span></eq>
+                                    <eq name="row['status']" value="3"><span style="color: green">已服务</span></eq>
+                                    <eq name="row['status']" value="4"><span style="color: grey">已过期</span></eq>
+                                </td>
+                                <td>
+                                    <eq name="row['status']" value="1"><a href="{:U('Bespeak/bespeakSussessDo',array('model'=>'Bespeak','id'=>$row['id']))}" title="确认完成" class="">
+                                        <span class="label label-info label-info-hover">确认完成</span></a>&nbsp;
+                                    </eq>
+                                    <a href="{:U('Bespeak/update',array('model'=>'Bespeak','id'=>$row['id']))}" title="详情" class="">
+                                        <span class="label label-success label-success-hover">详情</span></a>&nbsp;
+                                    <!--<a href="{:U('Bespeak/delete',array('model'=>'Bespeak','ids'=>$row['id']))}" title="删除" class="confirm ajax-get">-->
+                                        <!--<span class="label label-important label-important-hover">删除</span></a>-->
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination alternate">
+                    {$page}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</block>

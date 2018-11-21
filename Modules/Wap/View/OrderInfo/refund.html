@@ -1,0 +1,52 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="{:U('Center/index')}" class="back link"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">退款</div>
+    <div class="right"></div>
+</block>
+<block name="content">
+    <div class="page-content" style="position:static;background:#fff">
+        <form action="{:U('OrderInfo/applyRefund')}" method="post" class="form-horizontal">
+            <input type="hidden" value="{$_REQUEST['order_id']}" name="order_id">
+        <div class="refund">
+            <h1>选择您的退款原因</h1>
+            <ul class="clearfix">
+                <volist name="list" id="r">
+                <li>
+                    <span>
+                        <input type="radio" id="checkbox-{$key}" class="choice_box3 choice-reason" name="box" value="{$r['reason']}"/>
+                        <label for="checkbox-{$key}" class="choice-reason"></label>
+                    </span>{$r['reason']}
+                </li>
+                </volist>
+            </ul>
+            <p>
+                <span>
+                    <textarea name="reason" class="textarea" placeholder="请描述您的退款原因" datatype="*" nullmsg="请输入退款原因！" errormsg="请输入退款原因！"></textarea>
+                </span>
+            </p>
+        </div>
+        <div class="suspend">
+            <p class="tj">
+                <input type="submit" value="提交" class="btn submit-btn">
+            </p>
+        </div>
+        </form>
+    </div>
+</block>
+<block name="script">
+    <script src="__STATIC__/validform_5.3.2/Validform_v5.3.2_min.js"></script>
+    <script src="__JS__/validform.js"></script>
+    <script src="__JS__/common.js"></script>
+    <script>
+        $(function() {
+            $('.choice-reason').click(function(){
+                $('textarea[name="reason"]').val($(this).prev().val());
+            });
+        });
+        //提示弹出层 回调方法
+        function success_callback() {}
+        function error_callback() {}
+    </script>
+</block>

@@ -1,0 +1,49 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="{:U('Center/index')}" class="back link"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">收藏</div>
+    <div class="right"></div>
+</block>
+<block name="content">
+    <div class="page-content infinite-scroll">
+        <div class="c_silde">
+            <div class="hd">
+                <ul>
+                    <li><a href="{:U('Center/MyCollGoods')}">商品</a></li>
+                    <li><a href="{:U('Center/myCollArt')}" class="focus">文章</a></li>
+                </ul>
+            </div>
+            <div class="bd">
+                <div class="content">
+                    <div class="machine">
+                    <!--<div class="none">你还没有收藏过任何文章</div> -->
+                        <div class="exist scroll-append-box">
+
+                        </div>
+                    </div>
+                    <include file="Public:scroll_loader"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script>
+        var target = '{:U("Center/getMyCollArt")}';
+        function getHtml(data) {
+            return '<div class="list clearfix"> <a href="{:U(\'Article/art\')}/art_id/'+data['art_id']+'">' +
+            '<div class="left"><img src="'+data['cover']+'"></div> ' +
+            '<div class="right"> ' +
+            '<div class="about">'+data['title']+'</div> ' +
+            '<div class="rate"><em>'+data['short_desc']+'</em></div> ' +
+            '</div> </a>' +
+            '</div>';
+        }
+        //创建ajax data参数
+        function getQuery() {
+            return {p:p};
+        }
+    </script>
+    <script type="text/javascript" src="__JS__/scroll.js"></script>
+</block>

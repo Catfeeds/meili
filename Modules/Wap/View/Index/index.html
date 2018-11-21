@@ -1,0 +1,103 @@
+<extend name="Public/base" />
+
+    <block name="top">
+        <div class="left"></div>
+        <div class="center sliding">优道科技</div>
+        <div class="right"><a href="{:U('SiteMessage/messages')}" class="item-link">消息
+            <if condition="$result['not_read'] gt 0"><i></i></if></a>
+        </div>
+    </block>
+
+    <block name="content">
+        <div class="page-content" style="position:static">
+        <div class="banner">
+            <div class="banner_con">
+                <div class="banner_cx" id="banner_cx">
+                    <volist name="result['adverts_1']" id="ad_1">
+                        <div class="banner_slide"><a href="{$ad_1['link_url']}"><img src="{$ad_1['abs_url']}"></a></div>
+                    </volist>
+                </div>
+            </div>
+            <div class="paging"></div>
+        </div>
+        <div class="index_nav">
+            <div class="row">
+                <div class="col-33"><a href="{:U('Reservation/submitR', array('type'=>2))}" class="item-link"><img src="{$result['channels'][0]['abs_url']}"></a></div>
+                <div class="col-33"><a href="{:U('Reservation/submitR', array('type'=>1))}" class="item-link"><img src="{$result['channels'][1]['abs_url']}"></a></div>
+                <div class="col-33"><a href="{:U('Goods/goodsList', array('flag'=>'b'))}" class="item-link"><img src="{$result['channels'][2]['abs_url']}"></a></div>
+            </div>
+            <p><a href="{:U('Center/sign')}" title="每日签到" class="ajax-get" data-cz="sign">每日签到</a></p>
+        </div>
+        <div class="index_advert">
+            <h1>
+                <span><img src="__IMG__/index_icon_1.png"></span>
+                <em>温馨时刻<i>· warm moment</i></em>
+            </h1>
+            <!--p><a href="{$result['adverts_2']['link_url']}" class="item-link"><img src="{$result['adverts_2']['abs_url']}"></a></p-->
+			<p><a href="/Master/Apply" class="item-link"><img src="__IMG__/repair/master_apply.jpg"></a></p>
+        </div>
+        <div class="index_find">
+            <h1><span class="fl">发现美家<i>· discover beauty</i></span><span class="fr"><a href="{:U('Article/artList')}">更多</a></span></h1>
+            <div class="clearfix">
+                <volist name="result['articles']" id="art">
+                <!--start-->
+                <div class="list">
+                    <div class="all">
+                        <a href="{:U('Article/art', array('art_id'=>$art['art_id']))}" class="item-link">
+                        <div class="content">
+                            <div class="pic"><img src="{$art['cover']}"></div>
+                            <div class="about">{$art['title']}{$art['title']}{$art['title']}{$art['title']}</div>
+                            <div class="price">{$art['short_desc']}</div>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+                <!--end-->
+                </volist>
+            </div>
+        </div>
+        <!--签到start-->
+        <div class="bg"></div>
+        <div class="sign">
+            <h1><img src="__IMG__/index_05.png"></h1>
+            <div class="sign-con">
+
+            </div>
+        </div>
+        <!--签到end-->
+        <div class="footer">
+            <ul>
+                <li class="focus"><a href="/"><i><img src="__IMG__/icon_01_bak.png"></i><span>首页</span></a></li>
+                <li><a href="{:U('Goods/goodsList')}"><i><img src="__IMG__/icon_02.png"></i><span>商城</span></a></li>
+                <li><a href="{:U('Center/index')}"><i><img src="__IMG__/icon_03.png"></i><span>我的</span></a></li>
+            </ul>
+        </div>
+        </div>
+    </block>
+
+    <block name="script">
+        <script src="__JS__/swiper-2.1.min.js"></script>
+        <script src="__JS__/cygz.js"></script>
+        <script type="text/javascript" src="__JS__/common.js"></script>
+        <script>
+            $(function() {
+                 var newSlideSize = function slideSize(){
+                    var w = Math.ceil($(".banner_con").width()/2);
+                    $(".banner_con,.banner_cx,.banner_slide").height(w);
+                };
+                newSlideSize();
+                $(window).resize(function(){
+                    newSlideSize();
+                });
+                $(".index_nav p a").click(function() {
+                    $(".bg,.sign").fadeIn();
+                });
+                $(".bg").click(function() {
+                    $(".bg,.sign").fadeOut();
+                })
+            })
+            //提示弹出层 回调方法
+            function success_callback() {}
+            function error_callback() {}
+        </script>
+    </block>

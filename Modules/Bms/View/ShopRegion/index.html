@@ -1,0 +1,81 @@
+<extend name="Public/base" />
+
+<block name="main">
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+
+                <div class="widget-title widget-title-search list-widget-title">
+                    <button class="btn btn-success href" url="{:U('Region/index')}" target-form="ids">添加城市</button>&nbsp;
+                    <button class="btn btn-inverse ajax-post" url="{:U('ShopRegion/forbidResume',array('model'=>'ShopRegion','field'=>'status','value'=>0))}" target-form="ids">禁用</button>&nbsp;
+                    <button class="btn btn-info ajax-post" url="{:U('ShopRegion/forbidResume',array('model'=>'ShopRegion','field'=>'status','value'=>1))}" target-form="ids">启用</button>&nbsp;
+                    <button class="btn btn-danger confirm ajax-post" url="{:U('ShopRegion/delete',array('model'=>'ShopRegion'))}" target-form="ids">删除</button>&nbsp;
+
+                    <form action="{:U('ShopRegion/index')}" method="post" class="form">
+                        <input type="text" name="all_name" value="{$_REQUEST['all_name']}" placeholder="城市名称">
+                        {$select}
+                        <button class="btn btn-inverse">查询</button>
+                    </form>
+                </div>
+
+                <div class="widget-content no-padding no-border">
+                    <table class="table table-bordered table-striped with-check reset-checkbox">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="title-checkbox" name="title-checkbox" class="check-all"/><!--<i class="icon-resize-vertical"></i>--></th>
+                            <th>城市名称</th>
+                            <th>全称</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="tbody">
+                        <empty name="list"><tr><td colspan="30">Aho！没有查询结果！！</td></tr></empty>
+                        <volist name="list" id="row">
+                            <tr>
+                                <td><input type="checkbox" name="ids[]" value="{$row['id']}" class="ids"/></td>
+                                <td>{$row['all_name']}</td>
+                                <td>{$row['merger_name']}</td>
+                                <td>{$row['status']|get_status_title}</td>
+                                <!--<td>{$row['is_on_sale']}</td>-->
+                                <!--<td>
+                                    <select class="quick-edit-select" data-model="ShopRegion" data-id="{$row['id']}" data-field="is_integral" data-focus-value="{$row['is_integral']}" onchange="quick_edit_select_change(this)">
+                                        <option value="1" >可用</option>
+                                        <option value="0" >不可用</option>
+                                    </select>
+                                </td>-->
+                                <!--<td>
+                                    <select class="quick-edit-select" data-model="ShopRegion" data-id="{$row['id']}" data-field="is_best" data-focus-value="{$row['is_best']}" onchange="quick_edit_select_change(this)">
+                                        <option value="1">推荐</option>
+                                        <option value="0">不推荐</option>
+                                    </select>
+                                </td>-->
+                                <td>
+                                    <if condition ="in_array($row['type_id'],$spec_types)">
+                                    <!--<a href="{:U('ShopRegion/products',array('id'=>$row['id']))}" title="货品列表" class="">
+                                        <span class="label label-primary label-primary-hover">货品列表</span></a>&nbsp;-->
+                                    </if>
+                                    <a href="{:U('ShopRegion/update',array('model'=>'ShopRegion','id'=>$row['id']))}" title="编辑" class="">
+                                        <span class="label label-success label-success-hover">编辑</span></a>&nbsp;
+                                    <if condition="$row['status'] eq 0 or $row['status'] eq 1">
+                                        <a href="{:U('ShopRegion/forbidResume',array('model'=>'ShopRegion','ids'=>$row['id'],'field'=>'status','value'=>abs(1-$row['status'])))}" title="{$row['status']|show_status_name}" class="ajax-get">
+                                        <span class="label {$row['status']|show_status_label}">{$row['status']|show_status_name}</span></a>&nbsp;
+                                    </if>
+                                    <a href="{:U('ShopRegion/delete',array('model'=>'ShopRegion','ids'=>$row['id']))}" title="删除" class="confirm ajax-get">
+                                        <span class="label label-important label-important-hover">删除</span></a>
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination alternate">
+                    {$page}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</block>

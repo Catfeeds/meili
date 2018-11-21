@@ -1,0 +1,77 @@
+<extend name="Public/base" />
+
+<block name="main">
+
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+
+                <!--<div class="widget-title widget-title-search list-widget-title">
+                    <form action="{:U('Comment/index')}" method="post" class="form">
+                        <input type="text" name="m_id" value="{$_REQUEST['m_id']}" placeholder="会员ID">
+                        <div class="btn-group">
+                            <button type="button" class="btn checked" data-default="--状态--"></button>
+                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li data-value="1" data-title="已审核" <eq name="_REQUEST['status']" value="1">class="selected"</eq>>
+                                <a href="javascript:void(0)">已审核</a>
+                                </li>
+                                <li data-value="0" data-title="未审核" <eq name="_REQUEST['status']" value="0">class="selected"</eq>>
+                                <a href="javascript:void(0)">未审核</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <input type="hidden" name="status" value="{$_REQUEST['status']}">
+                        <button class="btn btn-inverse">查询</button>
+                    </form>
+                </div>-->
+
+                <div class="widget-content no-padding">
+                    <ul class="recent-posts">
+                        <empty name="list"><li>Aho！没有查询结果！！</li></empty>
+                        <volist name="list" id="row">
+                            <li>
+                                <div class="article-post">
+                                    <span class="user-info">
+                                        记录ID: {$row['id']},　
+                                        联系方式：{$row['contact']|default='---'},　
+                                        反馈时间：{$row['create_time']|date='Y-m-d H:i',###},　
+                                        IP: {$row['ip']|long2ip},　
+                                        <for start="0" end="$row['start']">
+                                            <i class="fa fa-star"></i>
+                                        </for>
+                                    </span>
+                                    <p>
+                                        反馈内容：<a href="javascript:void(0)" style="cursor: default">{$row['content']}</a>
+                                    </p>
+                                    <p>
+                                         <span class="user-info">
+                                             处理状态：<if condition="$row['status'] eq 0">未处理</if><if condition="$row['status'] eq 1">已处理</if>　
+                                             处理时间：{$row['finish_time']|timestamp2date}
+                                         </span>
+                                    </p>
+                                    <if condition="$row['status'] eq 0">
+                                        <a href="{:U('Feedback/forbidResume',array('model'=>'Feedback','ids'=>$row['id'],'field'=>'status','value'=>abs(1-$row['status'])))}" title="" class="ajax-get">
+                                            <span class="label {$row['status']|show_status_label}">标记为已处理</span></a>&nbsp;
+                                    </if>
+                                    <a href="{:U('Feedback/delete',array('model'=>'Feedback','ids'=>$row['id']))}" title="删除" class="confirm ajax-get">
+                                        <span class="label label-important label-important-hover">删除</span>
+                                    </a>
+                                </div>
+                            </li>
+                        </volist>
+                    </ul>
+                </div>
+
+                <div class="pagination alternate">
+                    {$page}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</block>
+

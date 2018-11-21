@@ -1,0 +1,259 @@
+<extend name="Public/base" />
+
+    <block name="top">
+        <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+        <div class="center sliding">商品详情</div>
+        <div class="right">
+            <span class="c">
+                <if condition="$goods['is_coll'] eq 0">
+                    <a href="{:U('Goods/goodsCollection',array('goods_id'=>$goods['goods_id'],'is_coll'=>$goods['is_coll']))}" title="收藏" class="ajax-get"><img src="__IMG__/star_collect.png" class="c_s"></a>
+                <else/>
+                    <a href="{:U('Goods/goodsCollection',array('goods_id'=>$goods['goods_id'],'is_coll'=>$goods['is_coll']))}" title="取消收藏" class="ajax-get"><img src="__IMG__/star_collect_bak.png" class="c_s"></a>
+                </if>
+            </span>
+            <span class="s do-share">
+                <img src="__IMG__/share.png">
+            </span>
+        </div>
+    </block>
+
+    <block name="content">
+        <div class="page-content" style="position:static">
+            <div class="details">
+                <div class="de_top">
+                    <div class="banner">
+                        <div class="banner_con">
+                            <div class="banner_cx" id="banner_cx">
+                                <volist name="goods['pictures']" id="pic">
+                                <div class="banner_slide"><a href="javascript:void(0)"><img src="{$pic['abs_url']}"></a></div>
+                                </volist>
+                            </div>
+                        </div>
+                        <div class="paging"></div>
+                    </div>
+                    <div class="about">{$goods['goods_name']}</div>
+                    <div class="price">￥<span>{$goods['price']}</span></div>
+                </div>
+                <div class="norms">
+                    <if condition="!empty($goods['goods_attr'])"><h1>规格</h1></if>
+                    <volist name="goods['goods_attr']" id="g_attr">
+                    <div class="clearfix goods-attr">
+                        <div class="fl">{$g_attr['attr_name']}</div>
+                        <div class="fr">
+                            <volist name="g_attr['attr_values']" id="val">
+                                <a href="javascript:void(0);" class="y choice-attr" data-goods-attr-id="{$val['goods_attr_id']}">{$val['attr_value']}</a>
+                            </volist>
+                            <!--<a href="javascript:void(0);" class="focus y">1500mm*1800mm</a>
+                            <a href="javascript:void(0);" class="n">1800mm*2000mm</a>-->
+                        </div>
+                    </div>
+                    </volist>
+                    <script>
+                        var goods_id = '{$goods["goods_id"]}', post = true, goods_attr_id_array = [], goods_attr_ids = '',
+                                goods_attr_desc_array = [], goods_attr_desc = '', stock = 0, product_id = 0;
+                        $(function() {
+                            clGoodsAttr();
+                            $('.choice-attr').click(function() {
+                                post = true; goods_attr_id_array = []; goods_attr_ids = ''; goods_attr_desc_array = []; goods_attr_desc = '';//初始化
+                                $(this).parents('.goods-attr').find('.choice-attr').removeClass('focus');
+                                $(this).addClass('focus');
+                                clGoodsAttr();
+                                //调数据
+                                if(post) {
+                                    goods_attr_ids = goods_attr_id_array.join('|');
+                                    $.post('{:U("Goods/getStockPrice")}', {goods_id: goods_id, goods_attr_ids: goods_attr_ids}).success(function (data) {
+                                        if (data.status == 1) {
+                                            $('.price span').html(data.data.price); stock = data.data.stock, product_id = data.data.product_id;
+                                        } else {
+                                            showPop(data.info, 'error', 1500, '');
+                                        }
+                                    });
+                                }
+                            });
+                            $('.add-to-cart').click(function(){
+                                if(!post) {
+                                    showPop('请选择完整商品规格！', 'error', 1500, ''); return;
+                                }
+                                var goods_attr_desc = goods_attr_desc_array.join('，'), number = $('.number').val();
+                                $.post('{:U("Cart/addToCart")}', {goods_id:goods_id,number:number,goods_attr_ids:goods_attr_ids,goods_attr_desc:goods_attr_desc}).success(function (data) {
+                                    if (data.status == 1) {
+                                        showPop(data.info, 'success', 1500, '');
+                                        $('.carts').html(parseInt($('.carts').html()) + parseInt(number));
+                                    } else {
+                                        showPop(data.info, 'error', 1500, data.url);
+                                    }
+                                });
+                            });
+                        });
+                        function clGoodsAttr() {
+                            $('.goods-attr').each(function(key, obj){
+                                if($(obj).find('.focus').html() != null) {
+                                    goods_attr_id_array.push($(obj).find('.focus').attr('data-goods-attr-id'));
+                                    goods_attr_desc_array.push($(obj).find('.fl').html()+'：'+$(obj).find('.focus').html());
+                                } else {
+                                    post = false;
+                                }
+                            });
+                        }
+                    </script>
+                    <div class="clearfix">
+                        <div class="fl">数量</div>
+                        <div class="fr">
+                            <input class="min" type="button" value="-" />
+                            <input class="txt1 number" type="text" value="1" />
+                            <input class="add" type="button" value="+" />
+                        </div>
+                    </div>
+                </div>
+                <div class="evaluate">
+                    <if condition="empty($goods['comments'])">
+                        <div class="no">该商品暂无评价</div>
+                    <else/>
+                        <div class="exist">
+                            <ul>
+                                <volist name="goods['comments']" id="comm">
+                                    <li>
+                                        <h1>
+                                            <span class="fl"><i><img src="{$comm['head']}"></i>{$comm['nickname']}</span>
+                                            <span class="fr">
+                                                <for start="1" end="$comm['level']">
+                                                <img src="__IMG__/star.png">
+                                                </for>
+                                            </span>
+                                        </h1>
+                                        <p>{$comm['content']}</p>
+                                        <div class="pic clearfix">
+                                            <volist name="comm['pictures']" id="c_pic">
+                                                <a href="javascript:void(0)"><span><img src="{$c_pic['abs_url']}"></span></a>
+                                            </volist>
+                                        </div>
+                                        <p class="date">{$comm['create_time']}</p>
+                                    </li>
+                                </volist>
+                            </ul>
+                            <h2><a href="{:U('Goods/comments', array('goods_id'=>$goods['goods_id']))}">查看更多评价<i>({$goods['comm_count']})</i></a></h2>
+                        </div>
+                    </if>
+                </div>
+                <div class="graphic">
+                    <h1><span>图文详情</span></h1>
+                    <p>
+                        {$goods['goods_desc']}
+                    </p>
+                </div>
+            </div>
+            <div class="suspend">
+                <div class="left">
+                    <a href="{:U('Cart/cartList')}"><span><em><img src="__IMG__/gwc.png"></em><i class="carts">{$goods['carts']|default=0}</i></span>购物车</a>
+                </div>
+                <div class="right">
+                    <a href="javascript:void(0);" class="item-link add-to-cart">加入购物车</a>
+                </div>
+            </div>
+            <!--分享好友start-->
+            <!--<div class="bg"></div>-->
+            <!--<div class="request">
+                <ul class="clearfix">
+                    <li><a href="#"><img src="__IMG__/weibo.png"></a></li>
+                    <li><a href="#"><img src="__IMG__/qq.png"></a></li>
+                    <li><a href="#"><img src="__IMG__/space.png"></a></li>
+                    <li><a href="#"><img src="__IMG__/weixin.png"></a></li>
+                    <li><a href="#"><img src="__IMG__/weixin_quan.png"></a></li>
+                </ul>
+            </div>-->
+            <!--分享好友end-->
+        </div>
+    </block>
+
+    <block name="script">
+        <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+        <script src="__JS__/wx.init.js"></script>
+        <script>
+            wx_init('{:C("WX_APP_ID")}', {$timestamp}, '{$noncestr}', '{$signature}', false);
+            wx.ready(function(){
+                // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，
+                // 则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+                wx.onMenuShareAppMessage({
+                    title: '优道科技', // 分享标题
+                    desc: '{$goods["goods_name"]}', // 分享描述
+                    link: '{:C("NOW_HOST")}Goods/detail/goods_id/{$goods["goods_id"]}', // 分享链接
+                    imgUrl: '{$goods["pictures"][0]["abs_url"]}', // 分享图标
+                    type: '', // 分享类型,music、video或link，不填默认为link
+                    dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                    success: function () {
+                        // 用户确认分享后执行的回调函数
+                        alert('分享成功！');
+                        //window.location.reload();
+                        $('.bg,.share').toggle();
+                    },
+                    cancel: function () {
+                        // 用户取消分享后执行的回调函数
+                        alert('分享取消！');
+                        $('.bg,.share').toggle();
+                    }
+                });
+                wx.onMenuShareTimeline({
+                    title: '优道科技', // 分享标题
+                    link: '{:C("NOW_HOST")}Goods/detail/goods_id/{$goods["goods_id"]}', // 分享链接
+                    imgUrl: '{$goods["pictures"][0]["abs_url"]}', // 分享图标
+                    success: function () {
+                        // 用户确认分享后执行的回调函数
+                        alert('分享成功！');
+                        $('.bg,.share').toggle();
+                    },
+                    cancel: function () {
+                        // 用户取消分享后执行的回调函数
+                        alert('分享取消！');
+                        $('.bg,.share').toggle();
+                    }
+                });
+                wx.onMenuShareQQ({
+                    title: '优道科技', // 分享标题
+                    desc: '{$goods["goods_name"]}', // 分享描述
+                    link: '{:C("NOW_HOST")}Goods/detail/goods_id/{$goods["goods_id"]}', // 分享链接
+                    imgUrl: '{$goods["pictures"][0]["abs_url"]}', // 分享图标
+                    success: function () {
+                        // 用户确认分享后执行的回调函数
+                        alert('分享成功！');
+                        $('.bg,.share').toggle();
+                    },
+                    cancel: function () {
+                        // 用户取消分享后执行的回调函数
+                        alert('分享取消！');
+                        $('.bg,.share').toggle();
+                    }
+                });
+            });
+        </script>
+        <script src="__JS__/swiper-2.1.min.js"></script>
+        <script src="__JS__/cygz.js"></script>
+        <script>
+            $(function() {
+                 var newSlideSize = function slideSize(){
+                    var w = Math.ceil($(".banner_con").width());
+                    $(".banner_con,.banner_cx,.banner_slide").height(w);
+                };
+                newSlideSize();
+                $(window).resize(function(){ newSlideSize(); });
+            })
+        </script>
+        <script type="text/javascript">
+        $(function(){
+            $(".add").click(function(){
+                var t=$(this).parent().find('input[class*=txt1]');
+                t.val(parseInt(t.val())+1)
+            })
+            $(".min").click(function(){
+                var t=$(this).parent().find('input[class*=txt1]');
+                if(parseInt(t.val())<2){return;}
+                t.val(parseInt(t.val())-1)
+            })
+        })
+        </script>
+        <script type="text/javascript" src="__JS__/common.js"></script>
+        <script>
+            //提示弹出层 回调方法
+            function success_callback() {window.location.reload();}
+            function error_callback() {}
+        </script>
+    </block>

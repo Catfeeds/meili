@@ -1,0 +1,329 @@
+<extend name="Public/base" />
+<block name="style">
+    <style type="text/css">
+        .chooseSection { float: left; }
+        .chooseSection:not(:first-child) { margin-right:20px; }
+        .section-check { border: 3px solid rgb(153, 153, 153)!important; }
+        .sectionType {  -webkit-user-select: none;  --moz-user-select: none;  width: 121px; padding:10px;  border-radius:4px; transition:linear 0.1s; border:3px solid transparent;  }
+        .section-box {  position: relative;  width: 120px; height: 80px;  background: white; border: 1px solid #999; border-radius: 2px;  cursor: pointer;  }
+        .section-flex { display: flex; }
+        .section-box1 { position: relative; width: 39px; height: 80px; }
+        .section-box2 { position: relative; width: 69px; height: 40px; }
+        .section-box3 { position: relative; width: 50px; height: 80px; }
+        .section-box4 { width: 120px; height: 80px; }
+        .section-top-left { position: absolute; top: 0; left: 0; }
+        .section-top-right { position: absolute; top: 0; right: 0; }
+        .section-bottom-left { position: absolute; bottom: 0; left: 0; }
+        .section-bottom-right { position: absolute; bottom: 0; right: 0; }
+        .section-text {  /*position: absolute;*/  display: inline-block; /*top: 0; bottom: 0; left: 0; right: 0; margin: auto;*/ width: 15px; height: 15px; padding: 2px;  background: #999; border-radius: 50%;  text-align:center; color: #eee; line-height: 16px;  }
+        .section-text-position {  position: absolute;  top: 0; bottom: 0; left: 0; right: 0; margin: auto;  }
+        .section-border-left   { border-left: 1px solid #999; }
+        .section-border-right  { border-right: 1px solid #999; }
+        .section-border-top    { border-top: 1px solid #999; }
+        .section-border-bottom { border-bottom: 1px solid #999; }
+        select { width: auto; margin-right: 10px;}
+    </style>
+</block>
+<block name="main">
+    <div class="row-fluid main-row-fluid">
+        <div class="span12">
+            <div class="widget-box">
+                <div class="widget-content">
+                    <form class="form-horizontal text-height-27-form" method="post" action="{:U('Section/update')}" id="form">
+                        <input type="hidden" name="model" value="Section">
+                        <input type="hidden" name="id" value="{$row['id']}">
+                        <div class="control-group">
+                            <label class="control-label">整体版块名称</label>
+                            <div class="controls">
+                                <input type="text" name="name" value="{$row['name']}" class="text-width-10">
+                                <span class="help-block">* 整体版块名称不超过4个字</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">板块位置</label>
+                            <div class="controls">
+                                <label for="id_radio1" style="display: inline"><input type="radio" name="position" value="2" id="id_radio1" <eq name="row['position']" value="2">checked="checked"</eq> />首页</label>&nbsp;&nbsp;&nbsp;
+                                <label for="id_radio2" style="display: inline"><input type="radio" name="position" value="1"  id="id_radio2" <eq name="row['position']" value="1">checked="checked"</eq> />商城</label>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">小版块布局</label>
+                            <div class="controls">
+                                <label class="chooseSection" data-layout="1">
+                                    <div class="sectionType <if condition="$row['layout'] eq 1">section-check</if>">
+                                        <div class="section-box" onselectstart="return false">
+                                            <div class="section-box4 section-top-left">
+                                                <span class="section-text section-text-position">1</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </label>
+                                <label class="chooseSection" data-layout="2">
+                                    <div class="sectionType <if condition="$row['layout'] eq 2">section-check</if>">
+                                        <div class="section-box" onselectstart="return false">
+                                            <div class="section-box3 section-top-left section-border-right">
+                                                <span class="section-text section-text-position">1</span>
+                                            </div>
+                                            <div class="section-box2 section-top-right section-border-bottom">
+                                                <span class="section-text section-text-position">2</span>
+                                            </div>
+                                            <div class="section-box2 section-bottom-right">
+                                                <span class="section-text section-text-position">3</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </label>
+                                <label class="chooseSection" data-layout="3">
+                                    <div class="sectionType <if condition="$row['layout'] eq 3">section-check</if>">
+                                        <div class="section-box" onselectstart="return false">
+                                            <div class="section-box2 section-top-left section-border-bottom">
+                                                <span class="section-text section-text-position">1</span>
+                                            </div>
+                                            <div class="section-box2 section-bottom-left">
+                                                <span class="section-text section-text-position">2</span>
+                                            </div>
+                                            <div class="section-box3 section-top-right section-border-left">
+                                                <span class="section-text section-text-position">3</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </label>
+                                <label class="chooseSection" data-layout="4">
+                                    <div class="sectionType <if condition="$row['layout'] eq 4">section-check</if>">
+                                    <div class="section-box" onselectstart="return false">
+                                        <div class="section-box2 section-top-left section-border-bottom">
+                                            <span class="section-text section-text-position">1</span>
+                                        </div>
+                                        <div class="section-box2 section-bottom-left">
+                                            <span class="section-text section-text-position">2</span>
+                                        </div>
+                                        <div class="section-box2 section-top-right section-border-left">
+                                            <span class="section-text section-text-position">3</span>
+                                        </div>
+                                        <div class="section-box2 section-bottom-right section-border-left">
+                                            <span class="section-text section-text-position">4</span>
+                                        </div>
+                                   </div>
+                                   </div>
+                            </label>
+                                <input type="hidden" name="layout" id="layout" value="{$row['layout']}" />
+                                <script type="text/javascript">
+                                    $('.chooseSection').click(function(){
+                                        $(this).parent().find('.sectionType').removeClass('section-check');
+                                        $(this).find('.sectionType').addClass('section-check');
+                                        $('#layout').val($(this).attr('data-layout'));
+                                    });
+                                </script>
+                                <!--<label class="chooseSection">
+                                    <div class="sectionType" data-layout="4">
+                                        <div class="section-box section-flex" onselectstart="return false">
+                                            <div class="section-box1 section-border-right"><span class="section-text">1</span></div>
+                                            <div class="section-box1 section-border-right"><span class="section-text">2</span></div>
+                                            <div class="section-box1"><span class="section-text">3</span></div>
+                                        </div>
+                                    </div>
+                                </label>-->
+                                <span class="help-block" style="clear:both">* 选择整个区域的布局格式</span>
+                            </div>
+                        </div>
+                        <div class="control-group section-1">
+                            <label class="control-label"><span class="section-text">1</span></label>
+                            <input type="hidden" name="in_id[]" value="{$section_0['i_id']}">
+                            <div class="controls">
+                                <div class="btn-group">
+                                    <button type="button" class="btn checked" data-default="--跳转规则--"></button>
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <volist name="target_rules" id="rule">
+                                            <li data-value="{$key}" data-title="{$rule}" <eq name="key" value="$row['configures'][0]['target_rule']">class="selected"</eq>>
+                                                <a href="javascript:void(0)">{$rule}</a>
+                                            </li>
+                                        </volist>
+                                    </ul>
+                                </div>
+                                <input type="hidden" name="target_rule[]" value="{$row['configures'][0]['target_rule']}">　
+                                <input type="text" name="param[]" value="{$row['configures'][0]['param']}" class="text-width-40" placeholder="参数">
+                                <br><br>
+                                {:hook('upload',array('is_first'=>1,'unique_sign'=>'section_img_1','field_name'=>'cover[]','field_value'=>$row['configures'][0]['cover'],'save_path'=>'Goods'))}
+                                <span class="help-block">
+                                    * 每块的展示图为必传内容，设置规则下同<br>
+                                    <include file="Public/target_rule_help"/><br>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="control-group section-2">
+                            <label class="control-label"><span class="section-text">2</span></label>
+                            <input type="hidden" name="in_id[]" value="{$section_1['i_id']}">
+                            <div class="controls">
+                                <div class="btn-group">
+                                    <button type="button" class="btn checked" data-default="--跳转规则--"></button>
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <volist name="target_rules" id="rule">
+                                            <li data-value="{$key}" data-title="{$rule}" <eq name="key" value="$row['configures'][1]['target_rule']">class="selected"</eq>>
+                                            <a href="javascript:void(0)">{$rule}</a>
+                                            </li>
+                                        </volist>
+                                    </ul>
+                                </div>
+                                <input type="hidden" name="target_rule[]" value="{$row['configures'][1]['target_rule']}">　
+                                <input type="text" name="param[]" value="{$row['configures'][1]['param']}" class="text-width-40" placeholder="参数">
+                                <br><br>
+                                {:hook('upload',array('unique_sign'=>'section_img_2','field_name'=>'cover[]','field_value'=>$row['configures'][1]['cover'],'save_path'=>'Goods'))}
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="control-group section-3">
+                            <label class="control-label "><span class="section-text">3</span></label>
+                            <input type="hidden" name="in_id[]" value="{$section_2['i_id']}">
+                            <div class="controls">
+                                <div class="btn-group">
+                                    <button type="button" class="btn checked" data-default="--跳转规则--"></button>
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <volist name="target_rules" id="rule">
+                                            <li data-value="{$key}" data-title="{$rule}" <eq name="key" value="$row['configures'][2]['target_rule']">class="selected"</eq>>
+                                            <a href="javascript:void(0)">{$rule}</a>
+                                            </li>
+                                        </volist>
+                                    </ul>
+                                </div>
+                                <input type="hidden" name="target_rule[]" value="{$row['configures'][2]['target_rule']}">　
+                                <input type="text" name="param[]" value="{$row['configures'][2]['param']}" class="text-width-40" placeholder="参数">
+                                <br><br>
+                                {:hook('upload',array('unique_sign'=>'section_img_3','field_name'=>'cover[]','field_value'=>$row['configures'][2]['cover'],'save_path'=>'Goods'))}
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="control-group section-4">
+                            <label class="control-label "><span class="section-text">4</span></label>
+                            <input type="hidden" name="in_id[]" value="{$section_3['i_id']}">
+                            <div class="controls">
+                                <div class="btn-group">
+                                    <button type="button" class="btn checked" data-default="--跳转规则--"></button>
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <volist name="target_rules" id="rule">
+                                            <li data-value="{$key}" data-title="{$rule}" <eq name="key" value="$row['configures'][3]['target_rule']">class="selected"</eq>>
+                                            <a href="javascript:void(0)">{$rule}</a>
+                                            </li>
+                                        </volist>
+                                    </ul>
+                                </div>
+                                <input type="hidden" name="target_rule[]" value="{$row['configures'][3]['target_rule']}">　
+                                <input type="text" name="param[]" value="{$row['configures'][3]['param']}" class="text-width-40" placeholder="参数">
+                                <br><br>
+                                {:hook('upload',array('unique_sign'=>'section_img_4','field_name'=>'cover[]','field_value'=>$row['configures'][3]['cover'],'save_path'=>'Goods'))}
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">备注</label>
+                            <div class="controls">
+                                <input type="text" name="remark" value="{$row['remark']}" class="text-width-50">
+                                <span class="help-block">作为版块的提示作用，不显示在app</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">排序</label>
+                            <div class="controls">
+                                <input type="text" name="sort" value="{$row['sort']}" class="number-only text-width-10">
+                                <span class="help-block">数值越大显示位置越靠前</span>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>　
+                            <button class="btn btn-info ajax-post no-refresh" type="submit" id="submit" target-form="form-horizontal">保 存</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <!--<include file11="./Modules/MsC/View/Public/link_template.html"/>-->
+    <script src="__STATIC__/sv.convert-1.0master.js"></script>
+    <script type="text/javascript">
+        // 修改处理
+        // 选中style
+//        $('.sectionType').each(function() {
+//            if("{$row['style']}" == $(this).attr('data-section-type')) {
+//                $(this).addClass('section-check');
+//            }
+//        });
+//        // 图片
+//        $('#link_type1').val("{$row['record'][0]['link_type']}");
+//        $('#link_type2').val("{$row['record'][1]['link_type']}");
+//        $('#link_type3').val("{$row['record'][2]['link_type']}");
+//        // 跳转参数
+//        getTpl($('#link_type1'), "{$row['record'][0]['link_value']}");
+//        getTpl($('#link_type2'), "{$row['record'][1]['link_value']}");
+//        getTpl($('#link_type3'), "{$row['record'][2]['link_value']}");
+//
+//        // 切换显示方式
+//        if('' == $('#sectionTypehid').val()) {}
+//        else if(-1 != ['1','2','3'].indexOf($('#sectionTypehid').val())) {
+//            $('.section1').show();
+//            $('.section2').show();
+//            $('.section3').show();
+//        } else if(-1 != ['4'].indexOf($('#sectionTypehid').val())) {
+//            $('.section1').show();
+//            $('.section2').hide();
+//            $('.section3').hide();
+//        }
+//        $('.sectionType').convert({
+//            show: 'section-check',
+//            after: function(elem) {
+//                var index = $(elem).attr('data-section-type');
+//                $('#sectionTypehid').val(index);
+//                if(4 == index) {
+//                    $('.section1').show();
+//                    $('.section2').hide();
+//                    $('.section3').hide();
+//                } else {
+//                    $('.section1').show();
+//                    $('.section2').show();
+//                    $('.section3').show();
+//                }
+//            }
+//        });
+//
+//        var param = {};
+//        /*  获取模版  */
+//        function getTpl(elem, value) {
+//            var index = $(elem).val() || 0,
+//                    showElem = $($(elem).attr('data-link'));
+//            if(0 != index && index) {
+//                var tpl = '#section' + index,
+//                        result = '';
+//                $.post('/Ajax/getCanList', {index:index, aid:"{$row['region_id']}"}, function(data) {
+//                    param.data = data.data;
+//                    console.log(param);
+//                    param.tpl_value = value;
+//                    result = $(tpl).html();
+//                    if(null == result) {
+//                        showElem.html('');
+//                    } else {
+//                        showElem.html(_.template(result, param)());
+//                    }
+//                });
+//            } else {
+//                showElem.html('');
+//            }
+//        }
+//
+//        $('.link-type').on('change', function() {
+//            getTpl(this);
+//        });
+
+    </script>
+</block>

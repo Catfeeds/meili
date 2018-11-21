@@ -1,0 +1,108 @@
+<extend name="Public/base" />
+
+<block name="main">
+
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+                <!--<div class="widget-title">
+                    <span class="icon">
+                        <i class="fa fa-plus"></i>
+                    </span>
+                    <h5></h5>
+                </div>-->
+                <br>
+                <div class="widget-content no-padding">
+                    <form class="form-horizontal text-height-27-form" method="post" action="{:U('RechargeCard/update')}">
+                        <input type="hidden" name="model" value="RechargeCard">
+                        <input type="hidden" name="id" value="{$row['id']}">
+                        <div class="control-group">
+                            <label class="control-label">充值卡名称</label>
+                            <div class="controls">
+                                <input type="text" name="name" value="{$row['name']}" class="text-width-30" maxlength="15">
+                                <span class="help-block">* 充值卡名称，15字符以内</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">充值卡面值</label>
+                            <div class="controls">
+                                <span class="input-append">
+                                    <input type="text" name="face_value" value="{$row['face_value']}" class="decimal-only text-width-30">
+                                <div class="add-on">元</div>
+                                </span>
+                                <span class="help-block">* 充值卡的面值，用户充值之后余额增加值</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">充值卡售价</label>
+                            <div class="controls">
+                                <span class="input-append">
+                                    <input type="text" name="sales_price" value="{$row['sales_price']}" class="decimal-only text-width-30">
+                                    <div class="add-on">元</div>
+                                </span>
+                                <span class="help-block">* 充值卡售价，用户购买时支付金额</span>
+                            </div>
+                        </div>
+                        <!--<div class="control-group">
+                            <label class="control-label">开始使用时间</label>
+                            <div class="controls">
+                                <div class="input-daterange" id="datepicker">
+                                <notempty name="row['id']">
+                                    <input type="text" name="start_use_time" value="{$row['start_use_time']|timestamp2date}" class="text-width-10"  readonly>
+                                    <else/>
+                                    <input type="text" name="start_use_time" value="" class="text-width-10" readonly>
+                                </notempty>
+                                </div>
+                                <span class="help-block">几月几号开始使用，不设置则从获得之日起即可使用</span>
+                            </div>
+                        </div>-->
+                        <!--<div class="control-group">
+                            <label class="control-label">有效期</label>
+                            <div class="controls">
+                                <span class="input-append">
+                                    <input type="text" name="effective_time" value="{$row['effective_time']}" class="number-only text-width-30">
+                                    <div class="add-on">天</div>
+                                </span>
+                                <span class="help-block">* 单位(天)，优惠券的有效时间</span>
+                            </div>
+                        </div>-->
+                        <div class="control-group">
+                            <label class="control-label">卡背景</label>
+                            <div class="controls">
+                                {:hook('upload',array('is_first'=>1,'unique_sign'=>'bg_picture','field_name'=>'bg_picture','field_value'=>$row['bg_picture'],'save_path'=>'Member'))}
+                                <span class="help-block">* 充值卡的背景图，前端显示</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">备注</label>
+                            <div class="controls">
+                                <input type="text" name="remark" value="{$row['remark']}" class="text-width-50">
+                                <span class="help-block">备注描述</span>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>　
+                            <button class="btn btn-info ajax-post" target-form="form-horizontal" type="submit">保 存</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <!--日历 start-->
+    <link href="__STATIC__/plugins/datepicker/datepicker3.css" rel="stylesheet">
+    <script src="__STATIC__/plugins/datepicker/bootstrap-datepicker.js"></script>
+    <!--日历 end-->
+    <script>
+        $(function(){
+            $('.input-daterange').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true
+            });
+        })
+    </script>
+</block>

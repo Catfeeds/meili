@@ -1,0 +1,78 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">添加地址</div>
+    <div class="right"></div>
+</block>
+
+<block name="content">
+    <div class="page-content">
+        <form action="{:U('Center/updAddress')}" method="post" class="form-horizontal" autocomplete="off">
+        <input type="hidden" class="text" name="adr_id" value="{$row['adr_id']}">
+        <div class="consignee">
+            <p class="a">
+                <span>
+                    <em class="fl">联系人：</em>
+                    <em class="fr">
+                        <input type="text" class="text" name="contacts" value="{$row['contacts']}" datatype="s1-9" nullmsg="请输入联系人！" errormsg="联系人格式不正确！">
+                    </em>
+                </span>
+            </p>
+            <p class="a">
+                <span>
+                    <em class="fl">手机号码：</em>
+                    <em class="fr">
+                        <input type="number" class="text" name="mobile" value="{$row['mobile']}" datatype="m" nullmsg="请输入手机号码！" errormsg="手机号码格式不正确！">
+                    </em>
+                </span>
+            </p>
+            <p class="a">
+                <span>
+                    <em class="fl">所在地址：</em>
+                    <em class="fr">
+                        <a href="javascript:void(0)" onclick="getArea(1,0,'')" class="area-text">{$row['province_name']}{$row['city_name']}{$row['area_name']}</a>
+                        <input type="hidden" name="province_name" value="{$row['province_name']}" datatype="s" nullmsg="请选择省！" errormsg="请选择省！">
+                        <input type="hidden" name="province_id" value="{$row['province_id']}" datatype="s" nullmsg="请选择省！" errormsg="请选择省！">
+                        <input type="hidden" name="city_name" value="{$row['city_name']}" datatype="s" nullmsg="请选择市！" errormsg="请选择市！">
+                        <input type="hidden" name="city_id" value="{$row['city_id']}" datatype="s" nullmsg="请选择市！" errormsg="请选择市！">
+                        <input type="hidden" name="area_name" value="{$row['area_name']}" datatype="s" nullmsg="请选择区！" errormsg="请选择区！">
+                        <input type="hidden" name="area_id" value="{$row['area_id']}" datatype="s" nullmsg="请选择区！" errormsg="请选择区！">
+                    </em>
+                </span>
+            </p>
+            <p class="a">
+                <span>
+                    <em class="fl">详细地址：</em>
+                    <em class="fr">
+                        <input type="text" class="text" name="address" value="{$row['address']}" datatype="s1-30" nullmsg="请输入详细地址！" errormsg="详细地址格式不正确！">
+                    </em>
+                </span>
+            </p>
+            <p class="b">
+                <input type="checkbox" id="checkbox-2" class="choice_box1" name="is_default" value="1" <if condition="$row['is_default'] eq 1">checked='checked'</if>/>
+                <label for="checkbox-2"></label>设为默认地址
+            </p>
+            <p class="c">
+                <input type="submit" value="保存" class="btn submit-btn">
+            </p>
+        </div>
+            <input type="hidden" name="flag" value="{$_REQUEST['flag']}">
+        </form>
+
+        <div class="add_city area-list" style="background:#fff;display: none"></div>
+
+    </div>
+    <include file="Public:area"/>
+</block>
+<block name="script">
+    <script src="__STATIC__/validform_5.3.2/Validform_v5.3.2_min.js"></script>
+    <script src="__JS__/validform.js"></script>
+    <script src="__JS__/common.js"></script>
+    <script>
+        $(function() { });
+        //提示弹出层 回调方法
+        function success_callback() {}
+        function error_callback() {}
+    </script>
+</block>

@@ -1,0 +1,55 @@
+<extend name="Public/base" />
+
+    <block name="top">
+        <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+        <div class="center sliding">忘记密码</div>
+        <div class="right"></div>
+    </block>
+
+    <block name="content">
+        <div class="page-content">
+            <div class="content-block">
+                <div class="content-block-inner">
+                    <form action="{:U('Passport/findPass/step/2')}" method="post" class="findpass-form-1">
+                    <div class="forget_password">
+                        <p><span>
+                            <em class="fl">手机号</em>
+                            <em class="fr">
+                                <input type="number" name="account" placeholder="输入手机号码" class="text" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')" maxlength="11" size="11">
+                            </em>
+                        </span></p>
+                        <p class="a1">
+                            <span>
+                                <em class="fl">验证码</em>
+                                <em class="fr">
+                                    <input type="number" name="verify" placeholder="请输入验证码" class="text" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')" maxlength="6" size="6">
+                                </em>
+                            </span>
+                            <input type="button" value="获取验证码" id="hq_btn" class="get-verify">
+                        </p>
+                        <p class="a2">
+                            <input type="button" value="立即验证" class="btn next-step">
+                        </p>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </block>
+
+    <block name="script">
+        <script src="__JS__/common.js"></script>
+        <script>
+            $(function() {
+                $('.get-verify').click(function() {
+                    getSmsVerify($('input[name="account"]').val(), 'retrieve', '{:U("SmsVerify/getSmsVerify")}', this);
+                });
+                $('.next-step').click(function() {
+                    checkSmsVerify($('input[name="account"]').val(), 'retrieve', '{:U("SmsVerify/checkSmsVerify")}', $('input[name="verify"]').val(), this, $('.findpass-form-1'));
+                });
+            });
+            //提示弹出层 回调方法
+            function success_callback() {}
+            function error_callback() {}
+        </script>
+    </block>

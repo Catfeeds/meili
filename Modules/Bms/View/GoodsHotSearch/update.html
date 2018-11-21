@@ -1,0 +1,48 @@
+<extend name="Public/base" />
+
+<block name="main">
+
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+                <!--<div class="widget-title">
+                    <span class="icon">
+                        <i class="fa fa-plus"></i>
+                    </span>
+                    <h5>更新行为信息</h5>
+                </div>-->
+                <br>
+                <div class="widget-content no-padding">
+                    <form class="form-horizontal text-height-27-form" method="post" action="{:U('GoodsHotSearch/update')}">
+                        <input type="hidden" name="model" value="GoodsHotSearch">
+                        <input type="hidden" name="id" value="{$row['id']}">
+                        <div class="control-group">
+                            <label class="control-label">关键字</label>
+                            <div class="controls">
+                                <input type="text" name="keywords" value="{$row['keywords']}" class="text-width-20" maxlength="9">
+                                <span class="help-block">* 热门关键字不能重复</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">是否热门</label>
+                            <div class="controls">
+                                <label style="margin-right:20px;display:inline">
+                                    <div class="radio"><span><input name="is_hot" style="opacity: 0;" type="radio" value="1" <if condition="$row['is_hot'] eq 1">checked</if>></span></div> 是
+                                </label>
+                                <label style="margin-right:20px;display:inline">
+                                    <div class="radio"><span><input name="is_hot" style="opacity: 0;" type="radio" value="0" <if condition="empty($row['is_hot'])">checked</if>></span></div> 否
+                                </label>
+                                <span class="help-block">是否热门</span>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>　
+                            <button class="btn btn-info ajax-post" target-form="form-horizontal" type="submit">保 存</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>

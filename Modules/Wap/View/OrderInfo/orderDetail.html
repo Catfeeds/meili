@@ -1,0 +1,117 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">订单详情</div>
+    <div class="right"></div>
+</block>
+
+<block name="content">
+    <div class="page-content" style="position:static">
+        <div class="backing">
+            <div class="share_adress">
+                <p><span>收货人：{$result['consignee']}　　{$result['mobile']}</span>
+                    <em>收货地址：{$result['province_name']}{$result['city_name']}{$result['area_name']}{$result['address']}</em></p>
+            </div>
+            <div class="share_list">
+                <h1><span><img src="__IMG__/c_04.png"></span>商品清单</h1>
+                <volist name="result['goods_list']" id="goods">
+                <div class="list">
+                    <div class="clearfix">
+                        <div class="left"><span><img src="{$goods['cover']}"></span></div>
+                        <div class="right">
+                            <p>{$goods['goods_name']}</p>
+                            <span>￥{$goods['price']}</span> <em><i class="fl">{$goods['goods_attr_desc']}</i><i class="fr">x{$goods['number']}</i></em>
+                        </div>
+                    </div>
+                </div>
+                </volist>
+            </div>
+            <div class="share_about">
+                <ul>
+                    <li>订单编号：<span>{$result['order_sn']}</span></li>
+                    <li>订单状态：<em>{$result['status_name']}</em></li>
+                </ul>
+                <p><span>{$result['remark']|default='无备注'}</span></p>
+            </div>
+            <div class="orders_mn">
+                <ul>
+                    <li><span class="fl">商品总额</span><span class="fr"><i>￥{$result['goods_amounts']}</i></span></li>
+                    <li><span class="fl">优惠券</span><span class="fr"><i>-￥{$result['coupon_amounts']}</i></span></li>
+                    <li><span class="fl">使用积分</span><span class="fr"><i>-￥{$result['integral_ded_amounts']}</i></span></li>
+                </ul>
+                <p class="date"> <span>实付款：<i>￥{$result['pay_amounts']}</i></span> <em>下单时间：{$result['create_time']}</em> </p>
+            </div>
+            <div class="logistics">
+                <h1>物流详情</h1>
+                <div class="xq">
+                    <ul>
+                        <volist name="result['logistics']" id="logis">
+                        <li <if condition="empty($result['logistics'][$key+1])">class="new"</if>>
+                            <p class="tit">{$logis['context']}</p>
+                            <p class="name"></p>
+                            <p class="date">{$logis['time']}</p>
+                            <i></i>
+                        </li>
+                        </volist>
+                        <!--<li class="new">
+                            <p class="tit">[天津市]望海楼快递员正在派件</p>
+                            <p class="name"><span>派件员：李大大</span><span class="tel"><a href="tel:13569854798">13569854798</a></span></p>
+                            <p class="date">2016-09-06 07:20</p>
+                            <i></i>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="suspend">
+            <p>
+            <if condition="$result['status'] eq 1">
+                <a href="{:U('OrderInfo/cancelOrder', array('order_id'=>$result['order_id']))}" class="qx ajax-get confirm" data-confirm="确定要取消订单吗？">取消订单</a>
+				<if condition="$result['order_type'] eq 1">
+                <a href="{:U('Flow/pay', array('order_id'=>$result['order_id']))}" class="bc tx">支付</a>
+				<else />
+                <a href="{:U('OrderInfo/repairPrepay', array('order_id'=>$result['order_id']))}" class="bc tx">支付</a>
+				</if>
+            <elseif condition="$result['status'] eq 2"/>
+                <a href="{:U('OrderInfo/cancelOrder', array('order_id'=>$result['order_id']))}" class="qx ajax-get confirm" data-confirm="确定要取消订单吗？">取消订单</a>
+                <a href="{:U('OrderInfo/urge', array('order_id'=>$result['order_id']))}" class="bc tx ajax-get">提醒发货</a>
+            <elseif condition="$result['status'] eq 3"/>
+                <a href="{:U('OrderInfo/refund', array('order_id'=>$result['order_id']))}" class="qx">退款</a>
+                <a href="{:U('OrderInfo/signFor', array('order_id'=>$result['order_id']))}" class="bc tx ajax-get confirm" data-confirm="确定要确认收货吗？">确认收货</a>
+            <elseif condition="$result['status'] eq 4"/>
+                <a href="{:U('OrderInfo/refund', array('order_id'=>$result['order_id']))}" class="qx">退款</a>
+				<if condition="$result['order_type'] eq 1">
+                <a href="{:U('OrderInfo/comment', array('order_id'=>$result['order_id']))}" class="bc tx">评价</a>
+				<else />
+				 <a href="{:U('OrderInfo/masterComment', array('order_id'=>$result['order_id']))}" class="bc tx">评价</a>
+				 </if>
+            <elseif condition="$result['status'] eq 5"/>
+
+            <elseif condition="$result['status'] eq 7"/>
+                <a href="{:U('OrderInfo/cancelRefund', array('order_id'=>$result['order_id']))}" class="bc tx ajax-get confirm" data-confirm="确定要取消退款吗？">取消退款</a>
+            </if>
+            </p>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript" src="__JS__/common.js"></script>
+    <script>
+        $(function() {
+            $("a.tx").click(function() {
+                $(".bg,.warn").fadeIn();
+            });
+            $(".warn p span").click(function() {
+                $(".bg,.warn").fadeOut();
+            });
+            $(".none").css("height",$(window).height()-196);
+        })
+    </script>
+    <script>
+        //提示弹出层 回调方法
+        function success_callback() {window.location.reload();}
+        function error_callback() {}
+    </script>
+</block>

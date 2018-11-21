@@ -1,0 +1,165 @@
+<extend name="Public/base" />
+
+<block name="main">
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+                <div class="widget-title widget-title-search list-widget-title">
+                    <ul class="quick-actions-horizontal">
+                        <li>
+                            <a href="javascript:void(0)">
+                                <i class="icon-tag"></i>
+                                <span>平台总成功收入总额：￥{$result['total_2']|default=0}</span>
+                                <!--<span>用户未支付总额：￥{$result['total_1']|default=0}</span>-->
+                                <span>平台总成功退款总额：￥{$result['total_3']|default=0}</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <form action="{:U('CashTurnover/index')}" method="post" class="form">
+                        <input type="hidden" name="status" value="{$_REQUEST['status']}">
+                        <input type="hidden" name="m_id" value="{$_REQUEST['m_id']}">
+                        <!--<span class="date-group date">
+                            <input type="text" name="start_time" class="form-control date-group-addon" value="{$_REQUEST['start_time']}" placeholder="注册时间" readonly>
+                        </span>-->
+                        <input type="text" name="account" value="{$_REQUEST['account']}" placeholder="会员账号">
+                        <div class="btn-group">
+                            <button type="button" class="btn checked" data-default="--支付方式--"></button>
+                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                <!--<span class="checked" data-default="--选择分组--"></span>--><span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li data-value="0" data-title="--取消选择--"><a href="javascript:void(0)">--取消选择--</a></li>
+                                <li data-value="1" data-title="支付宝" <eq name="_REQUEST['payment']" value="1">class="selected"</eq>><a href="javascript:void(0)">支付宝</a></li>
+                                <li data-value="2" data-title="微信" <eq name="_REQUEST['payment']" value="2">class="selected"</eq>><a href="javascript:void(0)">微信</a></li>
+                            </ul>
+                        </div>
+                        <input type="hidden" name="payment" value="{$_REQUEST['payment']}">
+                        <div class="btn-group">
+                            <button type="button" class="btn checked" data-default="--收入/支付--"></button>
+                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                <!--<span class="checked" data-default="--选择分组--"></span>--><span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li data-value="0" data-title="--取消选择--"><a href="javascript:void(0)">--取消选择--</a></li>
+                                <li data-value="1,2,3" data-title="收入" <eq name="_REQUEST['trend']" value="1,2,3">class="selected"</eq>><a href="javascript:void(0)">收入</a></li>
+                                <!--<li data-value="2" data-title="充值" <eq name="_REQUEST['trend']" value="2">class="selected"</eq>><a href="javascript:void(0)">充值</a></li>-->
+                                <li data-value="10" data-title="支出" <eq name="_REQUEST['trend']" value="10">class="selected"</eq>><a href="javascript:void(0)">支出</a></li>
+                            </ul>
+                        </div>
+                        <input type="hidden" name="trend" value="{$_REQUEST['trend']}">
+                        <button class="btn btn-inverse">查询</button>
+                        <button type="button" class="btn btn-warning senior">高级</button>
+                        <div class="senior-search" style="width: 475px;height: 300px;">
+                            <p>
+                            <div class="input-daterange" id="datepicker" style="display:inline">
+                                <input type="text" name="start_time" value="{$_REQUEST['start_time']}" class="text-width-10" placeholder="起始时间" readonly>
+                                --
+                                <input type="text" name="end_time" value="{$_REQUEST['end_time']}" class="text-width-10" placeholder="结束时间" readonly>
+                            </div>
+                            </p>
+                        </div>
+                        <!--<button type="button" class="btn btn-warning senior">高级</button>
+                        <div class="senior-search" style="width: 300px;height: 300px;">
+                            <p>
+                                <input type="text" name="id" value="{$_REQUEST['id']}" placeholder="会员ID">
+                            </p>
+                        </div>-->
+                    </form>
+                </div>
+
+                <ul class="nav nav-tabs">
+                    <!--<li class="active"><a data-toggle="tab" href="#tab1">成功</a></li>
+                    <li class=""><a data-toggle="tab" href="#tab2">未支付</a></li>-->
+                    <li <eq name="_REQUEST['status']" value="1">class="active"</eq>>
+                        <a href="{:U('CashTurnover/index',array('status'=>'1','m_id'=>$_REQUEST['m_id']))}" data-toggle="">成功</a>
+                    </li>
+                    <li <if condition="empty($_REQUEST['status'])">class="active"</if>>
+                        <a href="{:U('CashTurnover/index',array('status'=>'0','m_id'=>$_REQUEST['m_id']))}" data-toggle="">未支付</a>
+                    </li>
+                </ul>
+
+                <div class="widget-content no-padding no-border">
+                    <table class="table table-bordered table-striped reset-checkbox">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>用户信息</th>
+                            <th>支付方式</th>
+                            <th>金额动向</th>
+                            <th>金额信息</th>
+                            <th>流水号</th>
+                            <th>关联订单</th>
+                            <th>支付/退款时间</th>
+                            <th>状态</th>
+                        </tr>
+                        </thead>
+                        <tbody class="tbody">
+                        <empty name="list"><tr><td colspan="30">Aho！没有查询结果！！</td></tr></empty>
+                        <volist name="list" id="row">
+                            <tr>
+                                <td>{$row['id']}</td>
+                                <td>{$row['account']}-{$row['nickname']}</td>
+                                <td>{$row['payment']|get_payment_name}</td>
+                                <td>{$row['trend_name']}</td>
+                                <td>￥ {$row['amounts']} 元</td>
+                                <td>{$row['turnover_number']|default='---'}</td>
+                                <td>{$row['order_sn']|default='---'}</td>
+                                <td>{$row['create_time']|timestamp2date}</td>
+                                <td>
+                                    <if condition="$row['status'] eq 1">
+                                        <span class="green-1">成功</span>
+                                        <else/>
+                                        <span class="">未支付</span>
+                                    </if>
+                                </td>
+                            </tr>
+                        </volist>
+                        <tr>
+                            <td colspan="20">
+                                <!--<span class="yellow-1">
+                                    <if condition="$_REQUEST['status'] eq 1">
+                                        当前条件用户付款总额：￥{$result['now_total_2']|default=0}<br>
+                                        &lt;!&ndash;当前条件用户未支付总额：￥{$result['now_total_1']|default=0}</span>&ndash;&gt;
+                                        当前条件用户退款总额：￥{$result['now_total_3']|default=0}
+                                    </if>
+                                </span>-->
+                                <ul class="quick-actions-horizontal">
+                                    <li>
+                                        <a href="javascript:void(0)">
+                                            <i class="icon-tag"></i>
+                                            <span>当前条件用户付款总额：￥{$result['now_total_2']|default=0}</span>
+                                            <!--<span>用户未支付总额：￥{$result['total_1']|default=0}</span>-->
+                                            <span>当前条件用户退款总额：￥{$result['now_total_3']|default=0}</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination alternate">
+                    {$page}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <!--日历 start-->
+    <link href="__STATIC__/plugins/datepicker/datepicker3.css" rel="stylesheet">
+    <script src="__STATIC__/plugins/datepicker/bootstrap-datepicker.js"></script>
+    <!--日历 end-->
+    <script>
+        $(function(){
+            $('.input-daterange').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true
+            });
+        })
+    </script>
+</block>

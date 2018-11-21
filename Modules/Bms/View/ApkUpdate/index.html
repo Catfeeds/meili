@@ -1,0 +1,66 @@
+<extend name="Public/base" />
+
+<block name="main">
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+
+                <div class="widget-title widget-title-search list-widget-title">
+                    <button class="btn btn-success href" url="{:U('ApkUpdate/add')}" target-form="ids">新增</button>&nbsp;
+                    <!--<button class="btn btn-inverse ajax-post" url="{:U('ApkUpdate/forbidResume',array('model'=>'ApkUpdate','field'=>'status','value'=>0))}" target-form="ids">禁用</button>&nbsp;-->
+                    <!--<button class="btn btn-info ajax-post" url="{:U('ApkUpdate/forbidResume',array('model'=>'ApkUpdate','field'=>'status','value'=>1))}" target-form="ids">启用</button>&nbsp;-->
+                    <button class="btn btn-danger confirm ajax-post" url="{:U('ApkUpdate/delete',array('model'=>'ApkUpdate'))}" target-form="ids">删除</button>&nbsp;
+                </div>
+
+                <div class="widget-content no-padding no-border">
+                    <table class="table table-bordered table-striped with-check reset-checkbox">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="title-checkbox" name="title-checkbox" class="check-all"/><!--<i class="icon-resize-vertical"></i>--></th>
+                            <th>ID</th>
+                            <th>包名</th>
+                            <th>版本号</th>
+                            <th>版本描述</th>
+                            <th>上传时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="tbody">
+                        <empty name="list"><tr><td colspan="30">Aho！没有查询结果！！</td></tr></empty>
+                        <volist name="list" id="row">
+                            <tr>
+                                <td><input type="checkbox" name="ids[]" value="{$row['id']}" class="ids"/></td>
+                                <td>{$row['id']}</td>
+                                <td>{$row['package']}</td>
+                                <td>{$row['version']}</td>
+                                <td>{$row['description']}</td>
+                                <td>{$row['update_time']|timestamp2date}</td>
+                                <td>{$row['status']|get_status_title}</td>
+                                <td>
+                                    <if condition ="in_array($row['type_id'],$spec_types)">
+                                    </if>
+                                    <!--<a href="{:U('ApkUpdate/update',array('model'=>'ApkUpdate','id'=>$row['id']))}" title="编辑" class="">-->
+                                        <!--<span class="label label-success label-success-hover">编辑</span></a>&nbsp;-->
+                                    <!--<if condition="$row['status'] eq 0 or $row['status'] eq 1">-->
+                                        <!--<a href="{:U('ApkUpdate/forbidResume',array('model'=>'ApkUpdate','ids'=>$row['id'],'field'=>'status','value'=>abs(1-$row['status'])))}" title="{$row['status']|show_status_name}" class="ajax-get">-->
+                                        <!--<span class="label {$row['status']|show_status_label}">{$row['status']|show_status_name}</span></a>&nbsp;-->
+                                    <!--</if>-->
+                                    <a href="{:U('ApkUpdate/delete',array('model'=>'ApkUpdate','ids'=>$row['id']))}" title="删除" class="confirm ajax-get">
+                                        <span class="label label-important label-important-hover">删除</span></a>
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination alternate">
+                    {$page}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</block>

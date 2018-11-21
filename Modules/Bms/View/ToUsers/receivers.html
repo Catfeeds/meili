@@ -1,0 +1,106 @@
+<h5>　接收者　<span class="mailbox-notify">你可以筛选出你要发送的接收对象</span></h5>
+<empty name="receivers['list']">
+    <div style="margin-left: 15px;margin-top: 20px;">
+        <form class="send-search-form form-horizontal" method="" action="">
+            <input type="text" name="id" class="text-width-35" autocomplete="off" placeholder="ID">　
+            <input type="text" name="account" class="text-width-35" autocomplete="off" placeholder="账号">　
+            <!--<br><br><div class="btn-group">
+                <button type="button" class="btn checked" data-default="--排序--"></button>
+                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li data-value="" data-title="--取消选择--"><a href="javascript:void(0)">--取消选择--</a></li>
+                    <li data-value="id:DESC" data-title="ID降序"><a href="javascript:void(0)">ID降序</a></li>
+                </ul>
+            </div>
+            <input type="hidden" name="sort" value="">-->
+            <button class="btn btn-success btn-send-search" type="button">查询</button>
+        </form>
+    </div>
+</empty>
+<br>
+<div id="receivers-scroll-div">
+    <div class="widget-content no-border">
+    <table class="table table-striped reset-checkbox" style="width: 500px;max-width: none">
+        <thead>
+        <tr>
+            <th>用户ID</th>
+            <th>手机号码</th>
+            <th>邮箱地址</th>
+            <th>昵称</th>
+        </tr>
+        </thead>
+        <tbody class="tbody" id="receivers-list-body">
+            <volist name="receivers['list']" id="rec">
+                <tr>
+                    <td><input type="checkbox" class="receiver-ids" value="{$rec['id']}">{$rec['id']}</td>
+                    <td>{$rec['mobile']}</td>
+                    <td>{$rec['email']|default='---'}</td>
+                    <td>{$rec['nickname']}</td>
+                </tr>
+            </volist>
+        </tbody>
+    </table>
+    </div>
+</div>
+<!-- 美化滚动条
+<script src="__STATIC__/jquery.nicescroll.min.js"></script>
+<script type="text/javascript">
+    $("#receivers-scroll-div").niceScroll({
+        cursorcolor:"#ccc", cursoropacitymax:1, touchbehavior:false, cursorwidth:"10px", cursorborder:"0", cursorborderradius:"5px"
+    });
+</script>
+-->
+<empty name="receivers['list']">
+    <script type="text/javascript">
+        $(document).ready(function() {
+            getReceivers();
+        });
+    </script>
+</empty>
+<script type="text/javascript">
+    var sel_p = 1, can_load = true; //查找接收者的页号
+    $(document).ready(function() {
+        //点击查询按钮获取接收对象
+        $('.btn-send-search').click(function(){
+            sel_p = 1; where = $('.send-search-form').serialize();
+            getReceivers('html');
+        });
+        //滚动加载接收对象
+        $("#receivers-scroll-div").scroll(function(){
+            if($("#receivers-scroll-div")[0].scrollTop >= ($("#receivers-scroll-div")[0].scrollHeight - $("#receivers-scroll-div").height()))  {
+                sel_p++;
+                getReceivers('append');
+            }
+        });
+    });
+    //获取接收对象列表
+    function getReceivers(func) {
+        if(!can_load) {
+            return false;
+        }
+        var query = {receive_rule:2,where:where,model:model,p:sel_p}
+        $.post('{:U("ToUsers/getReceivers")}', query).success(function(data){
+            if(data.list == '') {
+                can_load = false;
+            }
+            var html = ''
+            for(var i in data.list) {
+                data.list[i]['mobile'] = (data.list[i]['mobile'] == '' || data.list[i]['mobile'] == 0) ? '---' : data.list[i]['mobile'];
+                data.list[i]['email']  = (data.list[i]['email'] == '')  ? '---' : data.list[i]['email'];
+                html += '<tr> ' +
+                            '<td><input type="checkbox" class="receiver-ids" value="'+data.list[i]['id']+'"> '+data.list[i]['id']+'</td> ' +
+                            '<td>'+data.list[i]['mobile']+'</td> ' +
+                            '<td>'+data.list[i]['email']+'</td>' +
+                            '<td>'+data.list[i]['nickname']+'</td> ' +
+                        '</tr>';
+            }
+            if(func == 'html') {
+                $('#receivers-list-body').html(html);
+            } else {
+                $('#receivers-list-body').append(html);
+            }
+        });
+    }
+</script>

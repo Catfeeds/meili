@@ -1,0 +1,181 @@
+<extend name="Public/base" />
+
+<block name="main">
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+                <div class="widget-title widget-title-search list-widget-title">
+                    <if condition="in_array($_REQUEST['type'], array(1,2))">
+                        <ul class="quick-actions-horizontal">
+                            <li>
+                                <if condition="$_REQUEST['type'] eq 2">
+                                    <a href="{:U('RefundOrderSer/index',array('type'=>2,'status'=>7))}"><i class="icon-tag"></i><span>未处理退款单：{$count_1} 单</span></a>
+                                </if>
+                                <if condition="$_REQUEST['type'] eq 1">
+                                    <a href="{:U('OrderInfoSer/index',array('type'=>1,'status'=>2))}"><i class="icon-tag"></i><span>支付完成等待预约：{$count_2} 单</span></a>
+                                </if>
+                            </li>
+                        </ul>
+                    </if>
+                    <!--<if condition="$_REQUEST['type'] eq 1">-->
+                        <!--<button class="btn btn-success ajax-post confirm" url="{:U('OrderInfo/delivery')}" target-form="ids">确认发货</button>&nbsp;-->
+                        <!--&lt;!&ndash;<button class="btn btn-warning ajax-post confirm" url="{:U('OrderInfo/receiving')}" target-form="ids">确认完成</button>&nbsp;&ndash;&gt;-->
+                    <!--</if>-->
+                        <form action="{:U(''.controller_by_order_type_ser($_REQUEST['type']).'/index',array('type'=>$_REQUEST['type']))}" method="post" class="form">
+                            <input type="hidden" name="type" value="{$_REQUEST['type']}">
+                            <input type="text" name="account" value="{$_REQUEST['account']}" placeholder="会员账号">
+                            <input type="text" name="order_sn" value="{$_REQUEST['order_sn']}" placeholder="订单号">
+                            <if condition="$_REQUEST['type'] eq 1">
+                                <div class="btn-group">
+                                    <button type="button" class="btn checked" data-default="--订单状态--"></button>
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                        <!--<span class="checked" data-default="--选择分组--"></span>--><span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li data-value="" data-title="--取消选择--"><a href="javascript:void(0)">--取消选择--</a></li>
+                                        <li data-value="1" data-title="待支付" <eq name="_REQUEST['status']" value="1">class="selected"</eq>><a href="javascript:void(0)">待支付</a></li>
+                                        <li data-value="2" data-title="待预约" <eq name="_REQUEST['status']" value="2">class="selected"</eq>><a href="javascript:void(0)">待预约</a></li>
+                                        <li data-value="3" data-title="待服务" <eq name="_REQUEST['status']" value="3">class="selected"</eq>><a href="javascript:void(0)">待服务</a></li>
+                                        <li data-value="4" data-title="已完成" <eq name="_REQUEST['status']" value="4">class="selected"</eq>><a href="javascript:void(0)">已完成</a></li>
+                                    </ul>
+                                </div>
+                                <elseif condition="$_REQUEST['type'] eq 2"/>
+                                <div class="btn-group">
+                                    <button type="button" class="btn checked" data-default="--订单状态--"></button>
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                        <!--<span class="checked" data-default="--选择分组--"></span>--><span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li data-value="0" data-title="--取消选择--"><a href="javascript:void(0)">--取消选择--</a></li>
+                                        <li data-value="7" data-title="申请退款" <eq name="_REQUEST['status']" value="7">class="selected"</eq>><a href="javascript:void(0)">申请退款</a></li>
+                                        <li data-value="8" data-title="退款完成" <eq name="_REQUEST['status']" value="8">class="selected"</eq>><a href="javascript:void(0)">退款完成</a></li>
+                                        <li data-value="9" data-title="取消退款" <eq name="_REQUEST['status']" value="9">class="selected"</eq>><a href="javascript:void(0)">取消退款</a></li>
+                                    </ul>
+                                </div>
+                            </if>
+                            <input type="hidden" name="status" value="{$row['status']}">
+                            <!--<span class="date-group date">
+                                <input type="text" name="start_time" class="form-control date-group-addon" value="{$_REQUEST['start_time']}" placeholder="注册时间" readonly>
+                            </span>-->
+                            <button class="btn btn-inverse">查询</button>
+                            <!--<button type="button" class="btn btn-warning senior">高级</button>-->
+                            <div class="senior-search" style="width: 300px;height: 300px;">
+                                <p>
+                                    <input type="text" name="id" value="{$_REQUEST['id']}" placeholder="会员ID">
+                                </p>
+                            </div>
+
+                        </form>
+                </div>
+
+                <div class="widget-content no-padding no-border">
+                    <table class="table table-bordered table-striped with-check reset-checkbox">
+                        <thead>
+                        <tr>
+                            <!--<th><input type="checkbox" id="title-checkbox" name="title-checkbox" class="check-all"/>&lt;!&ndash;<i class="icon-resize-vertical"></i>&ndash;&gt;</th>-->
+                            <th>ID</th>
+                            <th>订单号</th>
+                            <th>订单类型</th>
+                            <th>实体店</th>
+                            <th>支付信息</th>
+                            <th>费用信息</th>
+                            <th>下单时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="tbody">
+                        <empty name="list"><tr><td colspan="30">Aho！没有查询结果！！</td></tr></empty>
+                        <volist name="list" id="row">
+                            <tr>
+                                <!--<td class="va-middle"><input type="checkbox" name="ids[]" value="{$row['id']}" class="ids"/></td>-->
+                                <td class="va-middle">{$row['id']}</td>
+                                <td class="va-middle">{$row['order_sn']}</td>
+                                <td class="va-middle">
+                                    <eq name="row['flag']" value="0"><span style="color: red">服务商品</span></eq>
+                                    <eq name="row['flag']" value="1"><span style="color: goldenrod">套餐</span></eq>
+                                    <eq name="row['flag']" value="2"><span style="color: green">一卡通</span></eq>
+                                    <eq name="row['flag']" value="3"><span style="color: blueviolet">团购商品</span></eq>
+                                </td>
+                                <td class="va-middle">{$row['shop_name']|default='暂未选择'}</td>
+                                <td class="va-middle">
+                                    支付方式：{$row['payment']|get_payment_name}<br>
+                                    支付时间：{$row['pay_time']|timestamp2date}
+                                </td>
+                                <td class="va-middle"><span class="yellow-1">
+                                    商品总额：￥{$row['goods_amounts']}<br>
+                                    <!--&lt;!&ndash;积分抵扣：￥{$row['integral_ded_amounts']}　&ndash;&gt;优惠券抵扣：-￥{$row['coupon_amounts']}<br>-->
+                                    实付款：￥{$row['pay_amounts']}</span>
+                                </td>
+                                <td class="va-middle">{$row['create_time']|timestamp2date}</td>
+                                <td class="va-middle">
+                                    <eq name="row['status']" value="1"><span style="color: red">待支付</span></eq>
+                                    <eq name="row['status']" value="2"><span style="color: goldenrod">待预约</span></eq>
+                                    <eq name="row['status']" value="3"><span style="color: green">待服务</span></eq>
+                                    <eq name="row['status']" value="4"><span style="color: blueviolet">已完成</span></eq>
+                                    <eq name="row['status']" value="7"><span style="color: goldenrod">申请退款中</span></eq>
+                                    <eq name="row['status']" value="8"><span style="color: gold">退款完成</span></eq>
+                                    <eq name="row['status']" value="9"><span style="color: greenyellow">取消退款</span></eq>
+                                    <eq name="row['status']" value="10"><span style="color: darkorange">已取消</span></eq>
+                                </td>
+                                <td class="va-middle">
+                                    <a href="{:U('OrderInfoSer/update',array('id'=>$row['id']))}" title="详情" class="">
+                                        <span class="label label-hover">详情</span></a>&nbsp;
+                                    <if condition="$row['status'] eq 1">
+                                        <a href="#cancel-order-reason" data-toggle="modal" title="取消订单" onclick="setID(this)" data-order-id="{$row['id']}">
+                                            <span class="label label-important label-important-hover">取消订单</span>
+                                        </a>&nbsp;
+                                    </if>
+                                    <!--<if condition="$row['status'] eq 2">-->
+                                        <!--<a href="{:U('OrderInfo/delivery',array('ids'=>$row['id']))}" title="确认发货" class="ajax-get confirm">-->
+                                            <!--<span class="label label-success label-success-hover">确认发货</span></a>&nbsp;-->
+                                    <!--</if>-->
+                                    <!--<if condition="$row['status'] eq 3">-->
+                                        <!--<a href="{:U('OrderInfo/receiving',array('ids'=>$row['id']))}" title="确认完成" class="ajax-get confirm">-->
+                                            <!--<span class="label label-warning label-warning-hover">确认完成</span></a>&nbsp;-->
+                                    <!--</if>-->
+                                    <if condition="$row['status'] eq 7">
+                                        <a href="{:U('RefundOrderSer/update',array('id'=>$row['id'],'is_refund'=>1,'type'=>$_REQUEST['type']))}" title="处理退款" class="">
+                                            <span class="label label-info label-info-hover">处理退款</span>
+                                        </a>&nbsp;
+                                    </if>
+                                    <if condition="$row['status'] eq 10">
+                                        <a href="{:U('CancelOrderSer/delete',array('model'=>'OrderInfoSer','ids'=>$row['id'],'flag'=>$row['flag']))}" title="删除订单" class="ajax-get confirm">
+                                            <span class="label label-important label-important-hover">删除订单</span></a>&nbsp;
+                                    </if>
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination alternate">
+                    {$page}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <include file="./Modules/MsC/View/Public/modal_cancel_order_ser_reason.html"/>
+
+</block>
+<block name="script">
+    <!--日历 start-->
+    <link href="__STATIC__/plugins/datepicker/datepicker3.css" rel="stylesheet">
+    <script src="__STATIC__/plugins/datepicker/bootstrap-datepicker.js"></script>
+    <!--日历 end-->
+    <script>
+        $(function(){
+            $('span.date-group').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: false, //显示第几周
+                autoclose: true
+            });
+        })
+    </script>
+</block>

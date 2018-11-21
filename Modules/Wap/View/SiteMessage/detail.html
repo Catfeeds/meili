@@ -1,0 +1,18 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">消息详情</div>
+    <div class="right"></div>
+</block>
+<block name="content">
+    <div class="page-content">
+        <div class="dope">
+            <div class="xq">
+                <span><em class="fl">【{$msg['subject']}】</em><em class="fr">{$msg['create_time']}</em></em></span>
+                <!--<b><img src="__IMG__/index_04.png"></b>-->
+                <p>{$msg['content']}</p>
+            </div>
+        </div>
+    </div>
+</block>

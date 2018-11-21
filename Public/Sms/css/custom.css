@@ -1,0 +1,16 @@
+#content {  border-top-left-radius: 0px; min-height: 1000px;}
+#content-header {  margin-top: 1px;  height:85px;}
+#content-header h1, #content-header .btn-group {margin-top: 25px;}
+#header { height: 0; }
+#sidebar {position: fixed;top: -1px;}
+#sidebar .dropdown {padding: 35px 0 10px 20px;}
+#sidebar .dropdown .head-img {padding: 0 0 8px 0;}
+#sidebar .dropdown .dropdown-toggle .caret{border-top: 4px dashed; border-right: 4px solid transparent; border-left: 4px solid transparent;}
+#sidebar .dropdown ul.dropdown-menu{left:15px;}
+#sidebar .dropdown ul.dropdown-menu li a{line-height:25px;}
+
+
+/**物业后台 物业基本信息**/
+.info-left{width:25%;min-width:100px;float: left;border: 0px solid #000}
+.info-right{width:55%;float: left;border: 0px solid #000}
+.info-right p {padding: 5px 0 5px 0;color: #666}

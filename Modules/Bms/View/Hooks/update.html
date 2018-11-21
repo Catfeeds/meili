@@ -1,0 +1,100 @@
+<extend name="Public/base" />
+
+<block name="main">
+
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+                <!--<div class="widget-title">
+                    <span class="icon">
+                        <i class="fa fa-plus"></i>
+                    </span>
+                    <h5>更新钩子信息</h5>
+                </div>-->
+                <br>
+                <div class="widget-content no-padding">
+                    <form class="form-horizontal text-height-27-form" method="post" action="{:U('Hooks/update')}">
+                        <input type="hidden" name="model" value="Hooks">
+                        <input type="hidden" name="id" value="{$row['id']}">
+                        <div class="control-group">
+                            <label class="control-label">钩子名称</label>
+                            <div class="controls">
+                                <input type="text" name="name" value="{$row['name']}" class="text-width-20">
+                                <span class="help-block">* 驼峰法命名，必须为英文字母，30字符以内，必填</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">钩子描述</label>
+                            <div class="controls">
+                                <input type="text" name="description" value="{$row['description']}" class="text-width-40">
+                                <span class="help-block">* 描述其主要功能，225字符以内，必填</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">钩子类型</label>
+                            <div class="controls">
+                                <div class="btn-group">
+                                    <button type="button" class="btn checked" data-default="--选择类型--"></button>
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                        <!--<span class="checked" data-default="--选择类型--"></span>--><span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <volist name=":C('HOOKS_TYPE')" id="type">
+                                            <li data-value="{$key}" data-title="{$type}" <eq name="key" value="$row['type']">class="selected"</eq>>
+                                            <a href="javascript:void(0)">{$type}</a>
+                                            </li>
+                                        </volist>
+                                    </ul>
+                                </div>
+                                <input type="hidden" name="type" value="{$row['type']|default=1}">
+                                <span class="help-block">可选，默认为视图类型</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">插件列表</label>
+                            <div class="controls">
+                                <?php $plugins = explode(',', $row['plugins']);?>
+                                <div class="plugins-div">
+                                    <volist name="plugins" id="plugin">
+                                    <div class="plugins-item" val="{$plugin}">
+                                        <span>{$plugin}</span>
+                                    </div>
+                                    </volist>
+                                    <div class="clear"></div>
+                                </div>
+                                <input type="hidden" name="plugins" value="{$row['plugins']}">
+                                <span class="help-block">* 该钩子所绑定的插件列表，可拖动排序</span>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>　
+                            <button class="btn btn-info ajax-post" target-form="form-horizontal" type="submit">保 存</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript" src="__STATIC__/jquery.dragsort-0.5.1.min.js"></script>
+    <script>
+        $(".plugins-div").dragsort({
+            dragSelector:'div',
+            placeHolderTemplate: '<div class="plugins-item">&nbsp;</div>',
+            dragEnd:setPlugins
+        });
+        //重置插件 排序
+        function setPlugins(){
+            var plugins = [];
+            $('.plugins-item').each(function(){
+                plugins.push($(this).attr('val'));
+            });
+            if(plugins.length > 0)
+                $('input[name="plugins"]').val(plugins.join(','));
+            else
+                $('input[name="plugins"]').val('');
+        }
+    </script>
+</block>

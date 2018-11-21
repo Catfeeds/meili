@@ -1,0 +1,127 @@
+<extend name="Public/base" />
+
+<block name="main">
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+
+                <div class="widget-title widget-title-search list-widget-title">
+                    <ul class="quick-actions-horizontal">
+                        <li>
+                            <a href="javascript:void(0)">
+                                <!--<i class="icon-tag"></i>-->
+                                <span>{$goods['goods_sn']}：{$goods['goods_name']}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="widget-content no-padding no-border">
+                    <form action="{:U('Products/update')}" class="form-horizontal" method="post" id="form">
+                        <input type="hidden" name="goods_id" value="{$goods['goods_id']}">
+                        <table class="table table-bordered table-striped reset-checkbox" id="product-table">
+                            <thead>
+                            <tr>
+                                <volist name="goods_attr_list" id="goods_attr">
+                                    <th>{$goods_attr['attr_name']} *</th>
+                                </volist>
+                                <th><i class="fa fa-pencil"></i>货品号</th>
+                                <th><i class="fa fa-pencil"></i>库存</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody class="tbody">
+                            <!--<empty name="list"><tr><td colspan="30">Aho！没有查询结果！！</td></tr></empty>-->
+                            <volist name="products" id="pro">
+                                <tr>
+                                    <volist name="pro['goods_attr']" id="attr_value">
+                                    <td>{$attr_value}</td>
+                                    </volist>
+                                    <td class="quick-edit" data-model="Products" data-id="{$pro['id']}" data-field="product_sn">{$pro['product_sn']}</td>
+                                    <td class="quick-edit" data-model="Products" data-id="{$pro['id']}" data-field="product_stock">{$pro['product_stock']}</td>
+                                    <td>
+                                        <a href="{:U('Products/delete',array('model'=>'Products','ids'=>$pro['id']))}" title="删除" class="tip-bottom confirm ajax-get">
+                                            <span class="label label-important label-important-hover">删除</span></a>
+                                    </td>
+                                </tr>
+                            </volist>
+                            <tr id="product-row">
+                                <volist name="goods_attr_list" id="goods_attr">
+                                <td>
+                                    <select name="attr[{$goods_attr.attr_id}][]" style="margin-bottom: 0px;">
+                                        <option value="" selected>--请选择--</option>
+                                        <volist name="goods_attr['attr_values']" id="value">
+                                            <option value="{$value}">{$value}</option>
+                                        </volist>
+                                    </select>
+                                </td>
+                                </volist>
+                                <td><input type="text" name="product_sn[]" style="margin-bottom: 0px;"></td>
+                                <td><input type="text" name="product_stock[]" style="margin-bottom: 0px;"></td>
+                                <td>
+                                    <a href="javascript:void(0)" title="添加" class="" onclick="add_product_row();">
+                                        <span class="label label-success label-label-success">添加</span></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="form-actions">
+                            <button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>　
+                            <button class="btn btn-info ajax-post no-refresh" type="submit" id="submit" target-form="form-horizontal">确认添加</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="pagination alternate">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script>
+        var tr_id = 100, tableObj = document.getElementById('product-table');
+        $(function() {});
+
+        //追加货品添加表格
+        function add_product_row() {
+            tr_id++;
+            var attr_row, attr_col, new_row, new_col;
+            //此行号为输入框所在行
+            var index = tableObj.rows.length - 1;
+            //获取数据行
+            attr_row = document.getElementById('product-row');
+            attr_col = attr_row.getElementsByTagName('td');
+            //创建新行
+            new_row = tableObj.insertRow(index);//新增行
+            new_row.setAttribute("id", ''+tr_id+'');
+            //创建新行的列
+            for (var i = 0; i < attr_col.length; i++) {
+                new_col = new_row.insertCell(-1);
+                if (i + 1 == attr_col.length) {
+                    new_col.innerHTML = '<a href="javascript:void(0)" title="删除" class="" onclick="minus_product_row(\'' + tr_id + '\');"> ' +
+                    '<span class="label label-important label-important-hover">删除</span></a>'
+                } else {
+                    new_col.innerHTML = attr_col[i].innerHTML;
+                }
+            }
+        }
+        //删除追加的货品列表
+        function minus_product_row(tr_id){
+            if (tr_id.length > 0) {
+                if (confirm("确定要删除该行吗？") == false) {
+                    return false;
+                }
+                for (var i = 0; i < tableObj.rows.length; i++) {
+                    if (tableObj.rows[i].id == tr_id) {
+                        tableObj.deleteRow(i);
+                    }
+                }
+            }
+        }
+    </script>
+</block>

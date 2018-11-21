@@ -1,0 +1,82 @@
+<if condition="$plugins_param['is_first'] eq 1">
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=826e806b86676d155282de3d37188137"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/CityList/1.4/src/CityList_min.js"></script>
+<script type="text/javascript" src="__STATIC__/map/map-drag.js"></script>
+<link rel="stylesheet" href="__STATIC__/map/map-drag.css" type="text/css"/>
+</if>
+
+<input type="hidden" id="form-lat" name="lat" class="location" value="{$plugins_param['lat']}">
+<input type="hidden" id="form-lng" name="lng" class="location" value="{$plugins_param['lng']}">
+<input type="hidden" id="form-zoom" name="zoom" class="location" value="{$plugins_param['zoom']}">
+<input type="hidden" id="form-province" name="province" class="location" value="{$plugins_param['province']}">
+<input type="hidden" id="form-city" name="city" class="location" value="{$plugins_param['city']}">
+<input type="hidden" id="form-district" name="district" class="location" value="{$plugins_param['district']}">
+<input type="hidden" id="form-street" name="street" class="location" value="{$plugins_param['street']}">
+<input type="hidden" id="form-street-number" name="street_number" class="location" value="{$plugins_param['street_number']}">
+
+<table cellpadding="0" cellspacing="0">
+    <tr>
+        <td>
+            <neq name="plugins_param['not_mark']" value="1">
+            <button class="btn btn-info" onclick="labelMap('{:get_city_by_ip()}')" type="button">开始标注</button>
+            </neq>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <if condition="!empty($plugins_param['lng']) and  $plugins_param['lng'] neq 0.000000">
+                <div id='show-map' style="width:300px;height:250px;"></div>
+                <script>
+                    show_map();
+                    function show_map() {
+                        var small_map_show = new BMap.Map("show-map");//创建标注后地图
+                        var lng = {$plugins_param['lng']}, lat = {$plugins_param['lat']}, zoom = {$plugins_param['zoom']|default=13};
+                        zoom == 0 ? zoom = 12 : '';
+                        small_map_show.centerAndZoom(new BMap.Point(lng, lat), zoom);//map.getZoom()获取缩放值
+                        var small_marker_show = new BMap.Marker(new BMap.Point(lng, lat));// 创建标注
+                        small_map_show.addOverlay(small_marker_show);// 将标注添加到地图中
+                        //small_marker_show.setAnimation(BMAP_ANIMATION_BOUNCE);
+                    }
+                </script>
+            <else/>
+                <div id='show-map' style="width:0px;height:0px;"></div>
+            </if>
+        </td>
+    </tr>
+</table>
+
+<!-- 拖动窗口 start-->
+<div id="lyq-map">
+    <div class="lyq-map-title">
+        <h2>1.选择位置>2.标注位置>3.保存位置</h2>
+        <div>
+            <!--<a class="lyq-map-max" href="javascript:void(0);" title="最大化"></a>
+            <a class="lyq-map-revert" href="javascript:void(0);" title="还原"></a>-->
+            <a class="lyq-map-close" href="javascript:void(0);" title="关闭"></a>
+        </div>
+    </div>
+    <div class="lyq-map-content">
+        <if condition="1 eq 1">
+            <!-- 地址选择下拉菜单 s-->
+            <div id="lyq-map-f-container">
+                <div id="lyq-map-container"></div>
+            </div>
+        </if>
+        <!-- 地址选择下拉菜单 e-->
+        <!-- 地图显示框 s-->
+        <div id="lyq-map-all-map"></div>
+        <!-- 地图显示框 e-->
+        <div class="lyq-map-bottom">
+            <input type="hidden" id="hidden-lat"><input type="hidden" id="hidden-lng"><input type="hidden" id="hidden-zoom">
+            <input type="hidden" id="hidden-province"><input type="hidden" id="hidden-city"><input type="hidden" id="hidden-district">
+            <input type="hidden" id="hidden-street"><input type="hidden" id="hidden-street-number">
+            <input type="button" onclick="saveLabel();" class="lyq-map-btn" value="保存">
+            <input type="button" onclick="cancelLabel()" class="lyq-map-btn" value="取消">
+        </div>
+    </div>
+</div>
+<!-- 拖动窗口 end-->
+<if condition="$plugins_param['is_first'] eq 1">
+<!--标注操作  最好放在页面尾部-->
+<script type="text/javascript" src="__STATIC__/map/baidu/map-label.js"></script>
+</if>

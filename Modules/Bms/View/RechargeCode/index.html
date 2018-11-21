@@ -1,0 +1,157 @@
+<extend name="Public/base" />
+
+<block name="main">
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+                <div class="widget-title widget-title-search list-widget-title">
+                    <ul class="quick-actions-horizontal">
+                        <li>
+                            <a href="javascript:void(0)">
+                                <i class="icon-tag"></i>
+                                <span>平台充值码总额(平台生成)：￥{$result['total_1']|default=0}</span>
+                                <span>用户充值码总额(用户购买)：￥{$result['total_2']|default=0}</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <form action="{:U('RechargeCode/index')}" method="post" class="form">
+                        <!--<input type="hidden" name="m_id" value="{$_REQUEST['m_id']}">-->
+                        <input type="hidden" name="rec_card_id" value="{$_REQUEST['rec_card_id']}">
+                        <!--<span class="date-group date">
+                            <input type="text" name="start_time" class="form-control date-group-addon" value="{$_REQUEST['start_time']}" placeholder="注册时间" readonly>
+                        </span>-->
+                        <input type="text" name="account" value="{$_REQUEST['account']}" placeholder="会员账号">
+                        <div class="btn-group">
+                            <button type="button" class="btn checked" data-default="--状态--"></button>
+                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                <!--<span class="checked" data-default="--选择分组--"></span>--><span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li data-value="" data-title="--取消选择--"><a href="javascript:void(0)">--取消选择--</a></li>
+                                <li data-value="1" data-title="已充值" <eq name="_REQUEST['payment']" value="1">class="selected"</eq>><a href="javascript:void(0)">已充值</a></li>
+                                <li data-value="0" data-title="未充值" <eq name="_REQUEST['payment']" value="0">class="selected"</eq>><a href="javascript:void(0)">未充值</a></li>
+                            </ul>
+                        </div>
+                        <input type="hidden" name="status" value="{$_REQUEST['status']}">
+                        <button class="btn btn-inverse">查询</button>
+                        <button type="button" class="btn btn-warning senior">高级</button>
+                        <div class="senior-search" style="width: 405px;height: 300px;">
+                            <p>
+                            <div class="input-daterange" id="datepicker" style="display:inline">
+                                <input type="text" name="start_time" value="{$_REQUEST['start_time']}" class="text-width-10" placeholder="查询起始时间" readonly>
+                                --
+                                <input type="text" name="end_time" value="{$_REQUEST['end_time']}" class="text-width-10" placeholder="查询结束时间" readonly>
+                            </div>
+                            </p>
+                            <input type="text" name="m_id" value="{$_REQUEST['m_id']}" placeholder="用户ID">
+                        </div>
+                    </form>
+                </div>
+
+                <!--<ul class="nav nav-tabs">
+                    &lt;!&ndash;<li class="active"><a data-toggle="tab" href="#tab1">成功</a></li>
+                    <li class=""><a data-toggle="tab" href="#tab2">未支付</a></li>&ndash;&gt;
+                    <li <eq name="_REQUEST['status']" value="1">class="active"</eq>>
+                        <a href="{:U('RechargeCode/index',array('status'=>'1','m_id'=>$_REQUEST['m_id']))}" data-toggle="">成功</a>
+                    </li>
+                    <li <if condition="empty($_REQUEST['status'])">class="active"</if>>
+                        <a href="{:U('RechargeCode/index',array('status'=>'0','m_id'=>$_REQUEST['m_id']))}" data-toggle="">未支付</a>
+                    </li>
+                </ul>-->
+
+                <div class="widget-content no-padding no-border">
+                    <table class="table table-bordered table-striped reset-checkbox">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>拥有者</th>
+                            <th>充值码</th>
+                            <th>面值</th>
+                            <th>创建时间</th>
+                            <th>状态</th>
+                            <th>充值者</th>
+                            <th>充值时间</th>
+                        </tr>
+                        </thead>
+                        <tbody class="tbody">
+                        <empty name="list"><tr><td colspan="30">Aho！没有查询结果！！</td></tr></empty>
+                        <volist name="list" id="row">
+                            <tr>
+                                <td>{$row['id']}</td>
+                                <td>
+                                    <if condition="empty($row['user_id'])">
+                                        平台
+                                        <else/>
+                                        <a href="{:U('Member/update',array('id'=>$row['user_id']))}" target="_blank">{$row['user_account']}</a>
+                                    </if>
+                                </td>
+                                <td>{$row['code']}</td>
+                                <td>￥ {$row['face_value']} 元</td>
+                                <td>{$row['create_time']|timestamp2date}</td>
+                                <td>
+                                    <if condition="$row['status'] eq 1">
+                                        <span class="green-1">已充值</span>
+                                    <else/>
+                                        <span class="">未充值</span>
+                                    </if>
+                                </td>
+                                <td><a href="{:U('Member/update',array('id'=>$row['recharger_id']))}" target="_blank">{$row['recharger_account']|default='---'}</a></td>
+                                <td>{$row['recharge_time']|timestamp2date}</td>
+                            </tr>
+                        </volist>
+                        <tr>
+                            <td colspan="20">
+                                <!--<span class="yellow-1">
+                                    当前条件平台充值码已充值总额：￥{$result['now_total_1']|default=0}<br>
+                                    当前条件平台充值码未充值总额：￥{$result['now_total_2']|default=0}<br>
+                                    当前条件用户充值码已充值总额：￥{$result['now_total_3']|default=0}<br>
+                                    当前条件用户充值码未充值总额：￥{$result['now_total_4']|default=0}
+                                </span>-->
+                                <ul class="quick-actions-horizontal">
+                                    <li>
+                                        <a href="javascript:void(0)">
+                                            <i class="icon-tag"></i>
+                                            <span>当前条件平台充值码已充值总额：￥{$result['now_total_1']|default=0}</span>
+                                            <span>当前条件平台充值码未充值总额：￥{$result['now_total_2']|default=0}</span>
+                                        </a>
+                                    </li>
+                                </ul><br>
+                                <ul class="quick-actions-horizontal">
+                                    <li>
+                                        <a href="javascript:void(0)">
+                                            <i class="icon-tag"></i>
+                                            <span>当前条件用户充值码已充值总额：￥{$result['now_total_3']|default=0}</span>
+                                            <span>当前条件用户充值码未充值总额：￥{$result['now_total_4']|default=0}</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination alternate">
+                    {$page}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <!--日历 start-->
+    <link href="__STATIC__/plugins/datepicker/datepicker3.css" rel="stylesheet">
+    <script src="__STATIC__/plugins/datepicker/bootstrap-datepicker.js"></script>
+    <!--日历 end-->
+    <script>
+        $(function(){
+            $('.input-daterange').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true
+            });
+        })
+    </script>
+</block>

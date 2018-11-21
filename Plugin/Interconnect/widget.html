@@ -1,0 +1,5 @@
+<li><a href="{:plugins_url('Interconnect://Login/transfer',array('encrypt'=>think_encrypt($plugins_config['qq_app_id'].'|'.$plugins_config['qq_app_key'],'',3600),'platform'=>'qq'))}" title="QQ登录"><img src="__IMG__/qq.png" alt="扣扣登陆"></a></li>
+<!--
+<li><a href="{:plugins_url('Interconnect://Login/transfer',array('encrypt'=>think_encrypt($plugins_config['sina_app_key'].'|'.$plugins_config['sina_app_secret'],'',3600),'platform'=>'sina'))}" title="新浪微博登录"><img src="__IMG__/weixin.png" alt="新浪微博登陆"></a></li>-->
+
+<li><a href="{:plugins_url('Interconnect://Login/transfer',array('encrypt'=>think_encrypt($plugins_config['wx_app_id'].'|'.$plugins_config['wx_app_secret'],'',3600),'platform'=>'weChat'))}" title="微信登陆"><img src="__IMG__/weixin.png" alt="微信登陆"></a></li>

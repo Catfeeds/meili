@@ -1,0 +1,23 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">我的管家</div>
+    <div class="right"></div>
+</block>
+<block name="content">
+    <div class="page-content">
+        <div class="butler">
+            <if condition="empty($keeper)">
+            <div style="text-align: center;padding: 50px;">{$msg}</div>
+            <else/>
+            <div class="head"><img src="{$keeper['head']}"></div>
+            <ul>
+                <li><span>姓名：<i>{$keeper['name']}</i></span></li>
+                <li><span>电话：<i>{$keeper['mobile']}</i></span></li>
+            </ul>
+            <p><a href="tel:{$keeper['mobile']}">呼叫管家</a></p>
+            </if>
+        </div>
+    </div>
+ </block>

@@ -1,0 +1,173 @@
+<extend name="Public/base" />
+
+<block name="main">
+
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+                <!--<div class="widget-title">
+                    <span class="icon">
+                        <i class="fa fa-plus"></i>
+                    </span>
+                    <h5>更新行为信息</h5>
+                </div>-->
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#tab1">基本信息</a></li>
+                    <li class=""><a data-toggle="tab" href="#tab2">图文详情</a></li>
+                </ul>
+
+                <br>
+                <form class="form-horizontal text-height-27-form" method="post" action="{:U('Activities/update')}">
+                    <div class="widget-content tab-content no-padding">
+                        <div id="tab1" class="tab-pane active">
+                            <input type="hidden" name="model" value="Activities">
+                            <input type="hidden" name="id" value="{$row['id']}">
+                            <div class="control-group">
+                                <label class="control-label">标题</label>
+                                <div class="controls">
+                                    <input type="text" name="title" value="{$row['title']}" class="text-width-40" maxlength="60">
+                                    <span class="help-block">* 活动标题</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">封面图片</label>
+                                <div class="controls">
+                                    {:hook('upload',array('is_first'=>1,'unique_sign'=>'picture','field_name'=>'picture','field_value'=>$row['picture'],'save_path'=>'Activities'))}
+                                    <span class="help-block">* 封面图必须</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">跳转规则</label>
+                                <div class="controls">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn checked" data-default="--跳转规则--"></button>
+                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <volist name="target_rules" id="rule">
+                                                <li data-value="{$key}" data-title="{$rule}" <eq name="key" value="$row['target_rule']">class="selected"</eq>>
+                                                <a href="javascript:void(0)">{$rule}</a>
+                                                </li>
+                                            </volist>
+                                        </ul>
+                                    </div>　
+                                    <input type="hidden" name="target_rule" value="{$row['target_rule']}">
+                                    <input type="text" name="param" value="{$row['param']}" class="text-width-30" placeholder="跳转规则对应的参数">
+                                    <span class="help-block">
+                                    <include file="Public/target_rule_help"/>
+                                </span>
+                                </div>
+                            </div>
+                            <!--<div class="control-group">
+                                <label class="control-label">是否上架</label>
+                                <div class="controls">
+                                    <label style="margin-right:20px;display:inline">
+                                        <div class="radio"><span><input name="is_on_sale" style="opacity: 0;" type="radio" value="1" <if condition="!isset($row['is_on_sale']) or $row['is_on_sale'] eq 1">checked</if>></span></div> 是
+                                    </label>
+                                    <label style="margin-right:20px;display:inline">
+                                        <div class="radio"><span><input name="is_on_sale" style="opacity: 0;" type="radio" value="0" <if condition="isset($row['is_on_sale']) and $row['is_on_sale'] eq 0">checked</if>></span></div> 否
+                                    </label>
+                                    <span class="help-block">是否上架该商品</span>
+                                </div>
+                            </div>-->
+                            <!--<div class="control-group">
+                                <label class="control-label">是否可用积分抵扣</label>
+                                <div class="controls">
+                                    <label style="margin-right:20px;display:inline">
+                                        <div class="radio"><span><input name="is_integral" style="opacity: 0;" type="radio" value="1" <if condition="$row['is_integral'] eq 1">checked</if>></span></div> 是
+                                    </label>
+                                    <label style="margin-right:20px;display:inline">
+                                        <div class="radio"><span><input name="is_integral" style="opacity: 0;" type="radio" value="0" <if condition="empty($row['is_integral'])">checked</if>></span></div> 否
+                                    </label>
+                                    <span class="help-block">是否可用积分抵扣商品价格，有抵扣比例</span>
+                                </div>
+                            </div>-->
+                            <!--<div class="control-group">
+                                <label class="control-label">是否推荐到首页</label>
+                                <div class="controls">
+                                    <label style="margin-right:20px;display:inline">
+                                        <div class="radio"><span><input name="is_best" style="opacity: 0;" type="radio" value="1" <if condition="$row['is_best'] eq 1">checked</if>></span></div> 是
+                                    </label>
+                                    <label style="margin-right:20px;display:inline">
+                                        <div class="radio"><span><input name="is_best" style="opacity: 0;" type="radio" value="0" <if condition="empty($row['is_best'])">checked</if>></span></div> 否
+                                    </label>
+                                    <span class="help-block">设置为是 则出现在首页</span>
+                                </div>
+                            </div>-->
+                            <div class="control-group">
+                                <label class="control-label">排序</label>
+                                <div class="controls">
+                                    <input type="text" name="sort" value="{$row['sort']}" class="text-width-20" maxlength="15">
+                                    <span class="help-block">自定义商品排序，数值越大越靠前</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div id="tab2" class="tab-pane">
+                            <textarea name="content">{$row['content']}</textarea>
+                            {:hook('adminArticleEdit', array('is_first'=>1,'name'=>'content','value'=>$row['content'],'width'=>1010,'height'=>700))}
+                        </div>
+
+                        <!--<div id="tab3" class="tab-pane">
+                            <div class="control-group">
+                                <label class="control-label">商品类型：</label>
+                                <div class="controls">
+                                    <select name="type_id" class="type-select select-height-35" data-id="{$row['id']|default=0}">
+                                        <option value="0">--请选择商品类型--</option>
+                                        <volist name="type_list" id="type">
+                                            <option value="{$type['type_id']}" <eq name="row['type_id']" value="$type['type_id']">selected</eq>>{$type['type_name']}</option>
+                                        </volist>
+                                    </select>
+                                    <span class="help-block">请选择商品的所属类型，进而完善此商品的属性</span>
+                                </div>
+                            </div>
+                            <div id="attr-form">
+                                {$goods_attr_form}
+                            </div>
+                        </div>-->
+
+                        <div class="form-actions">
+                            <button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>　
+                            <button class="btn btn-info ajax-post" target-form="form-horizontal" type="submit">保 存</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script>
+        $(function(){
+            //获取属性
+            $(".type-select").change(function(){
+                var goods_id = $(this).attr('data-id'), type_id = $(this).val();
+                if(type_id == 0) {
+                    $('#attr-form').html('');
+                } else {
+                    $.ajax({
+                        url:'{:U("Activities/ajaxAttrForm")}', type:'POST', dataType:'json', data:{package_id:goods_id,type_id:type_id},
+                        success:function(data){
+                            $('#attr-form').html(data.form);
+                        }
+                    });
+                }
+            });
+        });
+        //增加一个节点
+        function addSpec(obj) {
+            var html = '<div class="control-group">' +
+                        '<label class="control-label">' + $(obj).parent().parent().find('label').html() + '</label>' +
+                        '<div class="controls">' + $(obj).parent().html().replace(/(.*)(addSpec)(.*)(\[)(\+)/i, "$1removeSpec$3$4-") + '</div>' +
+                       '</div>';
+            $(obj).parent().parent().next('.add-area').append(html);
+        }
+        //删除一个节点
+        function removeSpec(obj) {
+            $(obj).parent().parent().remove();
+        }
+    </script>
+</block>

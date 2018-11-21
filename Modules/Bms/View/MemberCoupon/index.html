@@ -1,0 +1,142 @@
+<extend name="Public/base" />
+
+<block name="main">
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+                <div class="widget-title widget-title-search list-widget-title">
+                    <ul class="quick-actions-horizontal">
+                        <li>
+                            <a href="javascript:void(0)">
+                                <i class="icon-tag"></i>
+                                <span>用户已使用优惠券总额：￥{$result['total_2']|default=0}</span>
+                                <span>用户未使用优惠券总额：￥{$result['total_1']|default=0}</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <form action="{:U('MemberCoupon/index')}" method="post" class="form">
+                        <!--<span class="date-group date">
+                            <input type="text" name="start_time" class="form-control date-group-addon" value="{$_REQUEST['start_time']}" placeholder="注册时间" readonly>
+                        </span>-->
+                        <input type="text" name="account" value="{$_REQUEST['account']}" placeholder="会员账号">
+                        <div class="btn-group">
+                            <button type="button" class="btn checked" data-default="--状态--"></button>
+                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                <!--<span class="checked" data-default="--选择分组--"></span>--><span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li data-value="" data-title="--取消选择--"><a href="javascript:void(0)">--取消选择--</a></li>
+                                <li data-value="1" data-title="已使用" <eq name="_REQUEST['trend']" value="1">class="selected"</eq>><a href="javascript:void(0)">已使用</a></li>
+                                <li data-value="0" data-title="未使用" <eq name="_REQUEST['trend']" value="0">class="selected"</eq>><a href="javascript:void(0)">未使用</a></li>
+                            </ul>
+                        </div>
+                        <input type="hidden" name="status" value="{$row['status']}">
+                        <div class="input-daterange" id="datepicker" style="display:inline">
+                            <input type="text" name="start_time" value="{$_REQUEST['start_time']}" class="text-width-10" placeholder="获得起始时间" readonly>
+                            --
+                            <input type="text" name="end_time" value="{$_REQUEST['end_time']}" class="text-width-10" placeholder="获得结束时间" readonly>
+                            <button class="btn btn-inverse">查询</button>
+                        </div>
+                        <!--<button type="button" class="btn btn-warning senior">高级</button>
+                        <div class="senior-search" style="width: 300px;height: 300px;">
+                            <p>
+                                <input type="text" name="id" value="{$_REQUEST['id']}" placeholder="会员ID">
+                            </p>
+                        </div>-->
+                    </form>
+                </div>
+
+                <div class="widget-content no-padding no-border">
+                    <table class="table table-bordered table-striped reset-checkbox">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>用户信息</th>
+                            <th>金额信息</th>
+                            <th>时间信息</th>
+                            <th>使用信息</th>
+                            <th>状态</th>
+                            <th>获得时间</th>
+                        </tr>
+                        </thead>
+                        <tbody class="tbody">
+                        <empty name="list"><tr><td colspan="30">Aho！没有查询结果！！</td></tr></empty>
+                        <volist name="list" id="row">
+                            <tr>
+                                <td class="va-middle">{$row['id']}</td>
+                                <td>账号：{$row['account']}<br>昵称：{$row['nickname']}</td>
+                                <td>
+                                    面值：￥{$row['face_value']}<br>
+                                    满 ￥{$row['use_condition']} 可用
+                                </td>
+                                <td>
+                                    生效时间：{$row['effective_date']|timestamp2date}<br>
+                                    过期时间：{$row['invalid_date']|timestamp2date}
+                                </td>
+                                <td>
+                                    <if condition="$row['status'] eq 1">
+                                    使用时间：{$row['use_time']|timestamp2date}<br>
+                                    订单号：<a href="">{$row['order_sn']}</a>
+                                        <else/>
+                                        ---
+                                    </if>
+                                </td>
+                                <td class="va-middle">
+                                    <if condition="$row['status'] eq 1">
+                                        <span class="yellow-1">已使用</span>
+                                        <else/>
+                                        <if condition="$row['invalid_date'] lt time()">
+                                            <span class="red-1">已过期</span>
+                                            <else/>
+                                            未使用
+                                        </if>
+                                    </if>
+                                </td>
+                                <td class="va-middle">{$row['create_time']|timestamp2date}</td>
+                            </tr>
+                        </volist>
+                        <tr>
+                            <td colspan="20">
+                                <!--<span class="yellow-1">当前条件用户已使用优惠券总额：￥{$result['now_total_2']|default=0}<br>
+                                当前条件用户未使用优惠券总额：￥{$result['now_total_1']|default=0}</span>-->
+                                <ul class="quick-actions-horizontal">
+                                    <li>
+                                        <a href="javascript:void(0)">
+                                            <i class="icon-tag"></i>
+                                            <span>当前条件用户已使用优惠券总额：￥{$result['now_total_2']|default=0}</span>
+                                            <span>当前条件用户未使用优惠券总额：￥{$result['now_total_1']|default=0}</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination alternate">
+                    {$page}
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <!--日历 start-->
+    <link href="__STATIC__/plugins/datepicker/datepicker3.css" rel="stylesheet">
+    <script src="__STATIC__/plugins/datepicker/bootstrap-datepicker.js"></script>
+    <!--日历 end-->
+    <script>
+        $(function(){
+            $('.input-daterange').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true
+            });
+        })
+    </script>
+</block>

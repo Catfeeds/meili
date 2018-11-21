@@ -1,0 +1,178 @@
+<extend name="Public/base"/>
+
+<block name="main">
+
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#tab1">基本信息</a></li>
+                </ul>
+
+                <br>
+                <form class="form-horizontal text-height-27-form" method="post"
+                      action="{:U('ActivityGroupService/update')}">
+                    <div class="widget-content tab-content no-padding">
+                        <div id="tab1" class="tab-pane active">
+                            <input type="hidden" name="model" value="ActivityGroupService">
+                            <input type="hidden" name="id" value="{$row['id']}">
+                            <div class="control-group">
+                                <label class="control-label">请选择服务商品</label>
+                                <div class="controls">
+                                    <select name="service_id">
+                                        <option value="">请选择商品</option>
+                                        <volist name="services" id="vo">
+                                            <eq name="vo.service_id" value="$row[service_id]">
+                                                <option value="{$vo.service_id}" selected>{$vo.service_name} &nbsp;￥:{$vo.price}</option>
+                                                <else/>
+                                                <option value="{$vo.service_id}">{$vo.service_name} &nbsp;￥:{$vo.price}</option>
+                                            </eq>
+                                        </volist>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">团购价格</label>
+                                <div class="controls">
+                                    <input type="text" name="group_price" value="{$row['group_price']}"
+                                           class="text-width-40" maxlength="60">
+                                    <span class="help-block">* 团购价格</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">团购成团人数</label>
+                                <div class="controls">
+                                    <input type="text" name="people_limit" value="{$row['people_limit']}"
+                                           class="text-width-40" maxlength="60">
+                                    <span class="help-block">* 团购成团人数</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">团购成团时间限制</label>
+                                <div class="controls">
+                                    <input type="text" name="join_time_limit" value="{$row['join_time_limit']}"
+                                           class="text-width-40" maxlength="60">
+                                    <span class="help-block">* 团购成团时间限制（单位：小时）</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">团购开始时间</label>
+                                <div class="controls">
+                                    <input name="group_start_time" type="text"
+                                           value="<?php echo $row['group_start_time']?date('Y-m-d H:i',$row['group_start_time']):'';?>"
+                                           class="text-width-20" id="jedatestart" placeholder="请选择开始时间" readonly>
+                                    <!--<input name="end_time" type="text"  class="text-width-20" id="jedateend" placeholder="请选择秒杀结束时间" readonly>-->
+                                    <span class="help-block">* 点击即可弹出时间选择器，开始时间必须</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">团购结束时间</label>
+                                <div class="controls">
+                                    <input name="group_end_time" type="text"
+                                           value="<?php echo $row['group_end_time']?date('Y-m-d H:i',$row['group_end_time']):'';?>"
+                                           class="text-width-20" id="jedatestart_s" placeholder="请选择结束时间" readonly>
+                                    <!--<input name="end_time" type="text"  class="text-width-20" id="jedateend" placeholder="请选择秒杀结束时间" readonly>-->
+                                    <span class="help-block">* 点击即可弹出时间选择器，结束时间必须</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-actions">
+                            <button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>
+                            　
+                            <button class="btn btn-info ajax-post" target-form="form-horizontal" type="submit">保 存
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script>
+        $(function () {
+            //获取属性
+            $(".type-select").change(function () {
+                var goods_id = $(this).attr('data-id'), type_id = $(this).val();
+                if (type_id == 0) {
+                    $('#attr-form').html('');
+                } else {
+                    $.ajax({
+                        url: '{:U("ActivityGroupService/ajaxAttrForm")}',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {card_id: goods_id, type_id: type_id},
+                        success: function (data) {
+                            $('#attr-form').html(data.form);
+                        }
+                    });
+                }
+            });
+        });
+
+        //增加一个节点
+        function addSpec(obj) {
+            var html = '<div class="control-group">' +
+                '<label class="control-label">' + $(obj).parent().parent().find('label').html() + '</label>' +
+                '<div class="controls">' + $(obj).parent().html().replace(/(.*)(addSpec)(.*)(\[)(\+)/i, "$1removeSpec$3$4-") + '</div>' +
+                '</div>';
+            $(obj).parent().parent().next('.add-area').append(html);
+        }
+
+        //删除一个节点
+        function removeSpec(obj) {
+            $(obj).parent().parent().remove();
+        }
+    </script>
+</block>
+<block name="script">
+    <link type="text/css" rel="stylesheet" href="__STATIC__/plugins/jedate-6.5.0/skin/jedate.css">
+    <script src="__STATIC__/plugins/jedate-6.5.0/jedate.js"></script>
+    <script>
+        jeDate("#jedatestart", {
+            // festival:true,                      //显示农历
+            minDate: "1970-01-01",              //最小日期
+            maxDate: "2099-12-31",              //最大日期
+            format: "YYYY-MM-DD hh:mm",       //控制可选属性(年月日时分秒)
+            donefun: function (obj) {              //选择完成回调
+                var jedateend = document.getElementById("jedateend");
+                if (jedateend) {
+                    if (jedateend.value && jedateend.value < obj.val) {
+                        jedateend.value = obj.val;
+                    }
+                }
+            }
+        });
+        jeDate("#jedatestart_s", {
+            // festival:true,                      //显示农历
+            minDate: "1970-01-01",              //最小日期
+            maxDate: "2099-12-31",              //最大日期
+            format: "YYYY-MM-DD hh:mm",       //控制可选属性(年月日时分秒)
+            donefun: function (obj) {              //选择完成回调
+                var jedateend = document.getElementById("jedateend_s");
+                if (jedateend) {
+                    if (jedateend.value && jedateend.value < obj.val) {
+                        jedateend.value = obj.val;
+                    }
+                }
+            }
+        });
+        // jeDate("#jedateend",{
+        //     // festival:true,                      //显示农历
+        //     minDate:"1970-01-01",              //最小日期
+        //     maxDate:"2099-12-31",              //最大日期
+        //     format: "YYYY-MM-DD hh:mm",       //控制可选属性(年月日时分秒)
+        //     donefun:function (obj) {              //选择完成回调
+        //         var jedatestart=document.getElementById("jedatestart");
+        //         if(jedatestart){
+        //             if(jedatestart.value && jedatestart.value > obj.val){
+        //                 jedatestart.value = obj.val;
+        //             }
+        //         }
+        //     }
+        // });
+    </script>
+</block>

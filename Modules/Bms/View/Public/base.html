@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{$content_header}--优道科技--后台管理系统</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!--基本-->
+		<!--<link rel="stylesheet" href="__CSS__/bootstrap.1.0.min.css" />-->
+        <link rel="stylesheet" href="__CSS__/bootstrap.2.3.2.min.css" />
+        <link rel="stylesheet" href="__CSS__/font-awesome-4.4.0/font-awesome.min.css" />
+        <link rel="stylesheet" href="__CSS__/unicorn.main.min.css" />
+        <link rel="stylesheet" href="__CSS__/unicorn.{:C('BACK_STYLE')}.min.css" class="skin-color" />
+        <!--基本-->
+        <!--表单表格-->
+        <link rel="stylesheet" href="__CSS__/uniform.min.css" />
+        <!--表单表格-->
+        <!--扩展样式-->
+        <link rel="stylesheet" href="__CSS__/custom.css" />
+        <!--扩展样式-->
+        <!--弹出提示框-->
+        <link rel="stylesheet" href="__CSS__/jquery.gritter.min.css" />
+        <!--弹出提示框-->
+        <!--jquery-->
+        <script src="__STATIC__/jquery.min.js"></script>
+        <!--jquery-->
+        <block name="style"></block>
+        <block name="head-script"></block>
+	</head>
+	<body>
+
+        <!--logo-->
+		<div id="header">
+            <h1 style="top:1px;height:51px;background:url('__IMG__/login-logo.png') no-repeat scroll 0 0 transparent;-moz-background-size:181px 51px;background-size:181px 51px;"><a href="./dashboard.html"></a></h1>
+		</div>
+        <!--<div id="header">-->
+            <!--<h1 style="top:1px;height:51px;background:url({:C('LOGO')}) no-repeat scroll 0 0 transparent;-moz-background-size:181px 51px;background-size:181px 51px;"><a href="./dashboard.html"></a></h1>-->
+        <!--</div>-->
+
+        <!--右侧 管理员 退出-->
+		<div id="user-nav" class="navbar navbar-inverse">
+            <ul class="nav btn-group">
+                <li class="btn btn-inverse">
+                    <a title="" href="javascript:void(0)">
+                        <i class="fa fa-user font-size-13"></i> <span class="text">{:session('admin.account')}</span>
+                    </a>
+                </li>
+                <li class="btn btn-inverse">
+                    <a title="" href="{:U('Administrator/rePass')}">
+                        <i class="fa fa-lock font-size-13"></i> <span class="text">修改密码</span>
+                    </a>
+                </li>
+                <li class="btn btn-inverse">
+                    <a title="" href="{:U('System/clearCache')}" class="ajax-get no-refresh">
+                        <i class="fa fa-trash font-size-13"></i> <span class="text">清除缓存</span>
+                    </a>
+                </li>
+                <li class="btn btn-inverse">
+                    <a title="" href="#help" data-toggle="modal">
+                        <i class="fa fa-question font-size-13"></i> <span class="text">帮助</span>
+                    </a>
+                </li>
+                <li class="btn btn-inverse">
+                    <a title="" href="{:U('Login/logOut')}">
+                        <i class="fa fa-power-off font-size-13"></i> <span class="text">退出</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <include file="Public/help"/>
+        <!--菜单 start-->
+		<div id="sidebar">
+			<ul>
+                <volist name="menus" id="menu">
+                    <li class="<notempty name="menu['_child']">submenu</notempty> {$menu['group']['class']}">
+                    <!--菜单组-->
+                        <a <empty name="menu['_child']">href="{$menu['group']['url']|U}"</empty>>
+                            <i class="fa {$menu['group']['icon']}"></i>
+                            <span>{$menu['group']['title']}</span>
+                            <if condition="count($menu['_child']) gt 0">
+                            <span class="label">{:count($menu['_child'])}</span>
+                            </if>
+                        </a>
+                    <!--菜单组-->
+                    <!--子菜单-->
+                        <notempty name="menu['_child']">
+                        <ul <eq name="menu['group']['class']" value="active">style="display: block"</eq>>
+                            <volist name="menu['_child']" id="child">
+                            <li class="{$child['class']}"><a href="{$child['url']|U}">{$child['title']}</a></li>
+                            </volist>
+                        </ul>
+                        </notempty>
+                    <!--子菜单-->
+                    </li>
+                    </notempty>
+                </volist>
+			</ul>
+		</div>
+        <!--菜单 end-->
+
+        <div id="style-switcher">
+            <i class="fa fa-arrow-left" style="color:#fff;height:25px;vertical-align:middle"></i>
+            <span>Style:</span>
+            <a href="{:U('Config/quickEdit',array('model'=>'Config','ids'=>54,'field'=>'value','value'=>'grey'))}" style="background-color: #555555;" class="ajax-get"></a>
+            <a href="{:U('Config/quickEdit',array('model'=>'Config','ids'=>54,'field'=>'value','value'=>'blue'))}" style="background-color: #2D2F57;" class="ajax-get"></a>
+            <a href="{:U('Config/quickEdit',array('model'=>'Config','ids'=>54,'field'=>'value','value'=>'red'))}" style="background-color: #673232;" class="ajax-get"></a>
+        </div>
+
+        <!--主体内容-->
+		<div id="content">
+            <div id="content-header">
+                <h1>{$content_header}</h1>
+                <div class="btn-group">
+                    <!--<a href="{:U('Withdraw/index',array('status'=>0))}" class="btn btn-large tip-bottom refresh no-handle-withdraw" title="未处理提现">
+                        <i class="fa fa-credit-card"></i>
+                    </a>
+                    <a class="btn btn-large tip-bottom refresh no-read-message" title="消息">
+                        <i class="fa fa-envelope-square"></i>
+                    </a>-->
+                    <a class="btn btn-large tip-bottom refresh" title="刷新"><i class="fa fa-refresh"></i></a>
+                </div>
+            </div>
+
+            <!--导航-->
+            <div id="breadcrumb">
+                <a href="{:U('Index/index')}" title="" class=""><i class="fa fa-home font-size-14"></i> 首页</a>
+                <a href="javascript:void(0)" class="">{$content_header}</a>
+                <a href="javascript:void(0)" class="">{$breadcrumb_nav}</a>
+            </div>
+
+            <include file="Public/notification"/>
+
+            <div class="container-fluid">
+
+                <block name="main"></block>
+
+                <div class="row-fluid">
+                    <div id="footer" class="span12">
+                        Copyright YouDao © 2016 <a href="http://shop.zbj.com/14311502/" target="_blank">优道科技</a>
+                    </div>
+                </div>
+            </div>
+
+            <!--<Iframe src="" width="0" height="0" scrolling="yes" frameborder="0" id="notify-iframe"></Iframe>-->
+            <audio id="bgMusic">
+                <source src="http://wenf-bms.toocms.com/Uploads/567.mp3" type="audio/mp3"/>
+                <source src="hangge.ogg" type="audio/ogg"/>
+            </audio>
+		</div>
+
+        <!--基本-->
+        <script src="__JS__/bootstrap.min.js"></script>
+        <script src="__JS__/unicorn.min.js"></script>
+        <!--基本-->
+        <!--表单加载-->
+        <script src="__JS__/jquery.uniform.min.js"></script>
+        <!--表单加载-->
+        <script src="__JS__/common.js"></script>
+        <script src="__JS__/js.js"></script>
+        <!--弹出提示框-->
+        <script src="__JS__/jquery.gritter.min.js"></script>
+        <script src="__JS__/jquery.peity.min.js"></script>
+        <!--弹出提示框-->
+        <script>
+//            $.gritter.add({
+//                image: 'fa fa-info-circle', sticky: false, title: '温馨提醒',time: 5000, speed: 500, position: 'top-right', class_name: 'gritter-success',
+//                text: '您有未处理用户提现：'+data.no_handle_withdraw+''
+//            });
+//            $(document).ready(function(){
+//                getTip();
+//            });
+            setInterval(function(){
+                getTip();
+            },30000);
+            function getTip() {
+                $.get('{:U("System/tip")}').success(function(data){
+//                    if(data.no_handle_withdraw != 0) {
+//                        $('a.no-handle-withdraw').append('<span class="label label-important no-read-message">'+data.no_handle_withdraw+'</span>');
+//                    }
+                    if(data.data.not_delivery_order != 0) {
+                        $.gritter.add({
+                            image: 'fa fa-info-circle', sticky: false, title: '温馨提醒',time: 5000, speed: 500, position: 'top-right', class_name: 'gritter-success',
+                            text: '您有未发货的订单：'+data.data.not_delivery_order+'单'
+                        });
+                        var audio = document.getElementById("bgMusic"); audio.play();
+                    }
+                });
+            }
+        </script>
+		<block name="script"></block>
+	</body>
+</html>

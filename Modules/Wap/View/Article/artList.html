@@ -1,0 +1,70 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">文章</div>
+    <div class="right"><span class="n"><img src="__IMG__/nav.png"></span></div>
+</block>
+<block name="content">
+    <div class="page-content infinite-scroll" style="position:static">
+        <div class="filtrate">
+            <a href="{:U('Article/artList',array('art_cate_id'=>$_REQUEST['art_cate_id']))}" <if condition="empty($_REQUEST['sort'])">class="focus"</if>>默认</a>
+            <a href="{:U('Article/artList',array('art_cate_id'=>$_REQUEST['art_cate_id'],'sort'=>1))}" <if condition="$_REQUEST['sort'] eq 1">class="focus"</if>>最新发布</a>
+            <a href="{:U('Article/artList',array('art_cate_id'=>$_REQUEST['art_cate_id'],'sort'=>2))}" <if condition="$_REQUEST['sort'] eq 2">class="focus"</if>>浏览最多</a>
+            <if condition="!in_array($_REQUEST['sort'],array(3,4)) or $_REQUEST['sort'] eq 4">
+                <a href="{:U('Article/artList',array('art_cate_id'=>$_REQUEST['art_cate_id'],'sort'=>3))}" <if condition="$_REQUEST['sort'] eq 4">class="focus"</if>><i>收藏次数</i></a>
+            <elseif condition="$_REQUEST['sort'] eq 3"/>
+                <a href="{:U('Article/artList',array('art_cate_id'=>$_REQUEST['art_cate_id'],'sort'=>4))}" <if condition="$_REQUEST['sort'] eq 3">class="focus"</if>><i>收藏次数</i></a>
+            </if>
+        </div>
+        <div class="index_find index_fd">
+            <div class="clearfix scroll-append-box">
+
+            </div>
+            <include file="Public:scroll_loader"/>
+        </div>
+        <!--导航分类start-->
+        <div class="bg"></div>
+        <div class="filtrate_list" style="z-index: 100">
+            <p>分类</p>
+            <ul>
+                <li><a href="{:U('Article/artList')}">全部</a></li>
+                <volist name="cates" id="cate">
+                    <li><a href="{:U('Article/artList', array('art_cate_id'=>$cate['art_cate_id']))}">{$cate['name']}</a></li>
+                </volist>
+            </ul>
+        </div>
+        <!--导航分类end-->
+    </div>
+</block>
+<block name="script">
+    <script>
+        var target = '{:U("Article/getArticles")}';
+        function getHtml(data) {
+            return '<div class="list"> ' +
+            '<div class="all"> ' +
+            '<div class="content"> ' +
+            '<div class="pic"><a href="{:U(\'Article/art\')}/art_id/'+data['art_id']+'" class="item-link"><img src="'+data['cover']+'"></a></div> ' +
+            '<div class="about">'+data['title']+'</div> ' +
+            '<div class="price"><span>'+data['short_desc']+'</span></div> ' +
+            '</div> ' +
+            '</div> ' +
+            '</div>';
+        }
+        //创建ajax data参数
+        function getQuery() {
+            return {p:p,art_cate_id:'{$_REQUEST["art_cate_id"]}',sort:'{$_REQUEST["sort"]}'};
+        }
+    </script>
+    <script type="text/javascript" src="__JS__/scroll.js"></script>
+    <script>
+        $(function() {
+            $("span.n").click(function() {
+                $(".filtrate_list,.bg").fadeIn();
+            });
+            $(".filtrate_list a,.bg").click(function() {
+                $(".filtrate_list,.bg").fadeOut();
+            })
+        })
+    </script>
+</block>

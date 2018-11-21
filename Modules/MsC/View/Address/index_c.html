@@ -1,0 +1,82 @@
+<extend name="Public/base" />
+
+<block name="main">
+
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+
+                <div class="widget-title widget-title-search list-widget-title">
+                    <ul class="quick-actions-horizontal">
+                        <!--<li>
+                            <a href="{:U('Address/index',array('circle_id'=>0))}">
+                                <i class="icon-tag"></i>
+                                <span>未分配商圈地址：{$count}</span>
+                            </a>
+                        </li>-->
+                    </ul>
+                    <button class="btn btn-danger confirm ajax-post" url="{:U('Address/delete',array('model'=>'Address'))}" target-form="ids">删除</button>&nbsp;
+
+                    <form action="{:U('Address/index')}" method="post" class="form">
+                        <input type="text" name="m_id" value="{$_REQUEST['m_id']}" placeholder="用户ID">
+                        <button class="btn btn-inverse">查询</button>
+                    </form>
+                </div>
+
+                <div class="widget-content no-padding no-border">
+                    <table class="table table-bordered table-striped with-check reset-checkbox">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="title-checkbox" name="title-checkbox" class="check-all"/><!--<i class="icon-resize-vertical"></i>--></th>
+                            <th>ID</th>
+                            <th>账号</th>
+                            <th>联系人</th>
+                            <th>联系电话</th>
+                            <th>地址</th>
+                            <th>创建时间</th>
+                            <th>操作</th>
+                            <th>是否默认</th>
+                        </tr>
+                        </thead>
+                        <tbody class="tbody">
+                        <empty name="list"><tr><td colspan="30">{:L('_LIST_NO_RESULT_')}</td></tr></empty>
+                        <volist name="list" id="row">
+                            <tr>
+                                <td><input type="checkbox" name="ids[]" value="{$row['id']}" class="ids"/></td>
+                                <td>{$row['id']}</td>
+                                <td>{$row['m_id']}--{$row['account']}</td>
+                                <td>{$row['contacts']}</td>
+                                <td>{$row['mobile']}</td>
+                                <td>{$row['province_name']}{$row['city_name']}{$row['area_name']}{$row['address']}</td>
+                                <td>{$row['create_time']|date='Y-m-d H:i',###}</td>
+                                <td>
+                                    <a href="{:U('Address/delete',array('model'=>'Address','ids'=>$row['id']))}" title="删除" class="confirm ajax-get">
+                                        <span class="label label-important label-important-hover">删除</span></a>&nbsp;
+                                </td>
+                                <td>
+                                    <if condition="$row['is_default'] eq 1">
+                                        <span class="badge badge-info">默认</span>
+                                    <else/>
+                                        ---
+                                    </if>
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination alternate">
+                    {$page}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script>
+        $(function(){})
+    </script>
+</block>

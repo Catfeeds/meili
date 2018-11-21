@@ -1,0 +1,134 @@
+<extend name="Public/base" />
+
+<block name="main">
+
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+                <!--<div class="widget-title">
+                    <span class="icon">
+                        <i class="fa fa-plus"></i>
+                    </span>
+                    <h5></h5>
+                </div>-->
+                <br>
+                <div class="widget-content tab-content no-padding">
+                    <form class="form-horizontal text-height-27-form" method="post" action="{:U(''.$_REQUEST['model'].'/adjust')}" autocomplete="off">
+                        <input type="hidden" name="model" value="{$_REQUEST['model']}">
+                        <input type="hidden" name="ids" value="{$_REQUEST['ids']}">
+                        <div class="control-group">
+                            <label class="control-label">选择调整资料</label>
+                            <div class="controls">
+                                <div class="btn-group">
+                                    <button type="button" class="btn checked" data-default="--选择调整资料--"></button>
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                        <!--<span class="checked" data-default="--选择分组--"></span>--><span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-field">
+                                        <li data-value="balance" data-title="余额(元)" data-field-value="{$info['balance']|default=0.00}"><a href="javascript:void(0)">余额(元)</a></li>
+                                        <!--<li data-value="integral" data-title="积分(个)" data-field-value="{$info['integral']|default=0}"><a href="javascript:void(0)">积分(个)</a></li>-->
+                                    </ul>
+                                </div>
+                                <input type="hidden" name="field" value="">
+                                <span class="help-block">* 选择要调整的用户资料，目前可选（余额）</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">当前额度</label>
+                            <div class="controls">
+                                <input type="text" name="now_value" value="" class="text-width-10" disabled>
+                                <span class="help-block">用户余额的当前额度</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">调整额度</label>
+                            <div class="controls">
+                                <input type="text" name="adjust_value" value="" class="decimal-only text-width-10">
+                                <span class="help-block">* 将要 加+ 或 减- 的额度</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">调整规则</label>
+                            <div class="controls">
+                                <div class="btn-group">
+                                    <button type="button" class="btn checked" data-default="--选择调整规则--"></button>
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                        <!--<span class="checked" data-default="--选择分组--"></span>--><span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-rule">
+                                        <li data-value="1" data-title="加 +"><a href="javascript:void(0)">加 +</a></li>
+                                        <li data-value="2" data-title="减 -"><a href="javascript:void(0)">减 -</a></li>
+                                    </ul>
+                                </div>
+                                <input type="hidden" name="rule" value="">
+                                <span class="help-block">* 选择调整规则，在原有基础上 加+ 或 减-</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">调整后额度</label>
+                            <div class="controls">
+                                <input type="text" name="after_value" value="" class="text-width-10" disabled>
+                                <span class="help-block">调整后应有的额度</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">调整原因</label>
+                            <div class="controls">
+                                <textarea name="reason" class="text-width-30"></textarea>
+                                <span class="help-block">* 说明调整用户该资料的原因，必填</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">相关订单号</label>
+                            <div class="controls">
+                                <input type="text" name="order_sn" value="{$_REQUEST['order_sn']}" class="text-width-20">
+                                <span class="help-block">可选 与该调整有关系的订单号</span>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>　
+                            <button class="btn btn-info ajax-post" target-form="form-horizontal" type="submit">保 存</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script>
+        //下拉菜单点击事件
+        $('ul.dropdown-menu-field li').bind('click',function(){
+            var that = $(this);
+            that.parents('div.btn-group').find('button.checked').html(that.attr('data-title'));
+            that.parents('div.btn-group').next('input').val(that.attr('data-value'));
+            field_callback(this);
+        });
+        function field_callback(obj) {
+            //alert(11);
+            $("input[name='now_value']").val($(obj).attr('data-field-value'));
+        }
+        //下拉菜单点击事件
+        $('ul.dropdown-menu-rule li').bind('click',function(){
+            var that = $(this);
+            that.parents('div.btn-group').find('button.checked').html(that.attr('data-title'));
+            that.parents('div.btn-group').next('input').val(that.attr('data-value'));
+            rule_callback(this);
+        });
+        function rule_callback(obj) {
+            var now_value = $("input[name='now_value']").val(), adjust_value = $("input[name='adjust_value']").val();
+            if(now_value == '') {
+                updateAlertWithTime('请选择要调整的资料！','alert-error'); return;
+            }if(adjust_value == '') {
+                updateAlertWithTime('请输入要调整的额度！','alert-error'); return;
+            }
+            if($(obj).attr('data-value') == 1) {
+                var after_value = parseFloat($("input[name='now_value']").val()) + parseFloat($("input[name='adjust_value']").val());
+            } else {
+                var after_value = parseFloat($("input[name='now_value']").val()) - parseFloat($("input[name='adjust_value']").val());
+            }
+            $("input[name='after_value']").val(after_value);
+        }
+    </script>
+</block>

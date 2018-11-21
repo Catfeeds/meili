@@ -1,0 +1,4 @@
+#手动备份
+#时间  `date +%Y%m%d-%H%M%S` 可替换 {{name}}
+print 数据库正在备份...
+mysqldump -uroot -pSXKJwws2016,, --default-character-set=utf8 --opt --extended-insert=false -R --hex-blob -x -q wenfeng {{tables}} | gzip > /home/wwwroot/wenfeng.toocms.com/Data/data/{{name}}.sql.gz

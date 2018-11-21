@@ -1,0 +1,96 @@
+<extend name="Public/base" />
+
+<block name="main">
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+
+                <div class="widget-title widget-title-search list-widget-title">
+                    <button class="btn btn-success href" url="{:U('Attribute/add', array('type_id'=>$_REQUEST['type_id']))}" target-form="ids">新增</button>&nbsp;
+                    <button class="btn btn-inverse ajax-post" url="{:U('Attribute/forbidResume',array('model'=>'Attribute','field'=>'status','value'=>0))}" target-form="ids">禁用</button>&nbsp;
+                    <button class="btn btn-info ajax-post" url="{:U('Attribute/forbidResume',array('model'=>'Attribute','field'=>'status','value'=>1))}" target-form="ids">启用</button>&nbsp;
+                    <button class="btn btn-danger confirm ajax-post" url="{:U('Attribute/delete',array('model'=>'Attribute'))}" target-form="ids">删除</button>&nbsp;
+                </div>
+
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#tab1">类型--{$_REQUEST['type_name']}</a></li>
+                </ul>
+
+                <div class="widget-content no-padding no-border">
+                    <table class="table table-bordered table-striped with-check reset-checkbox">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="title-checkbox" name="title-checkbox" class="check-all"/><!--<i class="icon-resize-vertical"></i>--></th>
+                            <th>ID</th>
+                            <th>属性名称</th>
+                            <th>属性类型</th>
+                            <th>检索类型</th>
+                            <th>输入类型</th>
+                            <th><i class="fa fa-pencil"></i>排序</th>
+                            <th>所属分组</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="tbody">
+                        <empty name="list"><tr><td colspan="30">Aho！没有查询结果！！</td></tr></empty>
+                        <volist name="list" id="row">
+                            <tr>
+                                <td><input type="checkbox" name="ids[]" value="{$row['id']}" class="ids"/></td>
+                                <td>{$row['id']}</td>
+                                <td>{$row['attr_name']}</td>
+                                <td>
+                                    <if condition="$row['attr_type'] eq 1">
+                                        唯一属性
+                                        <elseif condition="$row['attr_type'] eq 2"/>
+                                        单选属性
+                                        <else/>
+                                        复选属性
+                                    </if>
+                                </td>
+                                <td>
+                                    <if condition="$row['attr_index'] eq 1">
+                                        不参与检索
+                                    <elseif condition="$row['attr_index'] eq 2"/>
+                                        关键字检索
+                                    <else/>
+                                        范围检索
+                                    </if>
+                                </td>
+                                <td>
+                                    <if condition="$row['attr_input_type'] eq 1">
+                                        小文本框录入
+                                    <elseif condition="$row['attr_input_type'] eq 2"/>
+                                        大文本框录入
+                                    <else/>
+                                        下拉选择
+                                    </if>
+                                </td>
+                                <td class="quick-edit" data-model="Attribute" data-id="{$row['id']}" data-field="sort">{$row['sort']}</td>
+                                <td>{$row['group_name']|default='---'}</td>
+                                <td>{$row['status']|get_status_title}</td>
+                                <td>
+                                    <a href="{:U('Attribute/update',array('model'=>'Attribute','id'=>$row['id'],'type_id'=>$row['type_id']))}" title="编辑" class="">
+                                        <span class="label label-success label-success-hover">编辑</span></a>&nbsp;
+                                    <if condition="$row['status'] eq 0 or $row['status'] eq 1">
+                                        <a href="{:U('Attribute/forbidResume',array('model'=>'Attribute','ids'=>$row['id'],'field'=>'status','value'=>abs(1-$row['status'])))}" title="{$row['status']|show_status_name}" class="ajax-get">
+                                        <span class="label {$row['status']|show_status_label}">{$row['status']|show_status_name}</span></a>&nbsp;
+                                    </if>
+                                    <a href="{:U('Attribute/delete',array('model'=>'Attribute','ids'=>$row['id']))}" title="删除" class="confirm ajax-get">
+                                        <span class="label label-important label-important-hover">删除</span></a>
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination alternate">
+                    {$page}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</block>

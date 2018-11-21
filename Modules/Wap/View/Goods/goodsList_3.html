@@ -1,0 +1,47 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="{:U('Goods/search')}" class="back link"> <i class="icon icon-back"></i></a></div>
+    <form action="{:U('Goods/goodsList')}" method="post" autocomplete="off" class="search_list">
+    <div class="center sliding">
+        <span class="sousou">
+            <input type="text" name="keywords" class="text7"value="{$_REQUEST['keywords']}" placeholder="请输入商品名称">
+            <input type="button" value="" class="btn1">
+        </span>
+    </div>
+    <div class="right"><input type="submit" value="搜索" class="btn"></div>
+    </form>
+</block>
+<block name="content">
+    <div class="page-content infinite-scroll" style="position:static">
+        <div class="index_find index_fd">
+            <div class="clearfix scroll-append-box">
+
+
+            </div>
+            <include file="Public:scroll_loader"/>
+        </div>
+        <div class="g_cart"><a href="{:U('Cart/cartList')}" class="item-link"><img src="__IMG__/gwc_01.png"></a></div>
+    </div>
+</block>
+<block name="script">
+    <script>
+        var target = '{:U("Goods/getGoodsList")}', keywords = '{$_REQUEST["keywords"]|default=""}';
+        function getHtml(data) {
+            return '<div class="list">' +
+            '<div class="all">' +
+            '<div class="content">' +
+            '<div class="pic"><a href="{:U(\'Goods/detail\')}/goods_id/'+data['goods_id']+'" class="item-link"><img src="'+data['cover']+'"></a></div>' +
+            '<div class="about">'+data['goods_name']+'</div>' +
+            '<div class="price"><em>￥'+data['price']+'</em></div>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+        }
+        //创建ajax data参数
+        function getQuery() {
+            return {p:p,keywords:keywords};
+        }
+    </script>
+    <script type="text/javascript" src="__JS__/scroll.js"></script>
+</block>

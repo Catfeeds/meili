@@ -1,0 +1,73 @@
+<extend name="Public/base" />
+
+<block name="main">
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+
+                <div class="widget-title widget-title-search list-widget-title">
+                    <button class="btn btn-success href" url="{:U('RechargeCard/add')}" target-form="ids">新增</button>&nbsp;
+                    <button class="btn btn-inverse ajax-post" url="{:U('RechargeCard/forbidResume',array('model'=>'RechargeCard','field'=>'status','value'=>0))}" target-form="ids">禁用</button>&nbsp;
+                    <button class="btn btn-info ajax-post" url="{:U('RechargeCard/forbidResume',array('model'=>'RechargeCard','field'=>'status','value'=>1))}" target-form="ids">启用</button>&nbsp;
+                    <button class="btn btn-danger confirm ajax-post" url="{:U('RechargeCard/delete',array('model'=>'RechargeCard'))}" target-form="ids">删除</button>&nbsp;
+                </div>
+
+                <div class="widget-content no-padding no-border">
+                    <table class="table table-bordered table-striped with-check reset-checkbox">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="title-checkbox" name="title-checkbox" class="check-all"/><!--<i class="icon-resize-vertical"></i>--></th>
+                            <th>ID</th>
+                            <th>充值卡名称</th>
+                            <th>面值</th>
+                            <th>售价</th>
+                            <th>已生成充值码</th>
+                            <th><i class="fa fa-pencil"></i>排序</th>
+                            <th>最后修改时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="tbody">
+                        <empty name="list"><tr><td colspan="30">Aho！没有查询结果！！</td></tr></empty>
+                        <volist name="list" id="row">
+                            <tr>
+                                <td><input type="checkbox" name="ids[]" value="{$row['id']}" class="ids"/></td>
+                                <td>{$row['id']}</td>
+                                <td>{$row['name']}</td>
+                                <td>￥ {$row['face_value']} 元</td>
+                                <td>￥ {$row['sales_price']} 元</td>
+                                <td><a href="{:U('RechargeCode/index',array('rec_card_id'=>$row['id']))}">{$row['count']} 个</a></td>
+                                <td class="quick-edit" data-model="RechargeCard" data-id="{$row['id']}" data-field="sort">{$row['sort']}</td>
+                                <td>{$row['update_time']|timestamp2date}</td>
+                                <td>{$row['status']|get_status_title}</td>
+                                <td>
+                                    <a href="#modal-code" title="生成充值码" data-toggle="modal" onclick="openCodeModal(this)" data-id="{$row['id']}">
+                                        <span class="label label-warning label-warning-hover">生成充值码</span></a>&nbsp;
+                                    <a href="{:U('RechargeCard/update',array('id'=>$row['id'],'model'=>'RechargeCard'))}" title="编辑" class="">
+                                        <span class="label label-success label-success-hover">编辑</span></a>&nbsp;
+                                    <if condition="$row['status'] eq 0 or $row['status'] eq 1">
+                                        <a href="{:U('RechargeCard/forbidResume',array('model'=>'RechargeCard','ids'=>$row['id'],'field'=>'status','value'=>abs(1-$row['status'])))}" title="{$row['status']|show_status_name}" class="ajax-get">
+                                        <span class="label {$row['status']|show_status_label}">{$row['status']|show_status_name}</span></a>&nbsp;
+                                    </if>
+                                    <a href="{:U('RechargeCard/delete',array('model'=>'RechargeCard','ids'=>$row['id']))}" title="删除" class="confirm ajax-get">
+                                        <span class="label label-important label-important-hover">删除</span></a>
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination alternate">
+                    {$page}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <include file="Public/modal_rec_code"/>
+
+</block>

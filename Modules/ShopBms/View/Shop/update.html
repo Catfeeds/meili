@@ -1,0 +1,140 @@
+<extend name="Public/base" />
+
+<block name="main">
+
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+                <!--<div class="widget-title">
+                    <span class="icon">
+                        <i class="fa fa-plus"></i>
+                    </span>
+                    <h5>更新行为信息</h5>
+                </div>-->
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#tab1">基本信息</a></li>
+                    <!--<li class=""><a data-toggle="tab" href="#tab2">图文详情</a></li>-->
+                    <!--<li class=""><a data-toggle="tab" href="#tab3">属性信息</a></li>-->
+                </ul>
+
+                <br>
+                <form class="form-horizontal text-height-27-form" method="post" action="{:U('Shop/update')}">
+                    <div class="widget-content tab-content no-padding">
+                        <div id="tab1" class="tab-pane active">
+                            <input type="hidden" name="model" value="Shop">
+                            <input type="hidden" name="id" value="{$row['id']}">
+                            <div class="control-group">
+                                <label class="control-label">店铺名称</label>
+                                <div class="controls">
+                                    <input type="text" name="name" value="{$row['name']}" class="text-width-40" maxlength="60">
+                                    <span class="help-block">* 店铺名称必须</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">店铺简述</label>
+                                <div class="controls">
+                                    <input type="text" name="short" value="{$row['short']}" class="text-width-40" maxlength="60">
+                                    <span class="help-block">* 店铺简述必须</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">联系人名字</label>
+                                <div class="controls">
+                                    <input type="text" name="contacts" value="{$row['contacts']}" class="text-width-40" maxlength="60">
+                                    <span class="help-block">* 联系人名字</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">联系人电话</label>
+                                <div class="controls">
+                                    <input type="text" name="mobile" value="{$row['mobile']}" class="text-width-40" maxlength="60">
+                                    <span class="help-block">* 联系人电话</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">详细地址</label>
+                                <div class="controls">
+                                    <input type="text" name="address" value="{$row['address']}" class="text-width-40" maxlength="60">
+                                    <span class="help-block">* 详细地址</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Logo</label>
+                                <div class="controls">
+                                    {:hook('upload',array('is_first'=>1,'unique_sign'=>'logo','field_name'=>'logo','field_value'=>$row['logo'],'save_path'=>'Shop'))}
+                                    <span class="help-block">* 店铺Logo</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">关键字</label>
+                                <div class="controls">
+                                    <input type="text" name="keywords" value="{$row['keywords']}" class="text-width-20" maxlength="12">
+                                    <span class="help-block">关键字，增加搜索准确性，12字符以内</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">排序</label>
+                                <div class="controls">
+                                    <input type="text" name="sort" value="{$row['sort']}" class="text-width-20" maxlength="15">
+                                    <span class="help-block">自定义排序，数值越大越靠前</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">关联已开通城市</label>
+                                <div class="controls">
+                                    <select name="area_id">
+                                        <volist name="regions" id="row_s">
+                                            <if condition="$row['area_id'] eq $row_s['id']">
+                                                <option value={$row_s['id']} selected>{$row_s['all_name']}</option>
+                                                <else/>
+                                                <option value={$row_s['id']}>{$row_s['all_name']}</option>
+                                            </if>
+                                        </volist>
+                                    </select>
+                                    <span class="help-block">* 关联城市前注意必须先开通该城市哦 否则城市为空不可添加</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>　
+                            <button class="btn btn-info ajax-post" target-form="form-horizontal" type="submit">保 存</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script>
+        $(function(){
+            //获取属性
+            $(".type-select").change(function(){
+                var goods_id = $(this).attr('data-id'), type_id = $(this).val();
+                if(type_id == 0) {
+                    $('#attr-form').html('');
+                } else {
+                    $.ajax({
+                        url:'{:U("Shop/ajaxAttrForm")}', type:'POST', dataType:'json', data:{package_id:goods_id,type_id:type_id},
+                        success:function(data){
+                            $('#attr-form').html(data.form);
+                        }
+                    });
+                }
+            });
+        });
+        //增加一个节点
+        function addSpec(obj) {
+            var html = '<div class="control-group">' +
+                        '<label class="control-label">' + $(obj).parent().parent().find('label').html() + '</label>' +
+                        '<div class="controls">' + $(obj).parent().html().replace(/(.*)(addSpec)(.*)(\[)(\+)/i, "$1removeSpec$3$4-") + '</div>' +
+                       '</div>';
+            $(obj).parent().parent().next('.add-area').append(html);
+        }
+        //删除一个节点
+        function removeSpec(obj) {
+            $(obj).parent().parent().remove();
+        }
+    </script>
+</block>

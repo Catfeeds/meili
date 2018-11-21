@@ -1,0 +1,36 @@
+<div class="mail-box-header">
+    <div class="pull-right tooltip-demo">
+        <empty name="receivers['list']">
+            <div class="btn-group">
+                <button type="button" class="btn checked" data-default="--选择接收规则--"></button>
+                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu select-type">
+                    <volist name="receive_rules" id="rule">
+                        <li data-value="{$key}" data-title="{$rule}">
+                            <a href="javascript:void(0)">{$rule}</a>
+                        </li>
+                    </volist>
+                </ul>
+            </div>
+        </empty>
+        <input type="hidden" name="receive_rule" value="{$_REQUEST['receive_rule']}" autocomplete="off">&nbsp;
+        <button class="btn btn-success do-send" type="button" data-ing-html="发送中  <i class='fa fa-spinner fa-spin'></i>">
+            <i class="fa fa-mail-reply"></i>
+            确认发送</button>&nbsp;
+        <button class="btn" type="button" onclick="javascript:history.back(-1);return false;">
+            <i class="fa fa-backward"></i>
+            返 回</button>　
+    </div>
+    <h2 class="after-send-notify">
+        给用户
+    </h2>
+    <h2>
+        <span class="mailbox-notify">发送进度</span>
+        <span class="mailbox-notify text-bar"></span>
+        <div class="progress progress-striped active">
+            <div style="width:0%;" class="bar"></div>
+        </div>
+    </h2>
+</div>

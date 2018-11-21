@@ -1,0 +1,99 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="{:U('Center/index')}" class="back link"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">我的维修订单</div>
+    <div class="right"></div>
+</block>
+<block name="content">
+    <div class="page-content infinite-scroll" style="position:static">
+        <div class="orders">
+            <if condition="isset($_REQUEST['status']) or in_array($_REQUEST['status'],array(0,1,2,3,4))">
+            <div class="rhd">
+                <ul>
+                    <li><a href="{:U('OrderInfo/myRepairOrders')}" <if condition="!isset($_REQUEST['status'])">class="focus"</if>>全部</a></li>
+                    <li><a href="{:U('OrderInfo/myRepairOrders',array('status'=>0))}" <if condition="isset($_REQUEST['status']) and $_REQUEST['status'] eq 0">class="focus"</if>>待分配</a></li>
+                    <li><a href="{:U('OrderInfo/myRepairOrders',array('status'=>1))}" <if condition="$_REQUEST['status'] eq 1">class="focus"</if>>待付款</a></li>
+                    <li><a href="{:U('OrderInfo/myRepairOrders',array('status'=>4))}" <if condition="$_REQUEST['status'] eq 4">class="focus"</if>>待评价</a></li>
+                </ul>
+            </div>
+            </if>
+            <div class="bd">
+                <div class="exist">
+                    <div class="content scroll-append-box">
+
+                    </div>
+                </div>
+            </div>
+            <include file="Public:scroll_loader"/>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript" src="__JS__/common.js"></script>
+    <script>
+        var target = '{:U("OrderInfo/getOrders/order_type/2")}';
+        function getHtml(data) {
+            var html = '<div class="entry"> ' +
+                    '<a href="{:U(\'OrderInfo/orderDetail\')}/order_id/'+data.order_id+'"><div class="lb_head"> ' +
+                        '<div class="fl">订单编号：'+data.order_sn+'</div> <div class="fr">'+data.status_name+'</div> ' +
+                    '</div> ';
+ 
+                    html += '<div class="share_list"><div class="list"> ' +
+                            '<div class="clearfix"> ' +
+                                '<div class="left"><span><img src="'+'__IMG__/repair/type'+data.reservation['master_cat']+'.png'+'"></span></div> ' +
+                                '<div class="right"> ';
+                   if(data.master!= null)
+		            html += '<p>维修师傅：'+data.master['name']+'</p> ';
+					else
+                    html += '<p>'+'暂未分配师傅'+'</p> ';
+                                     
+                       html +=   '<span>'+data.reservation['area_name']+data.reservation['address_detail']+'</span> ' +
+                                    '<em>' +
+                                    '<i class="fl">'+'</i>' +
+                                    '<i class="fr">x'+''+'</i>' +
+                                    '</em> ' +
+                                '</div> ' +
+                            '</div> ' +
+                            '</div> </div>';
+                html += '</a><div class="lb_bot"> ' +
+                        '<span class="fl"><i>'+data.remark+'</i></span> <span class="fr">';
+
+
+                if(data.status == 0) {
+                  html += '<a url="{:U(\'OrderInfo/cancelOrder\')}/order_id/'+data.order_id+'" data-confirm="确定要取消订单吗？" class="a1 cancel-order confirm" onclick="ajaxGet(this);">取消订单</a>' +
+                    '<a href="" class="a2">待分配</a>';
+				} else if(data.status == 1) {
+                    html += '<a url="{:U(\'OrderInfo/cancelOrder\')}/order_id/'+data.order_id+'" data-confirm="确定要取消订单吗？" class="a1 cancel-order confirm" onclick="ajaxGet(this);">取消订单</a>' +
+                    '<a href="{:U(\'OrderInfo/repairPrepay\')}/order_id/'+data.order_id+'" class="a2">支付</a>';
+                } else if(data.status == 4) {
+                    html += '<a href="{:U(\'OrderInfo/refund\')}/order_id/'+data.order_id+'" class="a1 refund-order">退款</a>' +
+                    '<a href="{:U(\'OrderInfo/masterComment\')}/order_id/'+data.order_id+'" class="a2">去评价</a>';
+                } else if(data.status == 5) {
+                    html += '';
+                } else if(data.status == 7) {
+                    html += '<a url="{:U(\'OrderInfo/cancelRefund\')}/order_id/'+data.order_id+'" data-confirm="确定要取消退款申请吗？" class="a2 cancel-refund confirm" onclick="ajaxGet(this);">取消申请</a>';
+                }
+                html += '</span></div></div>';
+
+            return html;
+        }
+        //创建ajax data参数
+        function getQuery() {
+			<if condition="isset($_REQUEST['status'])">
+            return {p:p,status:'{$_REQUEST["status"]}'};
+			<else />
+			return {p:p};
+			</if>
+        }
+    </script>
+    <script>
+        //提示弹出层 回调方法
+        function success_callback() {window.location.reload();}
+        function error_callback() {}
+    </script>
+    <script type="text/javascript" src="__JS__/scroll.js"></script>
+    <script>
+        $(function() { $(".none").css("height",$(window).height()-196); })
+    </script>
+</block>

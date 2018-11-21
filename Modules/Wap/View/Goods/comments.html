@@ -1,0 +1,50 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">评价</div>
+    <div class="right"></div>
+</block>
+<block name="content">
+    <div class="page-content infinite-scroll">
+        <div class="evaluate index_fb">
+            <div class="overall">
+                <p>总评价({$count['best']+$count['better']+$count['bad']})</p>
+                <p><span class="a1">好评({$count['best']})</span>　<span class="a2">中评({$count['better']})</span>　<span class="a3">差评({$count['bad']})</span></p>
+            </div>
+            <div class="exist">
+                <ul class="scroll-append-box">
+
+                </ul>
+                <include file="Public:scroll_loader"/>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script>
+        var target = '{:U("Goods/getGoodsComments")}';
+        function getHtml(data) {
+            var html = '<li> ' +
+            '<h1><span class="fl"><i><img src="'+data.head+'"></i>'+data.nickname+'</span><span class="fr">';
+            for(var i=1; i<data.level; i++) {
+                html += '<img src="__IMG__/star.png">';
+            }
+            html += '</span></h1> ' +
+            '<p>'+data.content+'</p> ' +
+            '<div class="pic clearfix"> ';
+            for(var i in data.pictures) {
+                html += '<a href="javascript:void(0)"><span><img src="'+data.pictures[i]['abs_url']+'"></span></a> ';
+            }
+            html += '</div> ' +
+            '<p class="date">'+data.create_time+'</p> ' +
+            '</li>';
+            return html;
+        }
+        //创建ajax data参数
+        function getQuery() {
+            return {p:p,goods_id:'{$_REQUEST["goods_id"]}'};
+        }
+    </script>
+    <script type="text/javascript" src="__JS__/scroll.js"></script>
+</block>

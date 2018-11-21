@@ -1,0 +1,66 @@
+<extend name="Public/base" />
+
+<block name="main">
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+
+                <div class="widget-title widget-title-search list-widget-title">
+                    <button class="btn btn-success href" url="{:U('Coupon/add')}" target-form="ids">新增</button>&nbsp;
+                    <button class="btn btn-inverse ajax-post" url="{:U('Coupon/forbidResume',array('model'=>'Coupon','field'=>'status','value'=>0))}" target-form="ids">禁用</button>&nbsp;
+                    <button class="btn btn-info ajax-post" url="{:U('Coupon/forbidResume',array('model'=>'Coupon','field'=>'status','value'=>1))}" target-form="ids">启用</button>&nbsp;
+                    <button class="btn btn-danger confirm ajax-post" url="{:U('Coupon/delete',array('model'=>'Coupon'))}" target-form="ids">删除</button>&nbsp;
+                </div>
+
+                <div class="widget-content no-padding no-border">
+                    <table class="table table-bordered table-striped with-check reset-checkbox">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="title-checkbox" name="title-checkbox" class="check-all"/><!--<i class="icon-resize-vertical"></i>--></th>
+                            <th>ID</th>
+                            <th>唯一标识</th>
+                            <th>名称描述</th>
+                            <th>可用商品分类</th>
+                            <th>金额信息</th>
+                            <th>时间信息</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="tbody">
+                        <empty name="list"><tr><td colspan="30">Aho！没有查询结果！！</td></tr></empty>
+                        <volist name="list" id="row">
+                            <tr>
+                                <td class="va-middle"><input type="checkbox" name="ids[]" value="{$row['id']}" class="ids"/></td>
+                                <td class="va-middle">{$row['id']}</td>
+                                <td class="va-middle">{$row['unique_code']}</td>
+                                <td class="va-middle">{$row['name']}</td>
+                                <td class="va-middle">{$row['cate_name']|default='全场通用'}</td>
+                                <td>面值：￥{$row['face_value']}元 <br>满 ￥{$row['use_condition']}元 可用</td>
+                                <td>生效日期：{$row['effective_date'],'Y-m-d'|timestamp2date} <br>　有效期：{$row['valid_term']} 天</td>
+                                <td class="va-middle">{$row['status']|get_status_title}</td>
+                                <td class="va-middle">
+                                    <a href="{:U('Coupon/update',array('id'=>$row['id'],'model'=>'Coupon'))}" title="编辑" class="">
+                                        <span class="label label-success label-success-hover">编辑</span></a>&nbsp;
+                                    <if condition="$row['status'] eq 0 or $row['status'] eq 1">
+                                        <a href="{:U('Coupon/forbidResume',array('model'=>'Coupon','ids'=>$row['id'],'field'=>'status','value'=>abs(1-$row['status'])))}" title="{$row['status']|show_status_name}" class="ajax-get">
+                                        <span class="label {$row['status']|show_status_label}">{$row['status']|show_status_name}</span></a>&nbsp;
+                                    </if>
+                                    <a href="{:U('Coupon/delete',array('model'=>'Coupon','ids'=>$row['id']))}" title="删除" class="confirm ajax-get">
+                                        <span class="label label-important label-important-hover">删除</span></a>
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination alternate">
+                    {$page}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</block>

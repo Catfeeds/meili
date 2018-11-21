@@ -1,0 +1,45 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">我的积分</div>
+    <div class="right"><a href="{:U('Article/art', array('flag'=>'itg_rule'))}">积分规则</a></div>
+</block>
+<block name="content">
+    <div class="page-content infinite-scroll">
+        <div class="record">
+            <div class="ye">
+                <div class="all">
+                    <p>当前积分</p>
+                    <h1>{$integral}<i>分</i></h1>
+                </div>
+            </div>
+            <div class="notes">
+                <h1>查看积分记录</h1>
+                <!--<div class="none">暂无明细记录</div>-->
+                <div class="exist">
+                    <ul class="scroll-append-box">
+
+                    </ul>
+                </div>
+            </div>
+            <include file="Public:scroll_loader"/>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script>
+        var target = '{:U("Center/getMyIntegrals")}';
+        function getHtml(data) {
+            return '<li>' +
+                        '<span class="fl"><em>'+data['trend_name']+'</em><i>'+data['create_time']+'</i></span>' +
+                        '<span class="fr"><i>'+data['symbol_name']+data['number']+'</i></span>' +
+                    '</li>';
+        }
+        //创建ajax data参数
+        function getQuery() {
+            return {p:p};
+        }
+    </script>
+    <script type="text/javascript" src="__JS__/scroll.js"></script>
+</block>

@@ -1,0 +1,127 @@
+<extend name="Public/base" />
+
+<block name="main">
+
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+                <!--<div class="widget-title">
+                    <span class="icon">
+                        <i class="fa fa-plus"></i>
+                    </span>
+                    <h5>更新信息</h5>
+                </div>-->
+                <br>
+                <div class="widget-content no-padding">
+                    <form class="form-horizontal text-height-27-form" method="post" action="{:U('Coupon/update')}">
+                        <input type="hidden" name="model" value="Coupon">
+                        <input type="hidden" name="id" value="{$row['id']}">
+                        <div class="control-group">
+                            <label class="control-label">优惠券标识</label>
+                            <div class="controls">
+                                <input type="text" name="unique_code" value="{$row['unique_code']}" class="text-width-20" maxlength="30">
+                                <span class="help-block">* 优惠券标识必须，该种优惠券唯一标记</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">优惠券名称</label>
+                            <div class="controls">
+                                <input type="text" name="name" value="{$row['name']}" class="text-width-20" maxlength="30">
+                                <span class="help-block">* 文字描述优惠券类型、使用时机等</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">可用的商品分类</label>
+                            <div class="controls">
+                                {$select|default='暂无可用分类！'}<!--<span class="a"></span><span class="add" data-select="{$select|default='暂无可用分类！'}">添加</span>-->
+                                <span class="help-block">可以使用的分类，不选择则通用</span>
+                            </div>
+                            <script>
+                                $('.add').click(function(){
+                                    $('.a').append($(this).attr('data-select'));
+                                    //下拉菜单点击事件
+                                    $('ul.dropdown-menu li').bind('click',function(){
+                                        var that = $(this);
+                                        that.parents('div.btn-group').find('button.checked').html(that.attr('data-title'));
+                                        that.parents('div.btn-group').next('input').val(that.attr('data-value'));
+                                    });
+                                    //下拉菜单 选中
+                                    $('div.btn-group').each(function(key,obj){
+                                        if($(obj).find('ul li.selected a').html() == null) {
+                                            $(obj).find('button.checked').html($(obj).find('button.checked').attr('data-default'));
+                                        } else {
+                                            $(obj).find('button.checked').html($(obj).find('ul li.selected a').html());
+                                        }
+                                    });
+                                });
+                            </script>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">优惠券面值</label>
+                            <div class="controls">
+                                <span class="input-append">
+                                    <input type="text" name="face_value" value="{$row['face_value']}" class="decimal-only text-width-50">
+                                <div class="add-on">元</div>
+                                </span>
+                                <span class="help-block">* 优惠券的面值</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">可用条件</label>
+                            <div class="controls">
+                                <span class="input-append">
+                                    <input type="text" name="use_condition" value="{$row['use_condition']}" class="decimal-only text-width-50">
+                                    <div class="add-on">元</div>
+                                </span>
+                                <span class="help-block">* 可用条件，满多少可以使用</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">生效日期</label>
+                            <div class="controls">
+                                <div class="input-daterange" id="datepicker">
+                                <notempty name="row['id']">
+                                    <input type="text" name="effective_date" value="{$row['effective_date'],'Y-m-d'|timestamp2date}" class="text-width-10"  readonly>
+                                    <else/>
+                                    <input type="text" name="effective_date" value="" class="text-width-20" readonly>
+                                </notempty>
+                                </div>
+                                <span class="help-block">几月几号开始生效，不设置则从获得之日起即生效</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">有效期</label>
+                            <div class="controls">
+                                <span class="input-append">
+                                    <input type="text" name="valid_term" value="{$row['valid_term']}" class="number-only text-width-50">
+                                    <div class="add-on">天</div>
+                                </span>
+                                <span class="help-block">* 优惠券的有效期，单位(天)</span>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn" onclick="javascript:history.back(-1);return false;">返 回</button>　
+                            <button class="btn btn-info ajax-post" target-form="form-horizontal" type="submit">保 存</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <!--日历 start-->
+    <link href="__STATIC__/plugins/datepicker/datepicker3.css" rel="stylesheet">
+    <script src="__STATIC__/plugins/datepicker/bootstrap-datepicker.js"></script>
+    <!--日历 end-->
+    <script>
+        $(function(){
+            $('.input-daterange').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true
+            });
+        })
+    </script>
+</block>

@@ -1,0 +1,36 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">修改昵称</div>
+    <div class="right"></div>
+</block>
+<block name="content">
+    <div class="page-content">
+        <div class="homepage">
+            <div class="feedback nickname">
+                <form action="{:U('Center/modifyInfo')}" method="post" class="form-horizontal">
+                <input type="hidden" name="field" value="1">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td><input type="text" name="value" class="txt" placeholder="请输入昵称" value='' datatype="*1-15" nullmsg="请输入昵称！" errormsg=""></td>
+                    </tr>
+                    <tr>
+                        <td><input type="submit" value="保存" class="btn submit-btn"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script src="__STATIC__/validform_5.3.2/Validform_v5.3.2_min.js"></script>
+    <script src="__JS__/validform.js"></script>
+    <script src="__JS__/common.js"></script>
+    <script>
+        $(function() { });
+        //提示弹出层 回调方法
+        function success_callback() {}
+        function error_callback() {}
+    </script>
+</block>

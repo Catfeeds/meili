@@ -1,0 +1,111 @@
+<extend name="Public/base" />
+
+<block name="main">
+
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+                <!--<div class="widget-title">
+                    <span class="icon">
+                        <i class="fa fa-file"></i>
+                    </span>
+                    <h5>提现记录详情</h5>
+                </div>-->
+                <div class="widget-content">
+                    <div class="alert alert-block">
+                        <a class="close" data-dismiss="alert" href="#">×</a>
+                        <h4>提现金额：￥ <span style="font-size: 30px;">{$row['amounts']}</span>（RMB）</h4>
+                    </div>
+                    <form action="{:U('Withdraw/update')}" method="post" class="form-horizontal text-height-27-form" autocomplete="off">
+                        <input type="hidden" name="id" value="{$row['id']}">
+                        <input type="hidden" name="model" value="Withdraw">
+                        <table class="bill-table">
+                            <tr class="bg-tr">
+                                <td colspan="10" align="center">用户信息</td>
+                            </tr>
+                            <tr>
+                                <td width="20%">用户信息</td>
+                                <td colspan="4">ID：{$row['user_id']}　账号：{$row['m_account']}</td>
+                            </tr>
+                            <tr class="bg-tr">
+                                <td colspan="10" align="center">银行卡信息</td>
+                            </tr>
+                            <tr>
+                                <td>银行信息</td>
+                                <td colspan="4"><img src="{$row['bank_logo']}" width="24"> {$row['bank_name']}</td>
+                            </tr>
+                            <tr>
+                                <td>银行卡号</td><td colspan="4">{$row['card_number']}</td>
+                            </tr>
+                            <tr>
+                                <td>开户姓名</td><td colspan="4">{$row['open_name']}</td>
+                            </tr>
+                            <tr>
+                                <td>预留手机号</td><td colspan="4">{$row['mobile']}</td>
+                            </tr>
+                            <tr class="bg-tr">
+                                <td colspan="10" align="center">提现信息</td>
+                            </tr>
+                            <tr>
+                                <td>操作状态</td>
+                                <td colspan="4">
+                                    <eq name="row['status']" value="1">
+                                        <span class="badge badge-success">已处理</span>
+                                        <else/>
+                                        <span class="badge badge-warning">未处理</span>
+                                    </eq>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>提现金额</td>
+                                <td colspan="4">￥ {$row['amounts']} 元</td>
+                            </tr>
+                            <tr>
+                                <td>提交申请时间</td>
+                                <td colspan="4">{$row['create_time']|timestamp2date}</td>
+                            </tr>
+                            <tr>
+                                <td>操作完成时间</td>
+                                <td colspan="4">{$row['complete_time']|timestamp2date}</td>
+                            </tr>
+                            <tr>
+                                <td>转账流水号</td>
+                                <td colspan="4">
+                                    <if condition="$row['status'] eq 1">
+                                        {$row['trade_no']|default="---"}
+                                        <else/>
+                                        <input type="text" name="trade_no" class="text-width-40">
+                                    </if>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>操作备注</td>
+                                <td colspan="4">
+                                    <if condition="$row['status'] eq 1">
+                                        {$row['remark']|default="---"}
+                                        <else/>
+                                        <textarea name="remark"></textarea>
+                                    </if>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>操作者</td>
+                                <td colspan="4">{$row['admin_account']|default="---"}</td>
+                            </tr>
+                            <if condition="$row['status'] eq 0">
+                            <tr>
+                                <td></td>
+                                <td colspan="20">
+                                    <button class="btn btn-info ajax-post confirm" data-confirm="确认要操作完成吗？" target-form="form-horizontal" type="submit" data-ing-html="处理中...">操作完成</button>
+                                    <span class="help-block">请先进行线下的转账操作，再来进行此操作完成！</span>
+                                </td>
+                            </tr>
+                            </if>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>

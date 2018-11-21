@@ -1,0 +1,75 @@
+<extend name="Public/base" />
+
+<block name="main">
+
+    <div class="row-fluid main-row-fluid">
+
+        <div class="span12">
+            <div class="widget-box">
+
+                <div class="widget-title widget-title-search list-widget-title">
+                    <a href="#modal-goods" title="添加商品" data-toggle="modal" onclick="openGoodsModal(this);" data-id="{$row['id']}" class="btn btn-success">添加商品</a>&nbsp;
+                    <button class="btn btn-danger confirm ajax-post" url="{:U('SpecialGoods/delete',array('model'=>'SpecialGoods'))}" target-form="ids">移出该专题</button>&nbsp;
+                    <h4 style="display: inline">【{$_REQUEST['spe_name']}】</h4>
+                    <form action="{:U('SpecialGoods/index')}" method="post" class="form">
+                        <!--<input type="text" name="" value="{$_REQUEST['']}" placeholder="">
+                        {$select}
+                        <button class="btn btn-inverse">查询</button>-->
+                    </form>
+                </div>
+
+                <div class="widget-content no-padding no-border">
+                    <table class="table table-bordered table-striped with-check reset-checkbox">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="title-checkbox" name="title-checkbox" class="check-all"/><!--<i class="icon-resize-vertical"></i>--></th>
+                            <!--<th>ID</th>-->
+                            <th>商品货号</th>
+                            <th>商品名称</th>
+                            <th>所属分类</th>
+                            <th>售价</th>
+                            <th>库存</th>
+                            <th>排序</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="tbody">
+                        <empty name="list"><tr><td colspan="30">Aho！没有查询结果！！</td></tr></empty>
+                        <volist name="list" id="row">
+                            <tr>
+                                <td><input type="checkbox" name="ids[]" value="{$row['id']}" class="ids"/></td>
+                                <!--<td>{$row['id']}</td>-->
+                                <td>{$row['goods_sn']}</td>
+                                <td>{$row['goods_name']}</td>
+                                <td>{$row['goods_cate_name']}</td>
+                                <td>￥ {$row['price']} 元</td>
+                                <td>{$row['stock']}</td>
+                                <td class="quick-edit" data-model="SpecialGoods" data-id="{$row['id']}" data-field="sort">{$row['sort']}</td>
+                                <td>{$row['status']|get_status_title}</td>
+                                <td>
+                                    <a href="{:U('SpecialGoods/delete',array('model'=>'SpecialGoods','ids'=>$row['id']))}" title="移出该专题" class="tip-bottom confirm ajax-get">
+                                        <span class="label label-important label-important-hover">移出该专题</span></a>
+                                </td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination alternate">
+                    {$page}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <include file="Public/modal_goods"/>
+
+</block>
+<block name="script">
+    <script>
+        $(function(){ })
+    </script>
+</block>

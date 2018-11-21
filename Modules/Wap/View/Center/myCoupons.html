@@ -1,0 +1,51 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">我的优惠券</div>
+    <div class="right"></div>
+</block>
+<block name="content">
+    <div class="page-content infinite-scroll">
+        <div class="coupon scroll-append-box">
+
+        </div>
+        <include file="Public:scroll_loader"/>
+      </div>
+    </div>
+</block>
+<block name="script">
+    <script>
+        $(function() {
+            $(".none").css("height",$(window).height()-196);
+        })
+    </script>
+    <script>
+        var target = '{:U("Center/getMyCoupons")}';
+        function getHtml(data) {
+            var html = '<div class="list"> ';
+            if(data['status'] == 0) {
+                html += '<div class="clearfix green"> ';
+            } else {
+                html += '<div class="clearfix ash"> ';
+            }
+            html += '<div class="left">' +
+                        '<span>￥<b>'+data['face_value']+'</b></span><em>满'+data['use_condition']+'元可用</em>' +
+                    '</div>' +
+                    '<div class="right"><span>'+data['can_use']+'</span><em>'+data['desc']+'</em><i>有效期至：'+data['end_use_time']+'</i></div>' +
+                    '<div class="tag">';
+            if(data['status'] == 1) {
+                html += '<img src="__IMG__/ysy.png">';
+            } else if(data['status'] == 2) {
+                html += '<img src="__IMG__/ygq.png">';
+            }
+            html +='</div></div></div>';
+            return html;
+        }
+        //创建ajax data参数
+        function getQuery() {
+            return {p:p};
+        }
+    </script>
+    <script type="text/javascript" src="__JS__/scroll.js"></script>
+</block>

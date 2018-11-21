@@ -1,0 +1,93 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">文章详情</div>
+    <div class="right">
+        <if condition="empty($_REQUEST['flag'])">
+        <span class="c">
+            <if condition="$art['is_coll'] eq 0">
+                <a href="{:U('Article/artCollection',array('art_id'=>$art['art_id'],'is_coll'=>$art['is_coll']))}" title="收藏" class="ajax-get"><img src="__IMG__/star_collect.png" class="c_s"></a>
+                <else/>
+                <a href="{:U('Article/artCollection',array('art_id'=>$art['art_id'],'is_coll'=>$art['is_coll']))}" title="取消收藏" class="ajax-get"><img src="__IMG__/star_collect_bak.png" class="c_s"></a>
+            </if>
+        </span>
+        </if>
+    </div>
+</block>
+
+<block name="content">
+    <div class="page-content" style="position:static">
+        <div class="detail">
+            <div class="de_top">
+                <if condition="!empty($art['pictures'])">
+                <div class="banner">
+                    <div class="banner_con">
+                        <div class="banner_cx" id="banner_cx">
+                            <volist name="art['pictures']" id="pic">
+                            <div class="banner_slide"><a href="javascript:void(0)"><img src="{$pic['abs_url']}"></a></div>
+                            </volist>
+                        </div>
+                    </div>
+                    <div class="paging"></div>
+                </div>
+                </if>
+                <div class="about">{$art['title']}</div>
+                <div class="price" style="height: 25px;"><span>{$art['short_desc']}</span></div>
+                <div class="xq">
+                    {$art['content']}
+                </div>
+            </div>
+            <if condition="!empty($art['relation_goods'])">
+            <div class="swiper-container swiper-2">
+                <h1>推荐单品</h1>
+                <div class="swiper-wrapper">
+                    <volist name="art['relation_goods']" id="goods">
+                    <div class="swiper-slide">
+                        <div class="entry">
+                        <div class="all">
+                            <div class="content">
+                                <div class="pic">
+                                    <a href="{:U('Goods/detail', array('goods_id'=>$goods['goods_id']))}" class="item-link"><img src="{$goods['cover']}"></a>
+                                </div>
+                                <div class="about">{$goods['goods_name']}</div>
+                                <div class="price"><em>￥{$goods['price']}</em></div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    </volist>
+                </div>
+            </div>
+            </if>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script>
+    var mySwiper2 = myApp.swiper('.swiper-2', {
+      spaceBetween: 10,
+      slidesPerView: 2
+    });
+    </script>
+    <script src="__JS__/swiper-2.1.min.js"></script>
+    <script src="__JS__/cygz.js"></script>
+    <script>
+        $(function() {
+             var newSlideSize = function slideSize(){
+                var w = Math.ceil($(".banner_con").width()/2);
+                $(".banner_con,.banner_cx,.banner_slide").height(w);
+            };
+            newSlideSize();
+            $(window).resize(function(){
+                newSlideSize();
+            });
+        });
+    </script>
+    <script type="text/javascript" src="__JS__/common.js"></script>
+    <script>
+        //提示弹出层 回调方法
+        function success_callback() {window.location.reload();}
+        function error_callback() {}
+    </script>
+</block>

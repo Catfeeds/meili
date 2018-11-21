@@ -1,0 +1,190 @@
+<extend name="Public/base" />
+
+<block name="top">
+    <div class="left"><a href="javascript:void(0)" class="back link" onclick="javascript:history.back(-1);return false;"> <i class="icon icon-back"></i></a></div>
+    <div class="center sliding">购物车</div>
+    <div class="right">
+        <span class="b">
+            <a href="javascript:void(0);" class="b_bj">编辑</a>
+            <a href="javascript:void(0);" class="b_ok">完成</a>
+        </span>
+    </div>
+</block>
+<block name="content">
+    <div class="page-content" style="position:static">
+        <div class="machine">
+            <if condition="empty($carts)">
+                <div class="none">您的购物车为空</div>
+            <else/>
+            <div class="exist">
+                <volist name="carts" id="cart">
+                <!--start-->
+                <div class="list clearfix" data-cart-id="{$cart['cart_id']}" data-product-id="{$cart['product_id']}" data-goods-id="{$cart['goods_id']}">
+                    <div class="left"><a href="{:U('Goods/detail', array('goods_id'=>$cart['goods_id']))}"><img src="{$cart['cover']}"></a></div>
+                    <div class="right">
+                        <div class="about">{$cart['goods_name']}</div>
+                        <div class="size"><span>{$cart['goods_attr_desc']}</span></div>
+                        <div class="price">
+                            <span class="fl">￥{$cart['price']}</span>
+                            <span class="fr">
+                                <input id="min" type="button" class="min" value="-" disabled/>
+                                <input class="txt1 number" type="text" value="{$cart['number']}" data-price="{$cart['price']}"/>
+                                <input id="add" type="button" class="add" value="+" disabled/>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="choice">
+                        <input type="checkbox" id="checkbox-{$key}" class="choice_box1 cart-id" name="box" value="{$cart['cart_id']}"/>
+                        <label for="checkbox-{$key}" class="cart-id-label"></label>
+                    </div>
+                </div>
+                <!--end-->
+                </volist>
+            </div>
+            </if>
+        </div>
+        <div class="suspend">
+            <div class="fl"><span>
+                <input type="checkbox" id="r_1" class="choice_box1" value="1" onclick="check()" checked="checked"/>
+                <label for="r_1" onclick="check()"></label>全选</span><span class="mn">合计：￥<i>50.00</i></span>
+            </div>
+            <div class="fr">
+                <a href="javascript:void(0);" class="ban">去结算</a>
+                <a href="javascript:void(0);" class="del del-cart">删除</a>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript" src="__JS__/common.js"></script>
+    <script type="text/javascript">
+    $(function(){
+        $(".b_bj").click(function() {
+            okReset(this);
+            //$(".suspend a.ban,.suspend span.mn").hide();
+        });
+        $(".b_ok").click(function() {
+            var data_array = [], that = this;
+            $('.cart-edit').each(function(key, obj){
+                var goods_id = $(obj).attr('data-goods-id'), product_id = $(obj).attr('data-product-id'), number = $(obj).find('.number').val();
+                data_array.push('{"goods_id":'+goods_id+',"product_id":'+product_id+',"number":'+number+'}');
+            });
+            if(data_array.length == 0) {
+                bjReset(that); return;
+            }
+            var data = '['+data_array.join(',')+']';
+            $.post('{:U("Cart/updCart")}', {data:data}).success(function (data) {
+                if (data.status == 1) {
+                    showPop(data.info, 'success', 1500, '');
+                    bjReset(that);
+                } else {
+                    showPop(data.info, 'error', 1500, '');
+                }
+            });
+        });
+        $('.del-cart').click(function(){
+            if(confirm('确认要将商品删除购物车吗？')) {
+                var that = $('.b_ok'), cart_ids = getCartIds();
+                if (cart_ids == '') {
+                    bjReset(that);
+                    return;
+                }
+                $.post('{:U("Cart/delFromCart")}', {cart_ids: cart_ids}).success(function (data) {
+                    if (data.status == 1) {
+                        showPop(data.info, 'success', 1500, 'callback');
+                        bjReset(that);
+                    } else {
+                        showPop(data.info, 'error', 1500, '');
+                    }
+                });
+            }
+        });
+        $('.ban').click(function(){
+            var cart_ids = getCartIds();
+            if(cart_ids == '') {
+                showPop('请选择要结算的商品！', 'error', 1500, ''); return;
+            }
+            window.location.href = '{:U("Flow/confirmOrder")}/cart_ids/' + cart_ids;
+        });
+
+        $('.cart-id-label').click(function(){
+            setTimeout(function(){
+                setTotal();
+            }, 300);
+        });
+    })
+    function getCartIds() {
+        var cart_id_array = [];
+        $('.cart-id').each(function(key, obj){
+            if($(obj).attr('checked') != null) {
+                cart_id_array.push($(obj).val());
+            }
+        });
+        return cart_id_array.join(',');
+    }
+    </script>
+    <script type="text/javascript">
+        function check(){
+            var checkbox = document.getElementById('r_1');
+            checkbox.value == 1 ? checkbox.value = 2 : checkbox.value = 1;
+            var checkboxs = document.getElementsByName('box');
+            for(var i=0; i<checkboxs.length;i++){
+                if(checkbox.value==1){
+                    checkboxs[i].checked=false;
+                }else{
+                    checkboxs[i].checked=true;
+                }
+            }
+            setTotal();
+        }
+        function setTotal(){ //重置合计价格
+            var s = 0;
+            $(".list").each(function(){
+                if($(this).find('.choice').find('.cart-id').attr('checked') != null) {
+                    s += parseInt($(this).find('.price').find('input[class*=txt1]').val()) * parseInt($(this).find('.price').find('input[class*=txt1]').attr('data-price'));
+                }
+            });
+            $(".mn i").html(s.toFixed(2));
+        }
+        function bjReset(obj) {
+            $(obj).prev().show();
+            $(obj).hide();
+            $('.min').prop('disabled',true);
+            $('.add').prop('disabled',true);
+            $(".suspend a.del").hide().css("display","none");
+            $(".suspend a.ban").show().css("display","block");
+        }
+        function okReset(obj) {
+            $(obj).next().show();
+            $(obj).hide();
+            $('.min').prop('disabled',false);
+            $('.add').prop('disabled',false);
+            $(".suspend a.del").show().css("display","block");
+            $(".suspend a.ban").hide().css("display","none");
+        }
+        $(function() {
+            setTotal();check();
+            $(".add").click(function () {
+                var t = $(this).parent().find('input[class*=txt1]');
+                t.val(parseInt(t.val()) + 1);
+                $(this).parents('.list').addClass('cart-edit');
+                setTotal();
+            });
+            $(".min").click(function () {
+                var t = $(this).parent().find('input[class*=txt1]');
+                t.val(parseInt(t.val()) - 1);
+                if (parseInt(t.val()) < 0) {
+                    t.val(0);
+                }
+                $(this).parents('.list').addClass('cart-edit');
+                setTotal();
+            });
+            $(".none").css("height",$(window).height()-196)
+        });
+    </script>
+    <script>
+        //提示弹出层 回调方法
+        function success_callback() {window.location.reload();}
+        function error_callback() {}
+    </script>
+</block>

@@ -1,0 +1,220 @@
+<extend name="Public/base" />
+<block name="style">
+    <link rel="stylesheet" href="__CSS__/style/style.file.min.css" />
+    <link rel="stylesheet" href="__CSS__/style/style.mail.min.css" />
+</block>
+<block name="main">
+    <div class="row-fluid main-row-fluid">
+        <div class="alert alert-block alert-info">
+            <a class="close" data-dismiss="alert" href="javascript:void(0)">×</a>
+            <p>1、如要发送具有广告嫌疑的短信内容（例：优惠、活动推广等），需联系短信商，开通发送广告信息的通道，并且短信内容需具有一定格式，否则后果严重！<span class="label label-warning">重要</span></p>
+            <p>2、发送邮件时，遇到接收者数量过大的情况，可考虑使用批量发送邮件的软件工具，在此发送将需要很长时间！<span class="label label-warning">重要</span></p>
+            <p>3、对于批量发送的信息类型（短信、推送），所记录的发送成功的条数可能不准确！</p>
+            <p>4、可选择已有信息模板进行发送，选择模板后，将按模板内容发送！</p>
+        </div>
+        <br>
+        <div class="row" style="padding-right: 15px;">
+            <div class="span4">
+                <div class="mailbox-content">
+                    <div class="file-manager">
+                        <div class="space-25"></div>
+
+                        <!--接收者-->
+                        <include file="ToUsers/receivers"/>
+                        <!--接收者-->
+                        <br>
+
+                        <h5>　发信模板　<span class="mailbox-notify">您可以选择已有模板进行发送！模板优先于右侧手写内容</span></h5>
+                        <ul class="category-list m-b-md">
+                            <volist name="templates" id="temp">
+                                <li>
+                                    <a href="javascript:void(0)" title="{$temp['type'],SEND_TEMPLATE_TYPES|get_config_title}" <eq name="temp['status']" value="1">class="choice-temp"</eq> data-type="{$temp['type']}" data-temp-type="{$temp['type']|get_send_icon}" data-temp-unique="{$temp['unique_code']}" data-temp-desc="{$temp['description']}">
+                                    <i class="fa {$temp['type']|get_send_icon}"></i>
+                                    <span <eq name="temp['status']" value="1">class="label label-warning label-warning-hover"<else/>class="label label-hover"</eq>>标识：{$temp['unique_code']}　　模板描述：{$temp['description']}</span>　
+                                    </a>
+                                </li>
+                            </volist>
+                        </ul>
+
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="span8">
+
+                <!--发送头部-->
+                <include file="ToUsers/boxHeader"/>
+                <!--发送头部-->
+
+                <!--发送主体-->
+                <form class="form-horizontal text-height-27-form" autocomplete="off">
+                    <div class="mail-box">
+                        <div class="mail-body">
+                            <div class="control-group">
+                                <div class="send-temp" style="display: none">
+                                    <a class="close send-temp-close" href="javascript:void(0)" title="取消使用模板">×</a>
+                                    <p>模板类型： <span class="data-temp-type">短信</span></p>
+                                    <p>模板标识： <span class="data-temp-unique">register</span></p>
+                                    <p>模板描述： <span class="data-temp-desc">注册时出发</span></p>
+                                </div>
+                            </div>
+                            <div class="control-group no-send-temp">
+                                <div class="controls" style="margin-left: 50px;">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn checked" data-default="--发信类型--"></button>
+                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu select-type">
+                                            <volist name="types" id="type">
+                                                <li data-value="{$key}" data-title="<i class='fa {$key|get_send_icon}'></i> {$type}">
+                                                    <a href="javascript:void(0)"><i class="fa {$key|get_send_icon}"></i> {$type}</a>
+                                                </li>
+                                            </volist>
+                                        </ul>
+                                    </div>
+                                    <input type="hidden" name="type" value="" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="control-group no-send-temp">
+                                <div class="controls" style="margin-left: 50px;">
+                                    <input type="text" name="subject" value="" class="text-width-80" placeholder="标题  主要是邮件标题、站内信标题">
+                                </div>
+                            </div>
+                            <div class="control-group no-send-temp">
+                                <div class="controls" style="margin-left: 50px;">
+                                    <textarea name="content"></textarea>
+                                    {:hook('adminArticleEdit', array('is_first'=>1,'name'=>'content','value'=>'','width'=>825))}
+                                </div>
+                            </div>
+                            <div class="control-group no-send-temp">
+                                <div class="controls" style="margin-left: 50px;">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn checked" data-default="--跳转规则--"></button>
+                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <volist name="target_rules" id="rule">
+                                                <li data-value="{$key}" data-title="{$rule}" <eq name="key" value="$row['target_rule']">class="selected"</eq>>
+                                                <a href="javascript:void(0)">{$rule}</a>
+                                                </li>
+                                            </volist>
+                                        </ul>
+                                    </div>
+                                    <input type="hidden" name="target_rule" value="{$row['target_rule']}">　
+                                    <input type="text" name="param" value="{$row['param']}" class="text-width-60" placeholder="跳转参数">
+                                    <span class="help-block">
+                                        跳转规则，添加APP推送类型的模板时设置！<br>
+                                        后接跳转规则对应参数：<br>
+                                        　添加我的--无参数、商品详情--商品ID、文章详情--文章ID
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="control-group no-send-temp">
+                                <div class="controls" style="margin-left: 50px;">
+                            <button class="btn btn-primary save-to-temp" type="button" href="#save-to-template" data-toggle="modal" title="存为模板">
+                                <i class="fa fa-pencil"></i>
+                                存为模板</button>&nbsp;
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </form>
+                <!--发送主体-->
+
+                <!--存为模板弹出层-->
+                <div id="save-to-template" class="modal hide" style="z-index: 99999999">
+                    <div class="modal-header">
+                        <button data-dismiss="modal" class="close" type="button">×</button>
+                        <h3>保存为模板</h3>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal text-height-27-form">
+                            <div class="control-group">
+                                <div class="controls" style="margin-left: 50px;">
+                                    <input type="text" name="unique_code" value="" class="text-width-90" placeholder="模板标识 英文字母">
+                                    <span class="help-block">* 必须为英文字母</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="controls" style="margin-left: 50px;">
+                                    <input type="text" name="description" value="" class="text-width-90" placeholder="模板描述">
+                                    <span class="help-block">该模板在什么时机使用</span>
+                                </div>
+                            </div>
+                            <!--<div class="" style="padding: 20px 50px;">
+                                <button class="btn btn-info sure-save-to-template" type="button">确定保存</button>
+                            </div>-->
+                        </form>
+                    </div>
+                    <div class="modal-footer" id="modal-footer-goods">
+                        <button class="btn btn-info sure-save-to-template" type="button">确定保存</button>
+                        <a data-dismiss="modal" class="btn" href="javascript:void(0)">取消</a>
+                    </div>
+                </div>
+                <!--存为模板弹出层-->
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        var unique_code = '', type = 0, subject = '', content = '', target_rule = 0, param = '';
+        /***********************选择模板**************************/
+        $('a.choice-temp').click(function(){
+            if(!is_sending) {
+                $('.send-temp .data-temp-type').html('<i class="fa ' + $(this).attr('data-temp-type') + '"></i> ' + $(this).attr('title'));
+                $('.send-temp .data-temp-unique').html($(this).attr('data-temp-unique'));
+                $('.send-temp .data-temp-desc').html($(this).attr('data-temp-desc'));
+                unique_code = $(this).attr('data-temp-unique'); type = $(this).attr('data-type');
+                $('.send-temp').show();
+                $('.no-send-temp').hide();
+            }
+        });
+        $('a.send-temp-close').click(function(){
+            if(!is_sending) {
+                unique_code = ''; type = 0;
+                $('.send-temp').hide();
+                $('.no-send-temp').show();
+            }
+        });
+        /***********************选择模板**************************/
+
+        //设置发送参数
+        function setQuery() {
+            type    = type == 0 ? $("input[name='type']").val() : type;
+            subject = subject == '' ? $("input[name='subject']").val() : subject;
+            content = content == '' ? $("textarea[name='content']").val() : content;
+            target_rule = target_rule == 0 ? $("input[name='target_rule']").val() : target_rule;
+            param = param == '' ? $("input[name='param']").val() : param;
+        }
+        ///重置参数
+        function rid() {
+            type = 0; subject = ''; content = ''; send_p = 1; count = 0; suc = 0; fail = 0; is_sending = false; target_rule == 0; param == ''
+        }
+        //创建ajax data参数
+        function getQuery() {
+            return {type:type,subject:subject,content:content,receive_rule:receive_rule,where:where,model:model,time:time,p:send_p,count:count,success:suc,fail:fail,unique_code:unique_code,target_rule:target_rule,param:param};
+        }
+
+        /********************存为模板**************************/
+        $('.sure-save-to-template').click(function(){
+            var type = $("input[name='type']").val(), subject = $("input[name='subject']").val();
+            var content = $("textarea[name='content']").val(), unique_code = $("input[name='unique_code']").val();
+            var description = $("input[name='description']").val(), target_rule = $("input[name='target_rule']").val(), param = $("input[name='param']").val();
+            var query = {type:type,subject:subject,template:content,unique_code:unique_code,description:description,target_rule:target_rule,param:param,model:'SendTemplate'};
+            $.post('{:U("SendTemplate/update")}', query).success(function(data){
+                if (data.status==1) {
+                    updateAlert(data.info,'alert-success');
+                    setTimeout(function() {$('.top-alert').hide();$('.modal').hide(); $('.modal-backdrop').hide();},1500);
+                } else {
+                    updateAlertWithTime(data.info,'alert-error');
+                }
+            });
+        });
+        /*********************存为模板*************************/
+    </script>
+    <include file="ToUsers/baseJs"/>
+</block>
