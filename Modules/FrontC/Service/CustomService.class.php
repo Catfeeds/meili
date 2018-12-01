@@ -68,9 +68,9 @@ class CustomService extends FrontBaseService
     public function getChannel()
     {
         //获取缓存中数据
-        $list = S('Channel_Cache');
+        // $list = S('Channel_Cache');
         //不存在缓存 查找数据库
-        if (!$list) {
+        // if (!$list) {
             $list = M('ServiceCategory')->alias('servicecate')
                 ->field('servicecate.id cate_id,servicecate.icon,file.abs_url icon')
                 ->where(array('servicecate.status' => 1, 'servicecate.parent_id' => 0))
@@ -83,8 +83,8 @@ class CustomService extends FrontBaseService
                 $val['name'] = ' ';
             }
             //计入缓存
-            S('Channel_Cache', $list);
-        }
+            // S('Channel_Cache', $list);
+        // }
         if(empty($list))
             return array();
         return $list;
