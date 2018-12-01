@@ -17,9 +17,9 @@ class CardService extends FrontBaseService
     public function getCard()
     {
         //获取缓存中数据
-        $list = S('Card_Cache');
+        // $list = S('Card_Cache');
         //不存在缓存 查找数据库
-        if (!$list) {
+        // if (!$list) {
             $list = M('Card')->alias('card')
                 ->field('card.id card_id,card.card_name,card.m_price,card.m_count,card.y_price,card.y_count,card.sales,card.font_color,card.cover,file.abs_url cover')
                 ->where(array('card.status' => 1))
@@ -28,8 +28,8 @@ class CardService extends FrontBaseService
                 ))
                 ->select();
             //存入缓存
-            S('Card_Cache', $list);
-        }
+            // S('Card_Cache', $list);
+        // }
         return $list;
     }
 }

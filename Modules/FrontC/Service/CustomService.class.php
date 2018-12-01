@@ -40,9 +40,9 @@ class CustomService extends FrontBaseService
     public function getCateFirst()
     {
         //获取缓存中数据
-        $list = S('CateFirst_Cache');
+        // $list = S('CateFirst_Cache');
         //不存在缓存 查找数据库
-        if (!$list) {
+        // if (!$list) {
             $list = M('GoodsCategory')->alias('goodscate')
                 ->field('goodscate.id cate_id,goodscate.icon,file.abs_url icon')
                 ->where(array('goodscate.status' => 1, 'goodscate.parent_id' => 0))
@@ -54,8 +54,8 @@ class CustomService extends FrontBaseService
                 $val['name'] = ' ';
             }
             //存入缓存
-            S('CateFirst_Cache', $list);
-        }
+            // S('CateFirst_Cache', $list);
+        // }
         if(empty($list))
             return array();
         return $list;
