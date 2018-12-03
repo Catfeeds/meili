@@ -98,9 +98,9 @@ class CustomService extends FrontBaseService
     {
         $position = $request['position'];
         //获取缓存中数据
-        $list = S('Section_Cache' . $position);
+        // $list = S('Section_Cache' . $position);
         //不存在缓存 查找数据库
-        if (!$list) {
+        // if (!$list) {
             $list = M('Section')->field('name,layout,configure')->where(array('status' => 1, 'position' => $position))->order('sort DESC')->select();
             foreach ($list as &$value) {
                 //解析版块配置json
@@ -112,8 +112,8 @@ class CustomService extends FrontBaseService
                 $value['configure'] = $configure;
             }
             //计入缓存
-            S('Section_Cache' . $position, $list);
-        }
+            // S('Section_Cache' . $position, $list);
+        // }
         if(empty($list)){
             return array();
         }
